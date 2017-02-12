@@ -7,6 +7,10 @@ homepage
 <button id="on_button">On</button>
 <button id="off_button">Off</button>
 
+<br><br>
+
+Status: <span id="device_status"></span>
+
 <script>
   $(document).ready(function() {
 
@@ -28,6 +32,8 @@ homepage
       received: function(data) {
         // log the data
         console.log(data);
+        // update the status
+        $('#device_status').text(data.my_message);
       }
     });
 
