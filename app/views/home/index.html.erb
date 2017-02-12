@@ -10,14 +10,25 @@ homepage
 <script>
   $(document).ready(function() {
 
+    // when the on button is clicked
     $('#on_button').click(function() {
       console.log('on button clicked');
       $.get('/on');
     });
 
+    // when the off button is clicked
     $('#off_button').click(function() {
       console.log('off button clicked');
       $.get('/off');
+    });
+
+    // subscribe to 'X'
+    App.cable.subscriptions.create('DeviceChannel', {
+      // when data is received
+      received: function(data) {
+        // log the data
+        console.log(data);
+      }
     });
 
   });
