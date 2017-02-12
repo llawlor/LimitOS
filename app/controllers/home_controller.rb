@@ -5,7 +5,7 @@ class HomeController < ApplicationController
   def on
     puts 'on controller'
     # broadcast to "device:X"
-    DeviceChannel.broadcast_to(
+    DevicesChannel.broadcast_to(
       'X',
       my_message: 'on'
     )
@@ -14,7 +14,7 @@ class HomeController < ApplicationController
   def off
     puts 'off controller'
     # broadcast to "device:X"
-    DeviceChannel.broadcast_to(
+    DevicesChannel.broadcast_to(
       'X',
       my_message: 'off'
     )

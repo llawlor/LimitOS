@@ -1,1 +1,1 @@
-App.cable.subscriptions.create({ channel: "DeviceChannel" });
+App.cable.subscriptions.create({ channel: "DevicesChannel" });

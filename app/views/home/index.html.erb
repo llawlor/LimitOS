@@ -23,7 +23,7 @@ homepage
     });
 
     // subscribe to 'X'
-    App.cable.subscriptions.create('DeviceChannel', {
+    App.cable.subscriptions.create('DevicesChannel', {
       // when data is received
       received: function(data) {
         // log the data
