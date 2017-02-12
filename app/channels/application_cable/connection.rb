@@ -6,7 +6,7 @@ module ApplicationCable
     # connect method which will be called by each actioncable connection
     def connect
       # set the api_key attribute
-      self.api_key = "XXXXXXXXXXXXXXXXXXXXX"
+      self.api_key = "X"
     end
   end
 end

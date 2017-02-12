@@ -1,3 +1,24 @@
 <h1>LimitOS</h1>
 
 homepage
+
+<br><br>
+
+<button id="on_button">On</button>
+<button id="off_button">Off</button>
+
+<script>
+  $(document).ready(function() {
+
+    $('#on_button').click(function() {
+      console.log('on button clicked');
+      $.get('/on');
+    });
+
+    $('#off_button').click(function() {
+      console.log('off button clicked');
+      $.get('/off');
+    });
+
+  });
+</script>
