@@ -15,5 +15,8 @@ module LimitOS
     # don't add assets and helpers when using 'rails generate'
     config.generators.assets = false
     config.generators.helper = false
+
+    # allow requests from any origin
+    config.action_cable.disable_request_forgery_protection = true
   end
 end
