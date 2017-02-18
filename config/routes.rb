@@ -3,7 +3,10 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
-  get '/on', to: "home#on"
-  get '/off', to: "home#off"
+  resources :devices do
+    collection do
+      post :send_message
+    end
+  end
 
 end

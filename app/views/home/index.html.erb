@@ -17,13 +17,13 @@ Status: <span id="device_status"></span>
     // when the on button is clicked
     $('#on_button').click(function() {
       console.log('on button clicked');
-      $.get('/on');
+      $.post('/devices/send_message', { message: 'on' });
     });
 
     // when the off button is clicked
     $('#off_button').click(function() {
       console.log('off button clicked');
-      $.get('/off');
+      $.post('/devices/send_message', { message: 'off' });
     });
 
     // subscribe to 'X'
