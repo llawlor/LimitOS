@@ -11,19 +11,33 @@ homepage
 
 Status: <span id="device_status"></span>
 
+<br><br>
+
+<form id="servo_form">
+  <input id="servo_input" placeholder="Servo position"></input>
+  <button id="servo_button">Submit</button>
+</form>
+
 <script>
   $(document).ready(function() {
 
     // when the on button is clicked
     $('#on_button').click(function() {
       console.log('on button clicked');
-      $.post('/devices/send_message', { message: 'on' });
+      $.post('/devices/send_message', { message: { value: 'on' } });
     });
 
     // when the off button is clicked
     $('#off_button').click(function() {
       console.log('off button clicked');
-      $.post('/devices/send_message', { message: 'off' });
+      $.post('/devices/send_message', { message: { value: 'off' } });
+    });
+
+    // when the servo form is submitted
+    $('#servo_form').submit(function() {
+      sendServoMessage();
+      // don't reload the page
+      return false;
     });
 
     // subscribe to 'X'
@@ -33,9 +47,16 @@ Status: <span id="device_status"></span>
         // log the data
         console.log(data);
         // update the status
-        $('#device_status').text(data.my_message);
+        $('#device_status').text(JSON.stringify(data));
       }
     });
 
   });
+
+  // send servo position
+  function sendServoMessage() {
+    $.post('/devices/send_message', {
+      message: { servo: $('#servo_input').val() }
+    });
+  }
 </script>
