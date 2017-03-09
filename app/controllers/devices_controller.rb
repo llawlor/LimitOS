@@ -6,7 +6,7 @@ class DevicesController < ApplicationController
     # broadcast to "device:X"
     DevicesChannel.broadcast_to(
       'X',
-      params[:message]
+      params[:message].merge({ time: (Time.now.to_f * 1000).to_i })
     )
     head :ok
   end
