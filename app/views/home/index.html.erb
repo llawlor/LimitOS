@@ -23,7 +23,7 @@ Status: <span id="device_status"></span>
 <%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/css/bootstrap-slider.min.css' %>
 <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/bootstrap-slider.min.js' %>
 
-<input id="servo_slider" data-slider-id='servo_slider' type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
+<input id="servo_slider" data-slider-id='servo_slider' type="text" data-slider-min="40" data-slider-max="120" data-slider-step="1" data-slider-value="0" />
 
 <style>
   #servo_slider .slider-selection { background: #BABABA; }
@@ -39,6 +39,17 @@ Status: <span id="device_status"></span>
 
   // when the document is ready
   $(document).ready(function() {
+
+    // when the slider is moved
+    slider.on('slide', function() {
+      // get the slider value
+      var value = slider.getValue();
+      console.log(value);
+      // send the value
+      $.post('/devices/send_message', {
+        message: { servo: value }
+      });
+    });
 
     // when the on button is clicked
     $('#on_button').click(function() {
