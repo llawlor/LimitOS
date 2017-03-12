@@ -7,6 +7,7 @@ end
 
 gem 'rails', '~> 5.0.1'
 gem 'mysql2'
+gem 'redis'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Use Uglifier as compressor for JavaScript assets
