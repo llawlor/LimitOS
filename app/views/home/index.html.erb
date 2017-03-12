@@ -44,7 +44,6 @@ Status: <span id="device_status"></span>
     slider.on('slide', function() {
       // get the slider value
       var value = slider.getValue();
-      console.log(value);
       // send the value
       $.post('/devices/send_message', {
         message: { servo: value }
