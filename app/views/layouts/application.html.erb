@@ -52,6 +52,15 @@
             <li><%= link_to "Link2", "/path2"  %></li>
             <li><%= link_to "Link3", "/path3"  %></li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <% if current_user.present? %>
+                Account
+              <% else %>
+                <%= link_to 'Sign In', new_user_session_path %>
+              <% end %>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
