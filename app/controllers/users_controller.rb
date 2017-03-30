@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
-  def show
-    render text: 'account page'
+
+  def account
+    @user = current_user
   end
+
 end
