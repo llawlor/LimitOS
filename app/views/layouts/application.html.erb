@@ -53,13 +53,13 @@
             <li><%= link_to "Link3", "/path3"  %></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li>
-              <% if current_user.present? %>
-                Account
-              <% else %>
-                <%= link_to 'Sign In', new_user_session_path %>
-              <% end %>
-            </li>
+            <% if current_user.present? %>
+              <li><%= link_to 'My Account', user_path(current_user) %></li>
+              <li><%= link_to 'Sign Out', destroy_user_session_path %></li>
+            <% else %>
+              <li><%= link_to 'Sign In', new_user_session_path %></li>
+              <li><%= link_to 'Sign Up', new_user_registration_path %></li>
+            <% end %>
           </ul>
         </div>
       </div>
