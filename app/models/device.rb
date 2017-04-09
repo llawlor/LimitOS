@@ -14,7 +14,7 @@
 # device_type can be 'raspberry_pi' or 'arduino'
 class Device < ApplicationRecord
   belongs_to :user
-  belongs_to :device
+  belongs_to :device, optional: true
   has_many :devices
 
 end
