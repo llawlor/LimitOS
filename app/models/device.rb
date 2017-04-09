@@ -11,5 +11,10 @@
 #  updated_at  :datetime         not null
 #
 
+# device_type can be 'raspberry_pi' or 'arduino'
 class Device < ApplicationRecord
+  belongs_to :user
+  belongs_to :device
+  has_many :devices
+
 end

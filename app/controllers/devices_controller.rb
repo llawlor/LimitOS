@@ -11,4 +11,14 @@ class DevicesController < ApplicationController
     head :ok
   end
 
+  # list all devices
+  def index
+    @devices = current_user.devices
+  end
+
+  # new device form
+  def new
+
+  end
+
 end
