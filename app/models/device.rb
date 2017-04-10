@@ -17,4 +17,7 @@ class Device < ApplicationRecord
   belongs_to :device, optional: true
   has_many :devices
 
+  # options for device type
+  DEVICE_TYPES = ['raspberry_pi', 'arduino']
+
 end
