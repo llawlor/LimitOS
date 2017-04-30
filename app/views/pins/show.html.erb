@@ -1,0 +1,29 @@
+<%- model_class = Pin -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:device_id) %>:</strong></dt>
+  <dd><%= @pin.device_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dd><%= @pin.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:pin_type) %>:</strong></dt>
+  <dd><%= @pin.pin_type %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:pin_number) %>:</strong></dt>
+  <dd><%= @pin.pin_number %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:min) %>:</strong></dt>
+  <dd><%= @pin.min %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:max) %>:</strong></dt>
+  <dd><%= @pin.max %></dd>
+</dl>
+
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              pins_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_pin_path(@pin), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              pin_path(@pin),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
