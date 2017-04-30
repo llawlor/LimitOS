@@ -1,4 +1,6 @@
-<%= form_for @pin, :html => { :class => "form-horizontal pin" } do |f| %>
+<%= form_for [@device, @pin], :html => { :class => "form-horizontal pin" } do |f| %>
+
+  <%= hidden_field_tag :device_id, value: @device.id %>
 
   <% if @pin.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
@@ -16,13 +18,6 @@
   <% end %>
 
   <div class="form-group">
-    <%= f.label :device_id, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
-      <%= f.text_field :device_id, :class => 'form-control' %>
-    </div>
-    <%=f.error_span(:device_id) %>
-  </div>
-  <div class="form-group">
     <%= f.label :name, :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
       <%= f.text_field :name, :class => 'form-control' %>
@@ -31,8 +26,8 @@
   </div>
   <div class="form-group">
     <%= f.label :pin_type, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
-      <%= f.text_field :pin_type, :class => 'form-control' %>
+    <div class="col-lg-6">
+      <%= f.select :pin_type, Pin::PIN_TYPES, { include_blank: true }, { class: 'form-control' } %>
     </div>
     <%=f.error_span(:pin_type) %>
   </div>
@@ -62,7 +57,7 @@
     <div class="col-lg-offset-2 col-lg-10">
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                pins_path, :class => 'btn btn-default' %>
+                device_path(@device), :class => 'btn btn-default' %>
     </div>
   </div>
 

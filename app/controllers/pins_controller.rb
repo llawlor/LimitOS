@@ -1,35 +1,24 @@
 class PinsController < ApplicationController
+  before_action :set_device
   before_action :set_pin, only: [:show, :edit, :update, :destroy]
 
-  # GET /pins
-  # GET /pins.json
-  def index
-    @pins = Pin.all
-  end
-
-  # GET /pins/1
-  # GET /pins/1.json
-  def show
-  end
-
-  # GET /pins/new
+  # new pin
   def new
     @pin = Pin.new
   end
 
-  # GET /pins/1/edit
+  # edit a pin
   def edit
   end
 
-  # POST /pins
-  # POST /pins.json
+  # create the pin
   def create
-    @pin = Pin.new(pin_params)
+    @pin = @device.pins.new(pin_params)
 
     respond_to do |format|
       if @pin.save
-        format.html { redirect_to @pin, notice: 'Pin was successfully created.' }
-        format.json { render :show, status: :created, location: @pin }
+        format.html { redirect_to @device, notice: 'Pin was successfully created.' }
+        format.json { render :show, status: :created, location: @device }
       else
         format.html { render :new }
         format.json { render json: @pin.errors, status: :unprocessable_entity }
@@ -37,8 +26,7 @@ class PinsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /pins/1
-  # PATCH/PUT /pins/1.json
+  # update a pin
   def update
     respond_to do |format|
       if @pin.update(pin_params)
@@ -51,8 +39,7 @@ class PinsController < ApplicationController
     end
   end
 
-  # DELETE /pins/1
-  # DELETE /pins/1.json
+  # delete a pin
   def destroy
     @pin.destroy
     respond_to do |format|
@@ -63,8 +50,12 @@ class PinsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def set_device
+      @device = current_user.devices.find(params[:device_id])
+    end
+
     def set_pin
-      @pin = Pin.find(params[:id])
+      @pin = @device.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

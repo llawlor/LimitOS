@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :pins
   root 'home#index'
 
   devise_for :users
@@ -11,6 +10,7 @@ Rails.application.routes.draw do
     collection do
       post :send_message
     end
+    resources :pins
   end
 
 end
