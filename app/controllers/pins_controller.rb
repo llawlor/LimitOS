@@ -15,37 +15,26 @@ class PinsController < ApplicationController
   def create
     @pin = @device.pins.new(pin_params)
 
-    respond_to do |format|
-      if @pin.save
-        format.html { redirect_to @device, notice: 'Pin was successfully created.' }
-        format.json { render :show, status: :created, location: @device }
-      else
-        format.html { render :new }
-        format.json { render json: @pin.errors, status: :unprocessable_entity }
-      end
+    if @pin.save
+      redirect_to @device, notice: 'Pin was successfully created.'
+    else
+      frender :new
     end
   end
 
   # update a pin
   def update
-    respond_to do |format|
-      if @pin.update(pin_params)
-        format.html { redirect_to @pin, notice: 'Pin was successfully updated.' }
-        format.json { render :show, status: :ok, location: @pin }
-      else
-        format.html { render :edit }
-        format.json { render json: @pin.errors, status: :unprocessable_entity }
-      end
+    if @pin.update(pin_params)
+      redirect_to @device, notice: 'Pin was successfully updated.'
+    else
+      render :edit
     end
   end
 
   # delete a pin
   def destroy
     @pin.destroy
-    respond_to do |format|
-      format.html { redirect_to pins_url, notice: 'Pin was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to pins_url, notice: 'Pin was successfully destroyed.'
   end
 
   private
@@ -55,7 +44,7 @@ class PinsController < ApplicationController
     end
 
     def set_pin
-      @pin = @device.find(params[:id])
+      @pin = @device.pins.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

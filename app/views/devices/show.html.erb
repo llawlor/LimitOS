@@ -19,6 +19,7 @@
 <h3>Pins</h3>
 <% @device.pins.each do |pin| %>
   <%= pin.to_json %>
+  <%= link_to 'Edit Pin', edit_device_pin_path(@device, pin), class: 'btn btn-primary' %>
 <% end %>
 
 <br><br>
