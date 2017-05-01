@@ -14,7 +14,7 @@
   <tbody>
     <% @devices.each do |device| %>
       <tr>
-        <td><%= device.name %></td>
+        <td><%= link_to device.name, device_path(device) %></td>
         <td><%= device.device_type %></td>
         <td><%=l device.created_at %></td>
         <td>
