@@ -34,7 +34,7 @@ class PinsController < ApplicationController
   # delete a pin
   def destroy
     @pin.destroy
-    redirect_to pins_url, notice: 'Pin was successfully destroyed.'
+    redirect_to @device, notice: 'Pin was successfully destroyed.'
   end
 
   private

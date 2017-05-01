@@ -22,27 +22,32 @@
 <br><br>
 
 <h3>Pins</h3>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Pin Number</th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Minimum Value</th>
-      <th>Maximum Value</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <% @device.pins.each do |pin| %>
-    <tr>
-      <td><%= pin.pin_number %></td>
-      <td><%= pin.name %></td>
-      <td><%= pin.pin_type %></td>
-      <td><%= pin.min %></td>
-      <td><%= pin.max %></td>
-      <td><%= link_to 'Edit Pin', edit_device_pin_path(@device, pin), class: 'btn btn-sm btn-default' %></td>
-    </tr>
-  <% end %>
-</table>
+<% if @device.pins.present? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Pin Number</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Minimum Value</th>
+        <th>Maximum Value</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <% @device.pins.each do |pin| %>
+      <tr>
+        <td><%= pin.pin_number %></td>
+        <td><%= pin.name %></td>
+        <td><%= pin.pin_type %></td>
+        <td><%= pin.min %></td>
+        <td><%= pin.max %></td>
+        <td>
+          <%= link_to 'Edit Pin', edit_device_pin_path(@device, pin), class: 'btn btn-sm btn-default' %>
+          <%= link_to 'Remove Pin', device_pin_path(@device, pin), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
 
 <%= link_to 'Add New Pin', new_device_pin_path(@device), class: 'btn btn-primary' %>
