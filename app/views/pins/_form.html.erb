@@ -1,6 +1,6 @@
 <%= form_for [@device, @pin], :html => { :class => "form-horizontal pin" } do |f| %>
 
-  <%= hidden_field_tag :device_id, value: @device.id %>
+  <%= hidden_field_tag :device_id, @device.id %>
 
   <% if @pin.errors.any? %>
     <div id="error_expl" class="panel panel-danger">

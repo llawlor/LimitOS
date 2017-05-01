@@ -19,11 +19,16 @@ class DevicesController < ApplicationController
 
   # show a particular device
   def show
+    @parent_device = current_user.devices.find(@device.device_id) if @device.device_id.present?
   end
 
   # new device
   def new
+    # default new device
     @device = Device.new
+
+    # if this is a connected device
+    @parent_device = current_user.devices.find(params[:device_id]) if params[:device_id].present?
   end
 
   # edit a device
@@ -33,6 +38,11 @@ class DevicesController < ApplicationController
   # create a device
   def create
     @device = current_user.devices.new(device_params)
+    # add the parent device if it exists
+    if params[:parent_device_id].present?
+      @parent_device = current_user.devices.find(params[:parent_device_id] )
+      @device.device_id = @parent_device.id
+    end
 
     if @device.save
       redirect_to @device, notice: 'Device was successfully created.'

@@ -8,10 +8,15 @@
   <dd><%= @device.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:device_type) %>:</strong></dt>
   <dd><%= @device.device_type %></dd>
+  <% if @parent_device.present? %>
+    <dt><strong>Parent Device:</strong></dt>
+    <dd><%= link_to @parent_device.name, @parent_device %></dd>
+  <% end %>
 </dl>
 
 <br>
 
+<%= link_to 'Add Connected I2C Device', new_device_path(device_id: @device), class: 'btn btn-default' %>
 <%= link_to 'Edit Device', edit_device_path(@device), :class => 'btn btn-default' %>
 <%= link_to 'Delete Device',
               device_path(@device),
@@ -50,4 +55,4 @@
   </table>
 <% end %>
 
-<%= link_to 'Add New Pin', new_device_pin_path(@device), class: 'btn btn-primary' %>
+<%= link_to 'Add New Pin', new_device_pin_path(@device), class: 'btn btn-default' %>

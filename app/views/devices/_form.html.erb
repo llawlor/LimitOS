@@ -1,5 +1,7 @@
 <%= form_for @device, :html => { :class => "form-horizontal device" } do |f| %>
 
+  <%= hidden_field_tag :parent_device_id, @parent_device.id %>
+
   <% if @device.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
