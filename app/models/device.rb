@@ -13,6 +13,8 @@
 
 # device_type can be 'raspberry_pi' or 'arduino'
 class Device < ApplicationRecord
+  validates_presence_of :name, :device_type, :user_id
+  
   belongs_to :user
   belongs_to :device, optional: true
   has_many :devices
