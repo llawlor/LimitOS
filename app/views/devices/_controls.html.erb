@@ -1,27 +1,32 @@
-<button id="on_button">On</button>
-<button id="off_button">Off</button>
-
-<br><br>
+<%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/css/bootstrap-slider.min.css' %>
+<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/bootstrap-slider.min.js' %>
 
 Status: <span id="device_status"></span>
 
 <br><br>
 
-<form id="servo_form">
-  <input id="servo_input" placeholder="Servo position"></input>
-  <button id="servo_button">Submit</button>
-</form>
+<% @device.pins.where(pin_type: 'digital').order("pin_number asc").each do |pin| %>
+  <div class="well">
+    <%= pin.name %> (pin number: <%= pin.pin_number %>)
+    <button class="on_button">On</button>
+    <button class="off_button">Off</button>
+    <br>
+  </div>
+<% end %>
 
-<br><br>
+<br>
 
-<%= stylesheet_link_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/css/bootstrap-slider.min.css' %>
-<%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/bootstrap-slider.min.js' %>
-
-<input id="servo_slider" data-slider-id='servo_slider' type="text" data-slider-min="40" data-slider-max="120" data-slider-step="1" data-slider-value="0" />
-
-<style>
-  #servo_slider .slider-selection { background: #BABABA; }
-</style>
+<% @device.pins.where(pin_type: 'servo').order("pin_number asc").each do |pin| %>
+  <div class="well">
+    <%= pin.name %> (pin number: <%= pin.pin_number %>)
+    <form id="servo_form">
+      <input id="servo_input" placeholder="Servo position"></input>
+      <button id="servo_button">Submit</button>
+      <br><br>
+      <input id="servo_slider" data-slider-id='servo_slider' type="text" data-slider-min="40" data-slider-max="120" data-slider-step="1" data-slider-value="0" />
+    </form>
+  </div>
+<% end %>
 
 <script>
   // initialize slider
@@ -45,13 +50,13 @@ Status: <span id="device_status"></span>
     });
 
     // when the on button is clicked
-    $('#on_button').click(function() {
+    $('.on_button').click(function() {
       console.log('on button clicked');
       $.post('/devices/send_message', { message: { value: 'on' } });
     });
 
     // when the off button is clicked
-    $('#off_button').click(function() {
+    $('.off_button').click(function() {
       console.log('off button clicked');
       $.post('/devices/send_message', { message: { value: 'off' } });
     });
