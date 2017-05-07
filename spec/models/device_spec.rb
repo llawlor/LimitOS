@@ -17,12 +17,13 @@ RSpec.describe Device, type: :model do
 
   # lazy loaded variables
   let(:user) { FactoryGirl.create(:user) }
-  let(:device) { FactoryGirl.build(:device) }
+  let(:device) { FactoryGirl.build(:device, user: user) }
 
   describe 'validations' do
     it 'should be valid' do
       expect(device).to be_valid
       expect(device.name).to_not be_blank
+      expect(device.user_id).to eq(user.id)
     end
 
     it 'should be invalid if name is nil' do
