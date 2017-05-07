@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :device do
-    name 'my_device'
+    sequence(:name) { |n| "my_device_#{n}" }
     device_type 'raspberry_pi'
     association :user
   end
