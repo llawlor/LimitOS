@@ -17,7 +17,7 @@ RSpec.describe Device, type: :model do
 
   # lazy loaded variables
   let(:user) { FactoryGirl.create(:user) }
-  let(:device) { FactoryGirl.build(:device, user: user) }
+  let(:device) { FactoryGirl.build(:device) }
 
   describe 'validations' do
     it 'should be valid' do
@@ -47,6 +47,13 @@ RSpec.describe Device, type: :model do
       device.user = nil
       expect(device).to_not be_valid
       expect(device.errors.full_messages).to eq(["User can't be blank", "User must exist"])
+    end
+  end
+
+  describe '#parent_device' do
+    it 'gets the parent device' do
+      device2 = FactoryGirl.create(:device, device: device)
+      expect(device2.parent_device).to eq(device)
     end
   end
 end
