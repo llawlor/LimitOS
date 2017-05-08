@@ -56,14 +56,7 @@ RSpec.describe "Devices", type: :request do
     end
   end
 
-  describe '#show' do
-    it 'shows a device if it belongs to the user' do
-      sign_in user
-      get device_url(device)
-      expect(response.status).to eq(200)
-      expect(response.body).to include(device.name)
-    end
-
+  describe 'not my device' do
     it "doesn't show a device if it doesn't belong to the user" do
       sign_in user2
       expect {
