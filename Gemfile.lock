@@ -49,6 +49,14 @@ GEM
       i18n
       rake (>= 10.0.0)
       sshkit (>= 1.9.0)
+    capistrano-bundler (1.2.0)
+      capistrano (~> 3.1)
+      sshkit (~> 1.2)
+    capistrano-passenger (0.2.0)
+      capistrano (~> 3.0)
+    capistrano-rails (1.2.3)
+      capistrano (~> 3.1)
+      capistrano-bundler (~> 1.1)
     coderay (1.1.1)
     commonjs (0.2.7)
     concurrent-ruby (1.0.4)
@@ -242,6 +250,9 @@ PLATFORMS
 DEPENDENCIES
   byebug
   capistrano (~> 3.8)
+  capistrano-bundler
+  capistrano-passenger
+  capistrano-rails
   devise
   devise-bootstrap-views
   factory_girl_rails
