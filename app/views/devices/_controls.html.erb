@@ -19,9 +19,9 @@ Status: <span id="device_status"></span>
 <% @device.pins.where(pin_type: 'servo').order("pin_number asc").each do |pin| %>
   <div class="well">
     <%= pin.name %> (pin number: <%= pin.pin_number %>)
-    <form id="servo_form">
-      <input id="servo_input" placeholder="Servo position"></input>
-      <button id="servo_button">Submit</button>
+    <form id="servo_form_<%= pin.pin_number %>">
+      <input id="servo_input_<%= pin.pin_number %>" placeholder="Servo position"></input>
+      <button id="servo_button_<%= pin.pin_number %>">Submit</button>
       <br><br>
       <input id="slider_<%= pin.pin_number %>" data-slider-id='servo_slider' type="text" data-slider-min="0" data-slider-max="90" data-slider-step="1" data-slider-value="0" />
     </form>
@@ -52,8 +52,15 @@ Status: <span id="device_status"></span>
         var value = slider_<%= pin.pin_number %>.getValue();
         // send the value
         $.post('/devices/send_message', {
-          message: { servo: value }
+          message: { pin: <%= pin.pin_number %>, servo: value }
         });
+      });
+
+      // when the servo form is submitted
+      $('#servo_form_<%= pin.pin_number %>').submit(function() {
+        sendServoMessage(<%= pin.pin_number %>);
+        // don't reload the page
+        return false;
       });
     <% end %>
 
@@ -67,13 +74,6 @@ Status: <span id="device_status"></span>
     $('.off_button').click(function() {
       console.log('off button clicked');
       $.post('/devices/send_message', { message: { value: 'off' } });
-    });
-
-    // when the servo form is submitted
-    $('#servo_form').submit(function() {
-      sendServoMessage();
-      // don't reload the page
-      return false;
     });
 
     // subscribe to 'X'
@@ -90,9 +90,9 @@ Status: <span id="device_status"></span>
   });
 
   // send servo position
-  function sendServoMessage() {
+  function sendServoMessage(pin_number) {
     $.post('/devices/send_message', {
-      message: { servo: $('#servo_input').val() }
+      message: { pin: pin_number, servo: $('#servo_input_' + pin_number).val() }
     });
   }
 </script>
