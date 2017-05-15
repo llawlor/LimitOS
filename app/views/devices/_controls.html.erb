@@ -23,31 +23,39 @@ Status: <span id="device_status"></span>
       <input id="servo_input" placeholder="Servo position"></input>
       <button id="servo_button">Submit</button>
       <br><br>
-      <input id="servo_slider" data-slider-id='servo_slider' type="text" data-slider-min="40" data-slider-max="120" data-slider-step="1" data-slider-value="0" />
+      <input id="slider_<%= pin.pin_number %>" data-slider-id='servo_slider' type="text" data-slider-min="0" data-slider-max="90" data-slider-step="1" data-slider-value="0" />
     </form>
   </div>
 <% end %>
 
 <script>
-  // initialize slider
-  var slider = new Slider('#servo_slider', {
-  	formatter: function(value) {
-  		return 'Current value: ' + value;
-  	}
-  });
+
+  <% @device.pins.where(pin_type: 'servo').each do |pin| %>
+    // initialize this slider
+    var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {
+      formatter: sliderFormatter
+    });
+  <% end %>
+
+  // format slider tooltip
+  function sliderFormatter(value) {
+    return 'Current value: ' + value;
+  }
 
   // when the document is ready
   $(document).ready(function() {
 
-    // when the slider is moved
-    slider.on('slide', function() {
-      // get the slider value
-      var value = slider.getValue();
-      // send the value
-      $.post('/devices/send_message', {
-        message: { servo: value }
+    <% @device.pins.where(pin_type: 'servo').each do |pin| %>
+      // when the slider is moved
+      slider_<%= pin.pin_number %>.on('slide', function() {
+        // get the slider value
+        var value = slider_<%= pin.pin_number %>.getValue();
+        // send the value
+        $.post('/devices/send_message', {
+          message: { servo: value }
+        });
       });
-    });
+    <% end %>
 
     // when the on button is clicked
     $('.on_button').click(function() {
