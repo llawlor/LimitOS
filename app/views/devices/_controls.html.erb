@@ -44,7 +44,7 @@ Status: <span id="device_status"></span>
 
     <% @device.pins.where(pin_type: 'servo').each do |pin| %>
       // when the slider is moved
-      slider_<%= pin.pin_number %>.on('slide', function() {
+      slider_<%= pin.pin_number %>.on('change', function() {
         // get the slider value
         var value = slider_<%= pin.pin_number %>.getValue();
         // send the value
