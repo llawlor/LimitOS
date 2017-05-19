@@ -17,13 +17,16 @@ Status: <span id="device_status"></span>
   <div class="well">
     <%= pin.name %> (pin number: <%= pin.pin_number %>)
     <form id="servo_form_<%= pin.pin_number %>">
-      <input id="servo_input_<%= pin.pin_number %>" placeholder="Servo position"></input>
-      <button id="servo_button_<%= pin.pin_number %>">Submit</button>
+      <input id="servo_input_<%= pin.pin_number %>" class="servo_position" placeholder="Servo position"></input>
+      <button id="servo_button_<%= pin.pin_number %>" class="servo_submit">Submit</button>
       <br><br>
       <input id="slider_<%= pin.pin_number %>" data-slider-id='servo_slider' type="text" data-slider-min="0" data-slider-max="90" data-slider-step="1" data-slider-value="0" />
     </form>
   </div>
 <% end %>
+
+<button id="servos_to_0">All Servos To: 0</button>
+<button id="servos_to_90">All Servos To: 90</button>
 
 <script>
 
@@ -71,6 +74,18 @@ Status: <span id="device_status"></span>
     $('.off_button').click(function() {
       console.log('off button clicked');
       $.post('/devices/send_message', { message: { value: 'off' } });
+    });
+
+    // when the 'servos to 0' button is clicked, set all servos to 0
+    $('#servos_to_0').click(function() {
+      $('.servo_position').val(0);
+      $('.servo_submit').click();
+    });
+
+    // when the 'servos to 90' button is clicked, set all servos to 90
+    $('#servos_to_90').click(function() {
+      $('.servo_position').val(90);
+      $('.servo_submit').click();
     });
 
     // subscribe to 'X'
