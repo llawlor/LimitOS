@@ -27,6 +27,7 @@ Status: <span id="device_status"></span>
 
 <button id="servos_to_0">All Servos To: 0</button>
 <button id="servos_to_90">All Servos To: 90</button>
+<button id="wiggle_3">Wiggle Pin 3</button>
 
 <script>
 
@@ -74,6 +75,20 @@ Status: <span id="device_status"></span>
     $('.off_button').click(function() {
       console.log('off button clicked');
       $.post('/devices/send_message', { message: { value: 'off' } });
+    });
+
+    // when the wiggle pin 3 button is clicked
+    $('#wiggle_3').click(function() {
+      if ($('#servo_input_3').val() === "90") {
+        $('#servo_input_3').val(0);
+        $('#servo_button_3').click();
+      } else {
+        $('#servo_input_3').val(90);
+        $('#servo_button_3').click();
+      }
+      setTimeout(function() {
+        $('#wiggle_3').click();
+      }, 700);
     });
 
     // variable to hold the message delay in milliseconds, so that messages aren't sent simultaneously
