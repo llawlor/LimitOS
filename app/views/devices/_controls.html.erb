@@ -20,7 +20,7 @@ Status: <span id="device_status"></span>
       <input id="servo_input_<%= pin.pin_number %>" class="servo_position" placeholder="Servo position"></input>
       <button id="servo_button_<%= pin.pin_number %>" class="servo_submit">Submit</button>
       <br><br>
-      <input id="slider_<%= pin.pin_number %>" data-slider-id='servo_slider' type="text" data-slider-min="0" data-slider-max="90" data-slider-step="1" data-slider-value="0" />
+      <input id="slider_<%= pin.pin_number %>" data-slider-id='servo_slider' type="text" data-slider-min="<%= pin.min || 0 %>" data-slider-max="<%= pin.max || 90 %>" data-slider-step="1" data-slider-value="<%= pin.min || 0 %>" />
     </form>
   </div>
 <% end %>
