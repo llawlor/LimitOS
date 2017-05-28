@@ -91,47 +91,16 @@ Status: <span id="device_status"></span>
       }, 700);
     });
 
-    // variable to hold the message delay in milliseconds, so that messages aren't sent simultaneously
-    var message_delay = 0;
-
     // when the 'servos to 0' button is clicked, set all servos to 0
     $('#servos_to_0').click(function() {
       $('.servo_position').val(0);
-      // reset the message delay
-      message_delay = 0;
-
-      // for each servo_submit button
-      $('.servo_submit').each(function() {
-        // keep track of this button
-        var $servo_submit = $(this);
-        // set a timeout to click the button
-        setTimeout(function() {
-          $servo_submit.click();
-        }, message_delay);
-        // increase the delay variable
-        message_delay += 100;
-      });
-
+      $('.servo_submit').click();
     });
 
     // when the 'servos to 90' button is clicked, set all servos to 90
     $('#servos_to_90').click(function() {
       $('.servo_position').val(90);
-      // reset the message delay
-      message_delay = 0;
-
-      // for each servo_submit button
-      $('.servo_submit').each(function() {
-        // keep track of this button
-        var $servo_submit = $(this);
-        // set a timeout to click the button
-        setTimeout(function() {
-          $servo_submit.click();
-        }, message_delay);
-        // increase the delay variable
-        message_delay += 100;
-      });
-
+      $('.servo_submit').click();
     });
 
     // subscribe to 'X'
