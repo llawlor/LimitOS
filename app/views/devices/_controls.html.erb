@@ -5,9 +5,8 @@ Status: <span id="device_status"></span>
 <% @device.pins.where(pin_type: 'digital').order("pin_number asc").each do |pin| %>
   <div class="well">
     <%= pin.name %> (pin number: <%= pin.pin_number %>)
-    <button class="on_button">On</button>
-    <button class="off_button">Off</button>
-    <br>
+    <button data-pin="<%= pin.pin_number %>" data-digital="on" class="digital_submit">On</button>
+    <button data-pin="<%= pin.pin_number %>" data-digital="off" class="digital_submit">Off</button>
   </div>
 <% end %>
 
@@ -64,16 +63,13 @@ Status: <span id="device_status"></span>
       });
     <% end %>
 
-    // when the on button is clicked
-    $('.on_button').click(function() {
-      console.log('on button clicked');
-      $.post('/devices/send_message', { message: { value: 'on' } });
-    });
-
-    // when the off button is clicked
-    $('.off_button').click(function() {
-      console.log('off button clicked');
-      $.post('/devices/send_message', { message: { value: 'off' } });
+    // when the digital on/off button is clicked
+    $('.digital_submit').click(function() {
+      $.post('/devices/send_message', {
+        message: { pin: $(this).data('pin'), digital: $(this).data('digital') }
+      });
+      // don't reload the page
+      return false;
     });
 
     // when the 'servos to 0' button is clicked, set all servos to 0
