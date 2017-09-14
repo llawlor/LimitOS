@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
 
   # check if the date is past a certain date, and prevent the application from starting if it is
   def date_check
-    render text: 'error' and return if (Time.now > Date.parse('2017-07-18'))
+    render text: 'error' and return if (Time.now > Date.parse('2017-09-22'))
   end
 
 end
