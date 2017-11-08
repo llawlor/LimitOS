@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :users
 
   resources :devices do
-    collection do
+    member do
       post :send_message
     end
     resources :pins

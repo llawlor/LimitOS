@@ -50,7 +50,7 @@ Status: <span id="device_status"></span>
         // get the slider value
         var value = slider_<%= pin.pin_number %>.getValue();
         // send the value
-        $.post('/devices/send_message', {
+        $.post('/devices/<%= @device.id %>/send_message', {
           message: { pin: <%= pin.pin_number %>, servo: value }
         });
       });
@@ -65,7 +65,7 @@ Status: <span id="device_status"></span>
 
     // when the digital on/off button is clicked
     $('.digital_submit').click(function() {
-      $.post('/devices/send_message', {
+      $.post('/devices/<%= @device.id %>/send_message', {
         message: { pin: $(this).data('pin'), digital: $(this).data('digital') }
       });
       // don't reload the page
@@ -84,22 +84,28 @@ Status: <span id="device_status"></span>
       $('.servo_submit').click();
     });
 
-    // subscribe to 'X'
-    App.cable.subscriptions.create('DevicesChannel', {
-      // when data is received
-      received: function(data) {
-        // log the data
-        console.log(data);
-        // update the status
-        $('#device_status').text(JSON.stringify(data));
+    // subscribe to the correct device channel
+    App.cable.subscriptions.create(
+      {
+        channel: 'DevicesChannel',
+        id: <%= @device.id %>
+      },
+      {
+        // when data is received
+        received: function(data) {
+          // log the data
+          console.log(data);
+          // update the status
+          $('#device_status').text(JSON.stringify(data));
+        }
       }
-    });
+    );
 
   });
 
   // send servo position
   function sendServoMessage(pin_number) {
-    $.post('/devices/send_message', {
+    $.post('/devices/<%= @device.id %>/send_message', {
       message: { pin: pin_number, servo: $('#servo_input_' + pin_number).val() }
     });
   }

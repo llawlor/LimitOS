@@ -2,7 +2,13 @@ class DevicesChannel < ApplicationCable::Channel
 
   # called when someone subscribes to the device channel
   def subscribed
-    # name of stream
-    stream_from "devices:X"
+    # if no id, then just return true
+    return true if params[:id].blank?
+
+    # get the device
+    device = Device.find(params[:id])
+    # set the stream name
+    stream_from "devices:#{device.id}"
+
   end
 end
