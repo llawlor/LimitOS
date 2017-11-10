@@ -9,6 +9,7 @@
 #  device_type :string(255)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  auth_token  :string(24)
 #
 
 # device_type can be 'raspberry_pi' or 'arduino'
