@@ -8,6 +8,8 @@
   <dd><%= @device.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:device_type) %>:</strong></dt>
   <dd><%= @device.device_type %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:auth_token) %>:</strong></dt>
+  <dd><%= @device.auth_token %></dd>
 
   <% if @device.parent_device.present? %>
     <dt><strong>Parent Device:</strong></dt>
