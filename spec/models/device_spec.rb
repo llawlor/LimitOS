@@ -27,6 +27,12 @@ RSpec.describe Device, type: :model do
       expect(device.user_id).to eq(user.id)
     end
 
+    it 'should set the auth_token automatically' do
+      expect(device.auth_token).to eq(nil)
+      device.save
+      expect(device.auth_token.length).to eq(24)
+    end
+
     it 'should be invalid if name is nil' do
       device.name = nil
       expect(device).to_not be_valid
