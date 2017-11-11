@@ -6,11 +6,17 @@ class DevicesController < ApplicationController
   def send_message
     # get the device
     device = Device.find(params[:id])
-    # broadcast to "device:X"
-    DevicesChannel.broadcast_to(
-      device.id,
-      params[:message].merge({ time: (Time.now.to_f * 1000).to_i })
-    )
+
+    # if the auth_token matches
+    if Devise.secure_compare(device.auth_token, params[:auth_token])
+      # broadcast to "device:X"
+      DevicesChannel.broadcast_to(
+        device.id,
+        params[:message].merge({ time: (Time.now.to_f * 1000).to_i })
+      )
+    end
+
+    # blank response
     head :ok
   end
 

@@ -51,6 +51,7 @@ Status: <span id="device_status"></span>
         var value = slider_<%= pin.pin_number %>.getValue();
         // send the value
         $.post('/devices/<%= @device.id %>/send_message', {
+          auth_token: '<%= @device.auth_token %>',
           message: { pin: <%= pin.pin_number %>, servo: value }
         });
       });
@@ -66,6 +67,7 @@ Status: <span id="device_status"></span>
     // when the digital on/off button is clicked
     $('.digital_submit').click(function() {
       $.post('/devices/<%= @device.id %>/send_message', {
+        auth_token: '<%= @device.auth_token %>',
         message: { pin: $(this).data('pin'), digital: $(this).data('digital') }
       });
       // don't reload the page
@@ -107,6 +109,7 @@ Status: <span id="device_status"></span>
   // send servo position
   function sendServoMessage(pin_number) {
     $.post('/devices/<%= @device.id %>/send_message', {
+      auth_token: '<%= @device.auth_token %>',
       message: { pin: pin_number, servo: $('#servo_input_' + pin_number).val() }
     });
   }

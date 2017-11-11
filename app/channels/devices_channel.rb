@@ -7,8 +7,8 @@ class DevicesChannel < ApplicationCable::Channel
 
     # get the device
     device = Device.find(params[:id])
-    # set the stream name
-    stream_from "devices:#{device.id}" if Devise.secure_compare(device.auth_token, params[:auth_token])
 
+    # stream only if the auth_token matches
+    stream_from "devices:#{device.id}" if Devise.secure_compare(device.auth_token, params[:auth_token])
   end
 end
