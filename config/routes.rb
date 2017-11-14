@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :devices do
     member do
       post :send_message
+      get :nodejs_script
     end
     resources :pins
   end

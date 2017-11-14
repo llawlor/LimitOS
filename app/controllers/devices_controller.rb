@@ -1,5 +1,10 @@
 class DevicesController < ApplicationController
-  before_action :set_device, only: [:show, :edit, :update, :destroy]
+  before_action :set_device, only: [:show, :edit, :update, :destroy, :nodejs_script]
+
+  # create the dynamic nodejs script
+  def nodejs_script
+    @websocket_server_url = Rails.env.production? ? 'wss://limitos.com/cable' : "ws://#{request.host}:#{request.port}/cable"
+  end
 
   # send a message to the device
   # params[:message] should be a hash

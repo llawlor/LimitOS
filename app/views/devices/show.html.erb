@@ -27,7 +27,9 @@
 
 </dl>
 
-<br>
+<%= link_to 'Raspberry Pi Nodejs Script', nodejs_script_device_path(@device) %>
+
+<br><br>
 
 <%= link_to 'Add Connected I2C Device', new_device_path(device_id: @device), class: 'btn btn-default' %>
 <%= link_to 'Edit Device', edit_device_path(@device), :class => 'btn btn-default' %>
