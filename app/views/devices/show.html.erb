@@ -27,7 +27,9 @@
 
 </dl>
 
-<%= link_to 'Raspberry Pi Nodejs Script', nodejs_script_device_path(@device) %>
+<% if @device.device_type == 'raspberry_pi' %>
+  <%= link_to 'Raspberry Pi Nodejs Script', nodejs_script_device_path(@device) %>
+<% end %>
 
 <br><br>
 
