@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     member do
       post :send_message
       get :nodejs_script
+      get :arduino_script
     end
     resources :pins
   end
