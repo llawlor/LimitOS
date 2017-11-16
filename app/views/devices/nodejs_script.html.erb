@@ -23,8 +23,8 @@ rpio.init({mapping: 'gpio'});
 
 // begin using i2c
 rpio.i2cBegin();
-// set i2c address to 0x04
-rpio.i2cSetSlaveAddress(0x04);
+// set i2c address to <%= @device.devices.try(:first).try(:i2c_address) %>
+rpio.i2cSetSlaveAddress(<%= @device.devices.try(:first).try(:i2c_address) %>);
 // set baudrate
 rpio.i2cSetBaudRate(9600);
 
