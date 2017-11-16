@@ -8,6 +8,12 @@
   <dd><%= @device.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:device_type) %>:</strong></dt>
   <dd><%= @device.device_type %></dd>
+  
+  <% if @device.parent_device.present? %>
+    <dt><strong><%= model_class.human_attribute_name(:i2c_address) %>:</strong></dt>
+    <dd><%= @device.i2c_address %></dd>
+  <% end %>
+
   <dt><strong><%= model_class.human_attribute_name(:auth_token) %>:</strong></dt>
   <dd><%= @device.auth_token %></dd>
 
