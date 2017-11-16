@@ -8,7 +8,7 @@
   <dd><%= @device.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:device_type) %>:</strong></dt>
   <dd><%= @device.device_type %></dd>
-  
+
   <% if @device.parent_device.present? %>
     <dt><strong><%= model_class.human_attribute_name(:i2c_address) %>:</strong></dt>
     <dd><%= @device.i2c_address %></dd>
@@ -39,7 +39,10 @@
 
 <br><br>
 
-<%= link_to 'Add Connected I2C Device', new_device_path(device_id: @device), class: 'btn btn-default' %>
+<% if @device.parent_device.blank? %>
+  <%= link_to 'Add Connected I2C Device', new_device_path(device_id: @device), class: 'btn btn-default' %>
+<% end %>
+
 <%= link_to 'Edit Device', edit_device_path(@device), :class => 'btn btn-default' %>
 <%= link_to 'Delete Device',
               device_path(@device),
