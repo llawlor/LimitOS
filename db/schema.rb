@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171110050228) do
+ActiveRecord::Schema.define(version: 20171116045422) do
 
   create_table "devices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20171110050228) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.string   "auth_token",  limit: 24
+    t.string   "i2c_address", limit: 10
     t.index ["auth_token"], name: "index_devices_on_auth_token", unique: true, using: :btree
     t.index ["device_id"], name: "index_devices_on_device_id", using: :btree
     t.index ["user_id"], name: "index_devices_on_user_id", using: :btree

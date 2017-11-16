@@ -10,6 +10,7 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  auth_token  :string(24)
+#  i2c_address :string(10)
 #
 
 # device_type can be 'raspberry_pi' or 'arduino'
