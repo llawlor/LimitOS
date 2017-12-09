@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       get :arduino_script
     end
     resources :pins
+    resources :synchronizations
   end
 
 end

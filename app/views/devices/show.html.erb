@@ -87,6 +87,14 @@
 
 <br><br>
 
+<h3>Synchronizations</h3>
+<% if @device.synchronizations.present? %>
+
+<% end %>
+<%= link_to 'Add New Synchronization', new_device_synchronization_path(@device), class: 'btn btn-default' %>
+
+<br><br>
+
 <h3>Controls</h3>
 
 <%= render 'controls' %>
