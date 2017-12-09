@@ -1,0 +1,6 @@
+<h4>Synchronizations</h4>
+<% @device.synchronizations.order("id asc").each do |synchronization| %>
+  <div class="well">
+    <button data-synchronization_id="<% synchronization.id %>"><%= synchronization.name %></button>
+  </div>
+<% end %>
