@@ -16,7 +16,7 @@
 # device_type can be 'raspberry_pi' or 'arduino'
 class Device < ApplicationRecord
   has_secure_token :auth_token
-  
+
   validates_presence_of :name, :device_type, :user_id
 
   belongs_to :user
@@ -31,4 +31,10 @@ class Device < ApplicationRecord
   def parent_device
     self.device
   end
+
+  # parent device or self
+  def primary_device
+    self.parent_device.present? ? self.parent_device : self
+  end
+
 end
