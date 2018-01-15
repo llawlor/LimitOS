@@ -33,8 +33,13 @@ class Device < ApplicationRecord
   end
 
   # parent device or self
-  def primary_device
+  def master_device
     self.parent_device.present? ? self.parent_device : self
+  end
+
+  # slave device or self
+  def slave_device
+    self.devices.present? ? self.devices.first : self
   end
 
 end
