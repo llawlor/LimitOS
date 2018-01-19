@@ -33,7 +33,7 @@
 
 </dl>
 
-<% if @device.device_type == 'raspberry_pi' %>
+<% if @device.master_device.device_type == 'raspberry_pi' %>
   <%= link_to 'Raspberry Pi Nodejs Script', nodejs_script_device_path(@device) %>
 <% elsif @device.device_type == 'arduino' %>
   <%= link_to 'Arduino Script', arduino_script_device_path(@device) %>
