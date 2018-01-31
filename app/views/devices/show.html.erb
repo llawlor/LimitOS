@@ -14,8 +14,10 @@
     <dd><%= @device.i2c_address %></dd>
   <% end %>
 
-  <dt><strong><%= model_class.human_attribute_name(:auth_token) %>:</strong></dt>
-  <dd><%= @device.auth_token %></dd>
+  <% if @device == @master_device %>
+    <dt><strong><%= model_class.human_attribute_name(:auth_token) %>:</strong></dt>
+    <dd><%= @master_device.auth_token %></dd>
+  <% end %>
 
   <% if @device.parent_device.present? %>
     <dt><strong>Parent Device:</strong></dt>
@@ -33,8 +35,8 @@
 
 </dl>
 
-<% if @device.master_device.device_type == 'raspberry_pi' %>
-  <%= link_to 'Raspberry Pi Nodejs Script', nodejs_script_device_path(@device) %>
+<% if @master_device.device_type == 'raspberry_pi' %>
+  <%= link_to 'Raspberry Pi Nodejs Script', nodejs_script_device_path(@master_device) %>
 <% elsif @device.device_type == 'arduino' %>
   <%= link_to 'Arduino Script', arduino_script_device_path(@device) %>
 <% end %>

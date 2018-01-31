@@ -49,9 +49,9 @@ Status: <span id="device_status"></span>
       slider_<%= pin.pin_number %>.on('change', function() {
         // get the slider value
         var value = slider_<%= pin.pin_number %>.getValue();
-        // send the value
-        $.post('/devices/<%= @device.id %>/send_message', {
-          auth_token: '<%= @device.auth_token %>',
+        // send the value via the master device
+        $.post('/devices/<%= @master_device.id %>/send_message', {
+          auth_token: '<%= @master_device.auth_token %>',
           message: { i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: value }
         });
       });
@@ -66,8 +66,8 @@ Status: <span id="device_status"></span>
 
     // when the digital on/off button is clicked
     $('.digital_submit').click(function() {
-      $.post('/devices/<%= @device.id %>/send_message', {
-        auth_token: '<%= @device.auth_token %>',
+      $.post('/devices/<%= @master_device.id %>/send_message', {
+        auth_token: '<%= @master_device.auth_token %>',
         message: { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') }
       });
       // don't reload the page
@@ -90,8 +90,8 @@ Status: <span id="device_status"></span>
     App.cable.subscriptions.create(
       {
         channel: 'DevicesChannel',
-        id: <%= @device.id %>,
-        auth_token: '<%= @device.auth_token %>'
+        id: <%= @master_device.id %>,
+        auth_token: '<%= @master_device.auth_token %>'
       },
       {
         // when data is received
@@ -108,8 +108,8 @@ Status: <span id="device_status"></span>
 
   // send servo position
   function sendServoMessage(pin_number) {
-    $.post('/devices/<%= @device.id %>/send_message', {
-      auth_token: '<%= @device.auth_token %>',
+    $.post('/devices/<%= @master_device.id %>/send_message', {
+      auth_token: '<%= @master_device.auth_token %>',
       message: { i2c_address: '<%= @device.i2c_address %>', pin: pin_number, servo: $('#servo_input_' + pin_number).val() }
     });
   }

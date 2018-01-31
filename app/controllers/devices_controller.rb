@@ -8,6 +8,7 @@ class DevicesController < ApplicationController
   # create the dynamic nodejs script
   def nodejs_script
     @websocket_server_url = Rails.env.production? ? 'wss://limitos.com/cable' : "ws://#{request.host}:#{request.port}/cable"
+    render layout: false
   end
 
   # send a message to the device
@@ -37,6 +38,7 @@ class DevicesController < ApplicationController
   # show a particular device
   def show
     @parent_device = current_user.devices.find(@device.device_id) if @device.device_id.present?
+    @master_device = @device.master_device
   end
 
   # new device
