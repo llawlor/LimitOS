@@ -38,6 +38,7 @@ class DevicesController < ApplicationController
   # show a particular device
   def show
     @parent_device = current_user.devices.find(@device.device_id) if @device.device_id.present?
+    @master_device = @device.master_device
   end
 
   # new device

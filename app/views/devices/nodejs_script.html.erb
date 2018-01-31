@@ -21,13 +21,6 @@ rpio.init({gpiomem: false});
 // use Broadcom GPIO pin naming
 rpio.init({mapping: 'gpio'});
 
-// begin using i2c
-rpio.i2cBegin();
-// set i2c address to <%= @device.slave_device.i2c_address %>
-rpio.i2cSetSlaveAddress(<%= @device.slave_device.i2c_address %>);
-// set baudrate
-rpio.i2cSetBaudRate(9600);
-
 // create the channel JSON
 var channel_json = JSON.stringify({
   channel: 'DevicesChannel',
@@ -76,6 +69,13 @@ function handleDeviceMessage(message) {
   var delay = start_time - message.time;
   var i2c_delay, log_message;
 
+  // begin using i2c
+  rpio.i2cBegin();
+  // set i2c address (parsed in hex)
+  rpio.i2cSetSlaveAddress(parseInt(message.i2c_address, 16));
+  // set baudrate
+  rpio.i2cSetBaudRate(9600);
+
   // if there is a digital output command
   if (message.digital && message.digital.length !== 0) {
     // send the digital command
@@ -87,6 +87,9 @@ function handleDeviceMessage(message) {
     rpio.i2cWrite(new Buffer("pin:" + message.pin + ",servo:" + message.servo));
     log_message = "servo_" + message.servo + ",pin_" + message.pin;
   }
+
+  // end i2c
+  rpio.i2cEnd();
 
   // set the i2c delay
   i2c_delay = (new Date).getTime() - start_time;
