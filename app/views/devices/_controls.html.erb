@@ -52,7 +52,7 @@ Status: <span id="device_status"></span>
         // send the value
         $.post('/devices/<%= @device.id %>/send_message', {
           auth_token: '<%= @device.auth_token %>',
-          message: { pin: <%= pin.pin_number %>, servo: value }
+          message: { i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: value }
         });
       });
 
@@ -68,7 +68,7 @@ Status: <span id="device_status"></span>
     $('.digital_submit').click(function() {
       $.post('/devices/<%= @device.id %>/send_message', {
         auth_token: '<%= @device.auth_token %>',
-        message: { pin: $(this).data('pin'), digital: $(this).data('digital') }
+        message: { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') }
       });
       // don't reload the page
       return false;
@@ -110,7 +110,7 @@ Status: <span id="device_status"></span>
   function sendServoMessage(pin_number) {
     $.post('/devices/<%= @device.id %>/send_message', {
       auth_token: '<%= @device.auth_token %>',
-      message: { pin: pin_number, servo: $('#servo_input_' + pin_number).val() }
+      message: { i2c_address: '<%= @device.i2c_address %>', pin: pin_number, servo: $('#servo_input_' + pin_number).val() }
     });
   }
 </script>

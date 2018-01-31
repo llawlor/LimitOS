@@ -71,8 +71,8 @@ function handleDeviceMessage(message) {
 
   // begin using i2c
   rpio.i2cBegin();
-  // set i2c address to <%= @device.slave_device.i2c_address %>
-  rpio.i2cSetSlaveAddress(<%= @device.slave_device.i2c_address %>);
+  // set i2c address (parsed in hex)
+  rpio.i2cSetSlaveAddress(parseInt(message.i2c_address, 16));
   // set baudrate
   rpio.i2cSetBaudRate(9600);
 
