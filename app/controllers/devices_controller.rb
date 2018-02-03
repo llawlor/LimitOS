@@ -1,8 +1,14 @@
 class DevicesController < ApplicationController
   before_action :set_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
 
+  # create the dynamic raspberry pi setup script
+  def install
+    render layout: false
+  end
+
   # create the dynamic arduino script
   def arduino_script
+    render layout: false
   end
 
   # create the dynamic nodejs script
