@@ -58,7 +58,7 @@ Status: <span id="device_status"></span>
 
       // when the servo form is submitted
       $('#servo_form_<%= pin.pin_number %>').submit(function() {
-        sendServoMessage(<%= pin.pin_number %>);
+        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: $('#servo_input_' + pin_number).val() });
         // don't reload the page
         return false;
       });
@@ -107,10 +107,10 @@ Status: <span id="device_status"></span>
   });
 
   // send servo position
-  function sendServoMessage(pin_number) {
+  function sendServoMessage(message) {
     $.post('/devices/<%= @master_device.id %>/send_message', {
       auth_token: '<%= @master_device.auth_token %>',
-      message: { i2c_address: '<%= @device.i2c_address %>', pin: pin_number, servo: $('#servo_input_' + pin_number).val() }
+      message: message
     });
   }
 </script>
