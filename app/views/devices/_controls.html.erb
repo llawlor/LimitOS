@@ -24,9 +24,6 @@ Status: <span id="device_status"></span>
   </div>
 <% end %>
 
-<button id="servos_to_0">All Servos To: 0</button>
-<button id="servos_to_90">All Servos To: 90</button>
-
 <script>
 
   <% @device.pins.where(pin_type: 'servo').each do |pin| %>
@@ -72,18 +69,6 @@ Status: <span id="device_status"></span>
       });
       // don't reload the page
       return false;
-    });
-
-    // when the 'servos to 0' button is clicked, set all servos to 0
-    $('#servos_to_0').click(function() {
-      $('.servo_position').val(0);
-      $('.servo_submit').click();
-    });
-
-    // when the 'servos to 90' button is clicked, set all servos to 90
-    $('#servos_to_90').click(function() {
-      $('.servo_position').val(90);
-      $('.servo_submit').click();
     });
 
     // subscribe to the correct device channel
