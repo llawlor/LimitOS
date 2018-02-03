@@ -102,7 +102,7 @@
     <% @device.synchronizations.each do |synchronization| %>
       <tr>
         <td><%= synchronization.name %></td>
-        <td><%= synchronization.message %></td>
+        <td><%= synchronization.messages %></td>
         <td>
           <%= link_to 'Edit Synchronization', edit_device_synchronization_path(@device, synchronization), class: 'btn btn-sm btn-default' %>
           <%= link_to 'Remove Synchronization', device_synchronization_path(@device, synchronization), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>

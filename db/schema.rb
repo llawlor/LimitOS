@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171209050106) do
+ActiveRecord::Schema.define(version: 20180203040953) do
 
   create_table "devices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20171209050106) do
   create_table "synchronizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
     t.integer  "device_id"
-    t.text     "message",    limit: 65535
+    t.text     "messages",   limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.index ["device_id"], name: "index_synchronizations_on_device_id", using: :btree
