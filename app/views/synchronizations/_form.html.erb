@@ -28,7 +28,7 @@
   <div class="form-group">
     <%= f.label :messages, :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
-      <%= f.text_field :messages, placeholder: "[{ pin: 3, digital: 'off' }]", :class => 'form-control' %>
+      <%= f.text_area :messages, placeholder: "[{ pin: 3, digital: 'off' }]", class: 'form-control', size: '30x6' %>
     </div>
     <%=f.error_span(:messages) %>
   </div>
