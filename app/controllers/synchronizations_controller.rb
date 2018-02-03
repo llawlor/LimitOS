@@ -50,7 +50,7 @@ class SynchronizationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def synchronization_params
-      params.require(:synchronization).permit(:device_id, :name, :message)
+      params.require(:synchronization).permit(:device_id, :name, :messages)
     end
 
 end
