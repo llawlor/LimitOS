@@ -6,10 +6,6 @@ Rails.application.routes.draw do
   get '/account' => 'users#account'
   resources :users
 
-  # temporary route to test install script
-  get '/install' => 'devices#install'
-
-
   resources :devices do
     member do
       post :send_message

@@ -1,8 +1,10 @@
 class DevicesController < ApplicationController
-  before_action :set_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
+  before_action :set_device, only: [ :show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
 
   # create the dynamic raspberry pi setup script
   def install
+    # insecure, must be authenticated
+    #@device = Device.find(params[:id])
     render layout: false
   end
 
