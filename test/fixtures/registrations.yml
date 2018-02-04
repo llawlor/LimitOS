@@ -1,0 +1,23 @@
+# == Schema Information
+#
+# Table name: registrations
+#
+#  id         :integer          not null, primary key
+#  auth_token :string(6)
+#  device_id  :integer
+#  expires_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  auth_token: MyString
+  device_id: 1
+  expires_at: 2018-02-04 11:59:28
+
+two:
+  auth_token: MyString
+  device_id: 1
+  expires_at: 2018-02-04 11:59:28

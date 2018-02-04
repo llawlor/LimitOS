@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180203040953) do
+ActiveRecord::Schema.define(version: 20180204165928) do
 
   create_table "devices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
@@ -37,6 +37,16 @@ ActiveRecord::Schema.define(version: 20180203040953) do
     t.datetime "updated_at", null: false
     t.index ["device_id", "pin_number"], name: "index_pins_on_device_id_and_pin_number", using: :btree
     t.index ["device_id"], name: "index_pins_on_device_id", using: :btree
+  end
+
+  create_table "registrations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "auth_token", limit: 6
+    t.integer  "device_id"
+    t.datetime "expires_at"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.index ["auth_token"], name: "index_registrations_on_auth_token", using: :btree
+    t.index ["device_id"], name: "index_registrations_on_device_id", using: :btree
   end
 
   create_table "synchronizations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
