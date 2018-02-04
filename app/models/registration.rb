@@ -14,6 +14,8 @@ class Registration < ApplicationRecord
 
   validates_uniqueness_of :auth_token
 
+  before_create :set_auth_token
+
   # generate a secure authentication token
   def generate_auth_token
     # generate the 6-character auth token
@@ -22,6 +24,11 @@ class Registration < ApplicationRecord
     auth_token = self.generate_auth_token if Registration.where(auth_token: auth_token).present?
     # return the auth token
     return auth_token
+  end
+
+  # sets the auth token
+  def set_auth_token
+    self.auth_token = self.generate_auth_token
   end
 
 end
