@@ -3,19 +3,23 @@ class DevicesController < ApplicationController
 
   # create the dynamic raspberry pi setup script
   def install
-    # insecure, must be authenticated
-    #@device = Device.find(params[:id])
+    # create a new registration that expires in 5 minutes
+    @registration = Registration.create(expires_at: 5.minutes.from_now)
+
+    # don't use a layout
     render layout: false
   end
 
   # create the dynamic arduino script
   def arduino_script
+    # don't use a layout
     render layout: false
   end
 
   # create the dynamic nodejs script
   def nodejs_script
     @websocket_server_url = Rails.env.production? ? 'wss://limitos.com/cable' : "ws://#{request.host}:#{request.port}/cable"
+    # don't use a layout
     render layout: false
   end
 

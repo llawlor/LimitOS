@@ -6,12 +6,13 @@ Rails.application.routes.draw do
   get '/account' => 'users#account'
   resources :users
 
+  get '/install' => 'devices#install'
+
   resources :devices do
     member do
       post :send_message
       get :nodejs_script
       get :arduino_script
-      get :install
     end
     resources :pins
     resources :synchronizations

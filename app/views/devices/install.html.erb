@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # the preceding line instructs this script to run using the bash interpreter
 
-echo 'installation for device #<%#= @device.id %>'
-
 # main function definition
 perform_install()
 {
@@ -10,6 +8,9 @@ perform_install()
 
   # download the client.js file
   download_client_js
+
+  # output the registration information
+  echo 'register using the following code: <%= @registration.auth_token %>'
 }
 
 # function to download client.js
