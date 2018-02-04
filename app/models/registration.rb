@@ -22,6 +22,8 @@ class Registration < ApplicationRecord
     self.auth_token = SecureRandom.base58(6)
     # regenerate if duplicate
     self.auth_token = self.set_auth_token if Registration.where(auth_token: auth_token).present?
+    # return the auth token
+    return self.auth_token
   end
 
 end
