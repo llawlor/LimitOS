@@ -4,7 +4,7 @@ class DevicesController < ApplicationController
   # create the dynamic raspberry pi setup script
   def install
     # create a new registration that expires in 5 minutes
-    @registration = Registration.create(expires_at: 5.minutes.from_now)
+    #@registration = Registration.create(expires_at: 5.minutes.from_now)
 
     # use a text template but don't use a layout
     render '/devices/install.text.erb', layout: false, content_type: 'text/plain'

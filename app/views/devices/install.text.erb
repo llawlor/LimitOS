@@ -9,8 +9,11 @@ perform_install()
   # download the client.js file
   download_client_js
 
+  # get a new registration code
+  # registration_code = `curl -sSL http://localhost:3000/registrations/create`
+
   # output the registration information
-  echo 'register using the following code: <%= @registration.auth_token %>'
+  # echo 'register using the following code (valid for the next 5 minutes): registration_code
 }
 
 # function to download client.js
