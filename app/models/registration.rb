@@ -17,18 +17,11 @@ class Registration < ApplicationRecord
   before_create :set_auth_token
 
   # generate a secure authentication token
-  def generate_auth_token
-    # generate the 6-character auth token
-    auth_token = SecureRandom.base58(6)
-    # regenerate if duplicate
-    auth_token = self.generate_auth_token if Registration.where(auth_token: auth_token).present?
-    # return the auth token
-    return auth_token
-  end
-
-  # sets the auth token
   def set_auth_token
-    self.auth_token = self.generate_auth_token
+    # generate the 6-character auth token
+    self.auth_token = SecureRandom.base58(6)
+    # regenerate if duplicate
+    self.auth_token = self.set_auth_token if Registration.where(auth_token: auth_token).present?
   end
 
 end
