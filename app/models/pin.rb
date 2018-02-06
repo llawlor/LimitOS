@@ -16,6 +16,8 @@
 class Pin < ApplicationRecord
   belongs_to :device
 
+  validates_presence_of :device_id  
+
   # options for pin type
   PIN_TYPES = ['servo', 'digital']
 
