@@ -28,6 +28,11 @@ RSpec.describe Device, type: :model do
       expect(device.user_id).to eq(user.id)
     end
 
+    it 'should be valid with no data' do
+      device.update_attributes(name: nil, user_id: nil, device_type: nil)
+      expect(device).to be_valid
+    end
+
     it 'should set the auth_token automatically' do
       expect(device.auth_token).to eq(nil)
       device.save

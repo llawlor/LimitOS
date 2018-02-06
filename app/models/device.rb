@@ -17,7 +17,7 @@
 class Device < ApplicationRecord
   has_secure_token :auth_token
 
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :device, optional: true
   has_many :devices
   has_many :pins, dependent: :destroy
