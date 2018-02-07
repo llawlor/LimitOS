@@ -3,7 +3,8 @@ class Api::V1::DevicesController < ApplicationController
 
   # create a new device
   def create
-    render text: 'create device'
+    device = Device.create
+    render plain: device.auth_token
   end
 
 end
