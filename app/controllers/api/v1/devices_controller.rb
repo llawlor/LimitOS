@@ -6,7 +6,7 @@ class Api::V1::DevicesController < ApplicationController
     # create the anonymous device
     device = Device.create
     # output the auth_token
-    render plain: device.auth_token
+    render plain: device.to_json
   end
 
 end

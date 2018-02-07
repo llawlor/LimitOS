@@ -4,13 +4,18 @@
 # main function definition
 perform_install()
 {
-  echo 'perform_install. . .'
-
-  # quietly install the "jq" tool so that JSON can be parsed
-  sudo apt-get -qq -y install jq > /dev/null
+  echo 'starting installation...'
 
   # create a new device and return the auth_token
-  device_auth_token=$(curl -sSL -X POST <%= full_url %>/api/v1/devices)
+  device_json=$(curl -sSL -X POST <%= full_url %>/api/v1/devices)
+
+  # get the device id from the JSON
+  device_id=$(echo $device_json | grep -Po '"id":(\d*)' | awk -F':' '{print $2}')
+
+  # get the auth token from the JSON
+  device_auth_token=$(echo $device_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
+
+  echo "device id: $device_id"
   echo "auth_token: $device_auth_token"
 
   # download the client.js file
