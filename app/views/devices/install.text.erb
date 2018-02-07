@@ -6,12 +6,15 @@ perform_install()
 {
   echo 'perform_install. . .'
 
-  # download the client.js file
-  download_client_js
+  # quietly install the "jq" tool so that JSON can be parsed
+  sudo apt-get -qq -y install jq > /dev/null
 
   # create a new device and return the auth_token
   device_auth_token=$(curl -sSL -X POST <%= full_url %>/api/v1/devices)
   echo "auth_token: $device_auth_token"
+
+  # download the client.js file
+  download_client_js
 
   # get the client.js script for the device
   # client_js_script =
