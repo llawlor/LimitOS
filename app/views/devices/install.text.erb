@@ -35,9 +35,9 @@ function download_client_js()
 
   # retrieve client.js script
   client_js_script=$(curl -sSL --data "auth_token=$device_auth_token" http://localhost:3000/api/v1/devices/$device_id/nodejs_script)
-  echo $client_js_script
 
   # save client.js
+  echo $client_js_script >> client.js
 }
 
 # run the main function
