@@ -27,7 +27,9 @@ perform_install()
   # get a new registration code (using the device auth_token)
   registration_json=$(curl -sSL --data "auth_token=$device_auth_token" http://localhost:3000/api/v1/devices/$device_id/registrations)
 
-  echo "$registration_json"
+  # get the auth token from the JSON
+  registration_auth_token=$(echo $registration_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
+  echo "registration code: $registration_auth_token"
 
   # output the registration information
   # echo 'register using the following code (valid for the next 5 minutes): registration_code
