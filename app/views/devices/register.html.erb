@@ -2,7 +2,7 @@
 <br>
 
 <%= form_for @registration, url: 'submit_registration' do |f| %>
-Registration code: <%= f.text_field :auth_token %>
+Registration code: <%= f.text_field :auth_token, autofocus: true %>
 <br><br>
 <%= f.submit %>
 <% end %>

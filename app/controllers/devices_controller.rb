@@ -3,7 +3,17 @@ class DevicesController < ApplicationController
 
   # register a new device (take ownership of it)
   def submit_registration
-    render text: 'submitted'
+    # get the registration
+    @registration = Registration.where(auth_token: params[:auth_token]).where("expires_at > ?", DateTime.now).first
+
+    # error if the registration does not exist
+    if @registration.blank?
+      flash[:error] = 'Invalid or expired registration code.'
+      redirect_to register_path and return
+    end
+
+    # associate the device with this registration
+
   end
 
   # registration page
