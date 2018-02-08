@@ -3,7 +3,7 @@ class DevicesController < ApplicationController
 
   # register a new device (take ownership of it)
   def register
-    render plain: 'register'
+    
   end
 
   # create the dynamic raspberry pi setup script
