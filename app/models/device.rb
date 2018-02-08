@@ -27,6 +27,11 @@ class Device < ApplicationRecord
   # options for device type
   DEVICE_TYPES = ['raspberry_pi', 'arduino']
 
+  # name that is displayed for a device
+  def display_name
+    self.name || "Device ##{self.id}"
+  end
+
   # alias for device.device
   def parent_device
     self.device
