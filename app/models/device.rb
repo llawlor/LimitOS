@@ -22,6 +22,7 @@ class Device < ApplicationRecord
   has_many :devices
   has_many :pins, dependent: :destroy
   has_many :synchronizations, dependent: :destroy
+  has_many :registrations, dependent: :destroy
 
   # options for device type
   DEVICE_TYPES = ['raspberry_pi', 'arduino']

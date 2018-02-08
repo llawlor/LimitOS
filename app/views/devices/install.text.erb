@@ -25,7 +25,9 @@ perform_install()
   # client_js_script =
 
   # get a new registration code (using the device auth_token)
-  # registration_code = `curl -sSL <%= full_url %>/registrations/create`
+  registration_json=$(curl -sSL --data "auth_token=$device_auth_token" http://localhost:3000/api/v1/devices/$device_id/registrations)
+
+  echo "$registration_json"
 
   # output the registration information
   # echo 'register using the following code (valid for the next 5 minutes): registration_code

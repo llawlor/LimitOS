@@ -11,8 +11,10 @@
 #
 
 class Registration < ApplicationRecord
+  belongs_to :device
 
   validates_uniqueness_of :auth_token
+  validates_presence_of :device_id
 
   before_create :set_auth_token
 
