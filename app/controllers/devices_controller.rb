@@ -4,16 +4,26 @@ class DevicesController < ApplicationController
   # register a new device (take ownership of it)
   def submit_registration
     # get the registration
-    @registration = Registration.where(auth_token: params[:auth_token]).where("expires_at > ?", DateTime.now).first
+    registration = Registration.where(auth_token: params[:registration][:auth_token]).where("expires_at > ?", DateTime.now).first
 
     # error if the registration does not exist
-    if @registration.blank?
+    if registration.blank?
       flash[:error] = 'Invalid or expired registration code.'
       redirect_to register_path and return
     end
 
-    # associate the device with this registration
+    # if the user is logged in
+    if current_user.present?
+      # assign ownership of the device
+      registration.device.update_attributes(user_id: current_user.id)
+      # remove the registration
+      registration.destroy
+      # redirect to the user's devices page
+      redirect_to devices_path and return
+    end
 
+    # associate the device with this registration
+    render plain: 'registered'
   end
 
   # registration page

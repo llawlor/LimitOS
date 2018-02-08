@@ -16,7 +16,7 @@ class Api::V1::RegistrationsController < ApplicationController
     render plain: { error: 'Invalid device credentials.' } and return if valid != true
 
     # create the registration
-    registration = device.registrations.create
+    registration = device.registrations.create(expires_at: 5.minutes.from_now)
 
     # output the auth_token
     render plain: registration.to_json
