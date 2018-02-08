@@ -12,6 +12,12 @@ class DevicesController < ApplicationController
       redirect_to register_path and return
     end
 
+    # error if the device is already registered
+    if registration.device.user_id.present?
+      flash[:error] = 'Device has already been registered.'
+      redirect_to register_path and return
+    end
+
     # if the user is logged in
     if current_user.present?
       # assign ownership of the device
