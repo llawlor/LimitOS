@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   get '/account' => 'users#account'
   resources :users
 
+  # install limitos scripts onto a linux box
   get '/install' => 'devices#install'
+
+  # register a device and take ownership of it
+  get '/register' => 'devices#register'
 
   resources :devices do
     member do

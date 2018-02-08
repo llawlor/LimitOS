@@ -4,7 +4,7 @@
 # main function definition
 perform_install()
 {
-  echo 'starting installation...'
+  echo 'Starting installation...'
 
   # create a new device and return the auth_token
   device_json=$(curl -sSL -X POST <%= full_url %>/api/v1/devices)
@@ -25,14 +25,12 @@ perform_install()
   download_client_js
 
   # output the registration information
-  echo "register using the following code (valid for the next 5 minutes): $registration_auth_token"
+  echo "Register this device at <%= full_url %>/register using the code: $registration_auth_token"
 }
 
 # function to download client.js
 function download_client_js()
 {
-  echo "download_client_js for device id: $device_id $device_auth_token"
-
   # retrieve the nodejs script and save it as client.js
   curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > client.js
 }

@@ -27,7 +27,7 @@ class Api::V1::DevicesController < ApplicationController
     @websocket_server_url = Rails.env.production? ? 'wss://limitos.com/cable' : "ws://#{request.host}:#{request.port}/cable"
 
     # don't use a layout
-    render partial: 'shared/nodejs_script', layout: false
+    render partial: 'shared/nodejs_script', layout: false, content_type: 'text/plain'
   end
 
 end
