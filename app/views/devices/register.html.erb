@@ -1,5 +1,8 @@
 <h1>Register your device</h1>
+<br>
 
-<%= form_tag do %>
-Registration code: <%= text_field_tag :auth_token %>
+<%= form_for @registration, url: 'submit_registration' do |f| %>
+Registration code: <%= f.text_field :auth_token %>
+<br><br>
+<%= f.submit %>
 <% end %>

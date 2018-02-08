@@ -2,8 +2,13 @@ class DevicesController < ApplicationController
   before_action :set_device, only: [ :show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
 
   # register a new device (take ownership of it)
+  def submit_registration
+    render text: 'submitted'
+  end
+
+  # registration page
   def register
-    
+    @registration = Registration.new
   end
 
   # create the dynamic raspberry pi setup script

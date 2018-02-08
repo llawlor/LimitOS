@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   # register a device and take ownership of it
   get '/register' => 'devices#register'
+  post '/submit_registration' => 'devices#submit_registration'
 
   resources :devices do
     member do
