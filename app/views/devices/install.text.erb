@@ -22,7 +22,7 @@ perform_install()
   registration_auth_token=$(echo $registration_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
 
   # download the client.js file
-  download_client_js 
+  download_client_js
 
   # output the registration information
   echo "register using the following code (valid for the next 5 minutes): $registration_auth_token"
@@ -31,9 +31,11 @@ perform_install()
 # function to download client.js
 function download_client_js()
 {
-  echo "download_client_js for device id: $device_id"
+  echo "download_client_js for device id: $device_id $device_auth_token"
 
   # retrieve client.js script
+  client_js_script=$(curl -sSL --data "auth_token=$device_auth_token" http://localhost:3000/api/v1/devices/$device_id/nodejs_script)
+  echo $client_js_script
 
   # save client.js
 }

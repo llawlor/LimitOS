@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :devices do
+        member do
+          post :nodejs_script
+        end
         resources :registrations
       end
     end

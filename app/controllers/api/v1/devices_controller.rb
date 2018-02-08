@@ -9,4 +9,23 @@ class Api::V1::DevicesController < ApplicationController
     render plain: device.to_json
   end
 
+  # create the dynamic nodejs script
+  def nodejs_script
+    # get the device
+    @device = Device.find_by(id: params[:id])
+
+    # error if invalid
+    render plain: { error: 'Invalid device credentials.' } and return if @device.blank?
+
+    # check the authentication
+    valid = true if Devise.secure_compare(@device.auth_token, params[:auth_token])
+
+    # error if invalid
+    render plain: { error: 'Invalid device credentials.' } and return if valid != true
+
+    @websocket_server_url = Rails.env.production? ? 'wss://limitos.com/cable' : "ws://#{request.host}:#{request.port}/cable"
+    # don't use a layout
+    render layout: false
+  end
+
 end
