@@ -23,9 +23,11 @@ class Api::V1::DevicesController < ApplicationController
     # error if invalid
     render plain: { error: 'Invalid device credentials.' } and return if valid != true
 
+    # set the websocket server url
     @websocket_server_url = Rails.env.production? ? 'wss://limitos.com/cable' : "ws://#{request.host}:#{request.port}/cable"
+
     # don't use a layout
-    render layout: false
+    render partial: 'shared/nodejs_script', layout: false
   end
 
 end
