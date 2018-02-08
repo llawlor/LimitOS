@@ -32,7 +32,7 @@ perform_install()
 function download_client_js()
 {
   # retrieve the nodejs script and save it as client.js
-  curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > client.js
+  curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > client<%= '_dev' if !Rails.env.production? %>.js
 }
 
 # run the main function
