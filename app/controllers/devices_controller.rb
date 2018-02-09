@@ -28,10 +28,15 @@ class DevicesController < ApplicationController
       redirect_to devices_path and return
     # else no user
     else
-      # add a cookie
+      # initialize the cookie if it doesn't exist
       cookies.encrypted[:device_ids] ||= ''
-      cookies.encrypted[:device_ids] += "#{registration.device.id},"
+      # append the id to the string and set the expiration for a year in the future
+      cookies.encrypted[:device_ids] = { value: cookies.encrypted[:device_ids] + "#{registration.device.id},", expires: 1.year.from_now }
+      # remove the registration
+      registration.destroy
+      # add a flash notice
       flash[:notice] = 'Your device has been registered'
+      # redirect to the device page
       redirect_to devices_path and return
     end
 
@@ -86,7 +91,10 @@ class DevicesController < ApplicationController
     if current_user.present?
       @devices = current_user.devices
     else
-      @devices = Device.where(id: cookies.encrypted[:device_ids].split(","))
+      # get the device ids from the cookie
+      device_ids = cookies.encrypted[:device_ids].split(",")
+      # get the devices without users that match the ids
+      @devices = Device.where(user_id: nil).where(id: device_ids)
     end
   end
 
