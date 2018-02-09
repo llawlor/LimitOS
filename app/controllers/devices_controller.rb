@@ -26,10 +26,15 @@ class DevicesController < ApplicationController
       registration.destroy
       # redirect to the user's devices page
       redirect_to devices_path and return
+    # else no user
+    else
+      # add a cookie
+      cookies.encrypted[:device_ids] ||= ''
+      cookies.encrypted[:device_ids] += "#{registration.device.id},"
+      flash[:notice] = 'Your device has been registered'
+      redirect_to devices_path and return
     end
 
-    # associate the device with this registration
-    render plain: 'registered'
   end
 
   # registration page
@@ -77,7 +82,12 @@ class DevicesController < ApplicationController
 
   # list all devices
   def index
-    @devices = current_user.devices
+    # if the user is logged in
+    if current_user.present?
+      @devices = current_user.devices
+    else
+      @devices = Device.where(id: cookies.encrypted[:device_ids].split(","))
+    end
   end
 
   # show a particular device
