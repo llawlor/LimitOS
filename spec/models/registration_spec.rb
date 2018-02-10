@@ -15,7 +15,8 @@ require 'rails_helper'
 RSpec.describe Registration, type: :model do
 
   # lazy loaded variables
-  let (:registration) { FactoryGirl.build(:registration) }
+  let (:device) { FactoryGirl.create(:device) }
+  let (:registration) { FactoryGirl.build(:registration, device: device) }
 
   describe '#set_auth_token' do
     it 'adds an auth_token before create' do
