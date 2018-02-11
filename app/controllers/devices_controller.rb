@@ -29,9 +29,11 @@ class DevicesController < ApplicationController
     # else no user
     else
       # initialize the cookie if it doesn't exist
-      cookies.encrypted[:device_ids] ||= ''
-      # append the id to the string and set the expiration for a year in the future
-      cookies.encrypted[:device_ids] = { value: cookies.encrypted[:device_ids] + "#{registration.device.id},", expires: 1.year.from_now }
+      cookies.encrypted[:device_ids] ||= { value: [], expires: 1.year.from_now }
+      # append the new id to the array
+      new_device_ids = cookies.encrypted[:device_ids] << registration.device.id
+      # set the new cookie value
+      cookies.encrypted[:device_ids] = { value: new_device_ids, expires: 1.year.from_now }
       # remove the registration
       registration.destroy
       # add a flash notice
@@ -92,7 +94,7 @@ class DevicesController < ApplicationController
       @devices = current_user.devices
     else
       # get the device ids from the cookie
-      device_ids = cookies.encrypted[:device_ids].split(",")
+      device_ids = cookies.encrypted[:device_ids]
       # get the devices without users that match the ids
       @devices = Device.where(user_id: nil).where(id: device_ids)
     end
