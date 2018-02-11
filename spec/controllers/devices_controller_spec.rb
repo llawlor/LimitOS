@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe DevicesController, type: :controller do
 
-  let(:user) { FactoryGirl.create(:user) }
-  let(:device) { FactoryGirl.create(:device, user: user) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:device) { FactoryBot.create(:device, user: user) }
 
   describe '#send_message' do
     before :each do

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :pin do
     name 'on_off'
     pin_number 5

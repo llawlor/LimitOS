@@ -18,8 +18,8 @@ require 'rails_helper'
 RSpec.describe Device, type: :model do
 
   # lazy loaded variables
-  let(:user) { FactoryGirl.create(:user) }
-  let(:device) { FactoryGirl.build(:device, user: user) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:device) { FactoryBot.build(:device, user: user) }
 
   describe 'validations' do
     it 'should be valid' do
@@ -42,7 +42,7 @@ RSpec.describe Device, type: :model do
 
   describe '#parent_device' do
     it 'gets the parent device' do
-      device2 = FactoryGirl.create(:device, device: device)
+      device2 = FactoryBot.create(:device, device: device)
       expect(device2.parent_device).to eq(device)
     end
   end

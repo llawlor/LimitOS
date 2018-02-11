@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe "Devices", type: :request do
 
   # lazy loaded variables
-  let(:user) { FactoryGirl.create(:user) }
-  let(:user2) {  FactoryGirl.create(:user) }
-  let(:device) { FactoryGirl.create(:device, user: user) }
-  let(:device_attributes) { FactoryGirl.attributes_for(:device) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:user2) {  FactoryBot.create(:user) }
+  let(:device) { FactoryBot.create(:device, user: user) }
+  let(:device_attributes) { FactoryBot.attributes_for(:device) }
 
   describe 'device management' do
     it 'creates and views a device' do
