@@ -19,6 +19,8 @@ class ApplicationController < ActionController::Base
       device_ids = cookies.encrypted[:device_ids]
       # get the devices without users that match the ids
       @devices = Device.where(user_id: nil).where(id: device_ids)
+      # prompt user to sign in or sign up
+      flash[:warning] = "Please <a href=\"#{ new_user_session_path }\">sign up</a> to permanently save your devices.".html_safe if @devices.present?
     end
   end
 
