@@ -89,15 +89,6 @@ class DevicesController < ApplicationController
 
   # list all devices
   def index
-    # if the user is logged in
-    if current_user.present?
-      @devices = current_user.devices
-    else
-      # get the device ids from the cookie
-      device_ids = cookies.encrypted[:device_ids]
-      # get the devices without users that match the ids
-      @devices = Device.where(user_id: nil).where(id: device_ids)
-    end
   end
 
   # show a particular device
