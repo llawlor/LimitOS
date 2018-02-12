@@ -28,12 +28,12 @@ class DevicesController < ApplicationController
       redirect_to devices_path and return
     # else no user
     else
-      # initialize the cookie if it doesn't exist
-      cookies.encrypted[:device_ids] ||= { value: [], expires: 1.year.from_now }
+      # get the device ids or set to an empty array
+      device_ids = cookies.encrypted[:device_ids].present? ? cookies.encrypted[:device_ids] : []
       # append the new id to the array
-      new_device_ids = cookies.encrypted[:device_ids] << registration.device.id
+      device_ids << registration.device.id
       # set the new cookie value
-      cookies.encrypted[:device_ids] = { value: new_device_ids, expires: 1.year.from_now }
+      cookies.encrypted[:device_ids] = { value: device_ids, expires: 1.year.from_now }
       # remove the registration
       registration.destroy
       # add a flash notice
@@ -144,7 +144,13 @@ class DevicesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_device
-      @device = current_user.devices.find(params[:id])
+      # if the user is logged in
+      if current_user.present?
+        @device = current_user.devices.find(params[:id])
+      # else the user is not logged in
+      else
+        @device = @devices.find_by(id: params[:id])
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
