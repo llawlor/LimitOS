@@ -142,7 +142,7 @@ class DevicesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+    # set the the device for users that are logged in or out
     def set_device
       # if the user is logged in
       if current_user.present?

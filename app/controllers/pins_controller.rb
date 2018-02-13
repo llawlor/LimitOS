@@ -38,10 +38,16 @@ class PinsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_device
+  # set the the device for users that are logged in or out
+  def set_device
+    # if the user is logged in
+    if current_user.present?
       @device = current_user.devices.find(params[:device_id])
+    # else the user is not logged in
+    else
+      @device = @devices.find_by(id: params[:device_id])
     end
+  end
 
     def set_pin
       @pin = @device.pins.find(params[:id])
