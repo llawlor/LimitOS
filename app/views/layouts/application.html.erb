@@ -32,9 +32,8 @@
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <% if @devices.present? %>
             <ul class="nav navbar-nav">
-              <li><%= link_to "Devices", devices_path %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
+              <li><%= link_to "My Devices", devices_path %></li>
+              <li><%= link_to "Register Device", register_path  %></li>
             </ul>
           <% end %>
           <ul class="nav navbar-nav navbar-right">
