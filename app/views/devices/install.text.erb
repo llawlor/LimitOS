@@ -25,7 +25,8 @@ perform_install()
   download_client_js
 
   # output the registration information
-  echo "Register this device at <%= full_url %>/register using the code: $registration_auth_token"
+  echo "Register this device within 5 minutes at <%= full_url %>/register"
+  echo "Registration code: $registration_auth_token"
 }
 
 # function to download client.js
