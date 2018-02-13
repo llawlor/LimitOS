@@ -1,5 +1,5 @@
 class PinsController < ApplicationController
-  before_action :set_device
+  before_action :get_device
   before_action :set_pin, only: [:show, :edit, :update, :destroy]
 
   # new pin
@@ -39,7 +39,7 @@ class PinsController < ApplicationController
 
   private
   # set the the device for users that are logged in or out
-  def set_device
+  def get_device
     # if the user is logged in
     if current_user.present?
       @device = current_user.devices.find(params[:device_id])

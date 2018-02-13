@@ -1,6 +1,6 @@
 class SynchronizationsController < ApplicationController
 
-  before_action :set_device
+  before_action :get_device
   before_action :set_synchronization, only: [:show, :edit, :update, :destroy]
 
   # new synchronization
@@ -40,7 +40,7 @@ class SynchronizationsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_device
+    def get_device
       @device = current_user.devices.find(params[:device_id])
     end
 

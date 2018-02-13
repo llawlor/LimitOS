@@ -1,5 +1,5 @@
 class DevicesController < ApplicationController
-  before_action :set_device, only: [ :show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
+  before_action :get_device, only: [ :show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
 
   # register a new device (take ownership of it)
   def submit_registration
@@ -143,7 +143,7 @@ class DevicesController < ApplicationController
 
   private
     # set the the device for users that are logged in or out
-    def set_device
+    def get_device
       # if the user is logged in
       if current_user.present?
         @device = current_user.devices.find(params[:id])
