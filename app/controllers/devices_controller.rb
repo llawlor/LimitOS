@@ -1,5 +1,6 @@
 class DevicesController < ApplicationController
-  before_action :get_device, only: [ :show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
+  before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
+  before_action :get_parent_device, only: [:new]
 
   # register a new device (take ownership of it)
   def submit_registration
@@ -28,12 +29,8 @@ class DevicesController < ApplicationController
       redirect_to devices_path and return
     # else no user
     else
-      # get the device ids or set to an empty array
-      device_ids = cookies.encrypted[:device_ids].present? ? cookies.encrypted[:device_ids] : []
-      # append the new id to the array
-      device_ids << registration.device.id
-      # set the new cookie value
-      cookies.encrypted[:device_ids] = { value: device_ids, expires: 1.year.from_now }
+      # save this device to the logged out user
+      save_device_to_cookie(registration.device.id)
       # remove the registration
       registration.destroy
       # add a flash notice
@@ -93,7 +90,7 @@ class DevicesController < ApplicationController
 
   # show a particular device
   def show
-    @parent_device = current_user.devices.find(@device.device_id) if @device.device_id.present?
+    @parent_device = @devices.find(@device.device_id) if @device.device_id.present?
     @master_device = @device.master_device
   end
 
@@ -101,9 +98,6 @@ class DevicesController < ApplicationController
   def new
     # default new device
     @device = Device.new
-
-    # if this is a connected device
-    @parent_device = current_user.devices.find(params[:device_id]) if params[:device_id].present?
   end
 
   # edit a device
@@ -112,14 +106,25 @@ class DevicesController < ApplicationController
 
   # create a device
   def create
-    @device = current_user.devices.new(device_params)
+    # if the user is logged in
+    if current_user.present?
+      @device = current_user.devices.new(device_params)
+    # else the user is logged out
+    else
+      @device = Device.new(device_params)
+    end
+
     # add the parent device if it exists
     if params[:parent_device_id].present?
-      @parent_device = current_user.devices.find(params[:parent_device_id] )
+      @parent_device = @devices.find(params[:parent_device_id] )
       @device.device_id = @parent_device.id
     end
 
+    # if the device was saved
     if @device.save
+      # if the user is logged out, add the device
+      save_device_to_cookie(@device.id) if current_user.blank?
+      # redirect to the device
       redirect_to @device, notice: 'Device was successfully created.'
     else
       render :new
@@ -142,7 +147,8 @@ class DevicesController < ApplicationController
   end
 
   private
-    # set the the device for users that are logged in or out
+
+    # get the device for users that are logged in or out
     def get_device
       # if the user is logged in
       if current_user.present?
@@ -153,8 +159,33 @@ class DevicesController < ApplicationController
       end
     end
 
+    # get the parent device
+    def get_parent_device
+      # exit if no device_id in the params
+      return true if params[:device_id].blank?
+
+      # if the user is logged in
+      if current_user.present?
+        @parent_device = current_user.devices.find(params[:device_id])
+      # else the user is not logged in
+      else
+        @parent_device = @devices.find_by(id: params[:device_id])
+      end
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def device_params
       params.fetch(:device, {}).permit(:name, :device_type, :i2c_address)
     end
+
+    # save this device to the logged out user
+    def save_device_to_cookie(device_id)
+      # get the device ids or set to an empty array
+      device_ids = cookies.encrypted[:device_ids].present? ? cookies.encrypted[:device_ids] : []
+      # append the new id to the array
+      device_ids << device_id
+      # set the new cookie value
+      cookies.encrypted[:device_ids] = { value: device_ids, expires: 1.year.from_now }
+    end
+
 end
