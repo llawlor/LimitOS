@@ -27,16 +27,24 @@ function install_nodejs()
   # output pm2 installation message
   echo 'Installing node.js...'
 
-  # remove old versions of node and npm
-  #sudo apt-get remove nodered -y
-  #sudo apt-get remove nodejs nodejs-legacy -y
-  #sudo apt-get remove npm -y
-  # install new version of nodejs
-  #sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
+  # check if nodejs is installed
+  # command -v: outputs location of specified program, wc -l: count line numbers
+  nodejs_installed=$(command -v nodejs | wc -l)
 
-  # install nodejs if it doesn't already exist, and log output
-  # command -v: outputs location of specified program, >/dev/null 2>&1: suppresses output
-  command -v nodejs >/dev/null 2>&1 || sudo apt-get install -y nodejs &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+  # if nodejs is not installed (command location line count is zero)
+  if [ $nodejs_installed -eq 0 ]
+    # then execute the commands below
+    then
+
+      # install version 6 of nodejs, and log output
+      sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo bash - &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+
+      # install nodejs, and log output
+      sudo apt-get install -y nodejs &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+
+  # end the if statement
+  fi
+
 }
 
 # function to install pm2
@@ -49,14 +57,8 @@ function install_pm2()
   # npm install: installs module via npm, -g: installs globally for command line use
   command -v pm2 >/dev/null 2>&1 || sudo npm install pm2@2.9.3 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
-  # check if pm2 is running
-  # ps aux | grep pm2
-
-  # check if limitos script is running
-  # ps aux | grep limitos<%= '_dev' if !Rails.env.production? %>.js
-
   # get the number of limitos<%= '_dev' if !Rails.env.production? %>.js processes that are running
-  # ps aux: show all processes, grep -w: search for a full word, grep -v: ignore the search itself, wc -l: count line numbers
+  # ps aux: show all processes, grep -w: search for a full word, grep -v: ignore the search itself
   limitos_processes=$(ps aux | grep -w limitos<%= '_dev' if !Rails.env.production? %>.js | grep -vw grep | wc -l)
 
   # if the number of limitos.js processes is equal to 0
