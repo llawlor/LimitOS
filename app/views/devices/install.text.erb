@@ -22,17 +22,17 @@ perform_install()
 function install_pm2()
 {
   # output pm2 installation message
-  echo 'Installing pm2 node.js process manager'
+  echo 'Installing pm2 node.js process manager...'
 
-  # install the pm2 module globally, and suppress output
-  sudo npm install pm2 -g &> /dev/null
+  # install the pm2 module globally, and log output
+  sudo npm install pm2 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
   # start the client<%= '_dev' if !Rails.env.production? %>.js node script
   # -s: silent mode
   sudo pm2 -s start client<%= '_dev' if !Rails.env.production? %>.js
 
-  # start pm2 when server is started, and suppress output
-  sudo pm2 startup > /dev/null
+  # start pm2 when server is started, and log output
+  sudo pm2 startup &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
   # save the current client<%= '_dev' if !Rails.env.production? %>.js process
   sudo pm2 -s save
