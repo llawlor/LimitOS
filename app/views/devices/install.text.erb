@@ -4,22 +4,10 @@
 # main function definition
 perform_install()
 {
+  # echo: output a message to the screen
   echo 'Starting installation...'
 
-  # create a new device and return the auth_token
-  device_json=$(curl -sSL -X POST <%= full_url %>/api/v1/devices)
-
-  # get the device id from the JSON
-  device_id=$(echo $device_json | grep -Po '"id":(\d*)' | awk -F':' '{print $2}')
-
-  # get the auth token from the JSON
-  device_auth_token=$(echo $device_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
-
-  # get a new registration code (using the device auth_token)
-  registration_json=$(curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/registrations)
-
-  # get the auth token from the JSON
-  registration_auth_token=$(echo $registration_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
+  # install pm2 to run the nodejs process
 
   # download the client.js file
   download_client_js
@@ -32,6 +20,25 @@ perform_install()
 # function to download client.js
 function download_client_js()
 {
+  # create a new device and save the auth_token as device_json
+  # curl: request a remote url, -s: silent, -S: show errors, -L: follow redirects, -X POST: use a HTTP POST request
+  device_json=$(curl -sSL -X POST <%= full_url %>/api/v1/devices)
+
+  # get the device id from the JSON
+  # grep: search, -P: use Perl regular expressions, -o: only output the match, '"id":(\d*)': look for "id":(digits)
+  # awk: pattern manipulation, -F':': separate by ':', print $2: print the second match
+  device_id=$(echo $device_json | grep -Po '"id":(\d*)' | awk -F':' '{print $2}')
+
+  # get the auth token from the JSON
+  # '"auth_token":.*?[^\\]"': look for "auth_token":"xxxxxx", tr -d '"': delete quotes
+  device_auth_token=$(echo $device_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
+
+  # get a new registration code (using the device auth_token)
+  registration_json=$(curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/registrations)
+
+  # get the auth token from the JSON
+  registration_auth_token=$(echo $registration_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
+
   # retrieve the nodejs script and save it as client.js
   curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > client<%= '_dev' if !Rails.env.production? %>.js
 }
