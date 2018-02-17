@@ -8,6 +8,7 @@ perform_install()
   echo 'Starting installation...'
 
   # install pm2 to run the nodejs process
+  install_pm2
 
   # download the client.js file
   download_client_js
@@ -15,6 +16,26 @@ perform_install()
   # output the registration information
   echo "Register this device within 5 minutes at <%= full_url %>/register"
   echo "Registration code: $registration_auth_token"
+}
+
+# function to install pm2
+function install_pm2()
+{
+  # output pm2 installation message
+  echo 'Installing pm2 node.js process manager'
+
+  # install the pm2 module globally, and suppress output
+  sudo npm install pm2 -g &> /dev/null
+
+  # start the client<%= '_dev' if !Rails.env.production? %>.js node script
+  # -s: silent mode
+  sudo pm2 -s start client<%= '_dev' if !Rails.env.production? %>.js
+
+  # start pm2 when server is started, and suppress output
+  sudo pm2 startup > /dev/null
+
+  # save the current client<%= '_dev' if !Rails.env.production? %>.js process
+  sudo pm2 -s save
 }
 
 # function to download client.js
