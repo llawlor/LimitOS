@@ -10,11 +10,11 @@ perform_install()
   # install nodejs
   #install_nodejs
 
-  # install pm2 to run the client javascript process via node
+  # install pm2 to run the limitos javascript process via node
   install_pm2
 
-  # download the client.js file
-  download_client_js
+  # download the limitos.js file
+  download_limitos_js
 
   # output the registration information
   echo "Register this device within 5 minutes at <%= full_url %>/register"
@@ -45,19 +45,19 @@ function install_pm2()
   # install the pm2 module globally, and log output
   sudo npm install pm2@2.9.3 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
-  # start the client<%= '_dev' if !Rails.env.production? %>.js node script
+  # start the limitos<%= '_dev' if !Rails.env.production? %>.js node script
   # -s: silent mode
-  sudo pm2 -s start client<%= '_dev' if !Rails.env.production? %>.js
+  sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
 
   # start pm2 when server is started, and log output
   sudo pm2 startup &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
-  # save the current client<%= '_dev' if !Rails.env.production? %>.js process
+  # save the current limitos<%= '_dev' if !Rails.env.production? %>.js process
   sudo pm2 -s save
 }
 
-# function to download client.js
-function download_client_js()
+# function to download limitos.js
+function download_limitos_js()
 {
   # create a new device and save the auth_token as device_json
   # curl: request a remote url, -s: silent, -S: show errors, -L: follow redirects, -X POST: use a HTTP POST request
@@ -78,8 +78,8 @@ function download_client_js()
   # get the auth token from the JSON
   registration_auth_token=$(echo $registration_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
 
-  # retrieve the nodejs script and save it as client.js
-  curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > client<%= '_dev' if !Rails.env.production? %>.js
+  # retrieve the nodejs script and save it as limitos.js
+  curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>.js
 }
 
 # run the main function
