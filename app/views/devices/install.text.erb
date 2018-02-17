@@ -55,14 +55,27 @@ function install_pm2()
   # check if limitos script is running
   # ps aux | grep limitos<%= '_dev' if !Rails.env.production? %>.js
 
-  # start the limitos<%= '_dev' if !Rails.env.production? %>.js node script, -s: silent mode
-  sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
+  # get the number of limitos<%= '_dev' if !Rails.env.production? %>.js processes that are running
+  # ps aux: show all processes, grep -w: search for a full word, grep -v: ignore the search itself, wc -l: count line numbers
+  limitos_processes=$(ps aux | grep -w limitos<%= '_dev' if !Rails.env.production? %>.js | grep -vw grep | wc -l)
 
-  # start pm2 when server is started, and log output
-  sudo pm2 startup &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+  # if the number of limitos.js processes is equal to 0
+  if [ $limitos_processes -eq 0 ]
+    # then execute the commands below
+    then
 
-  # save the current limitos<%= '_dev' if !Rails.env.production? %>.js process
-  sudo pm2 -s save
+      # start the limitos<%= '_dev' if !Rails.env.production? %>.js node script, -s: silent mode
+      sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
+
+      # start pm2 when server is started, and log output
+      sudo pm2 startup &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+
+      # save the current limitos<%= '_dev' if !Rails.env.production? %>.js process
+      sudo pm2 -s save
+
+  # end the if statement
+  fi
+
 }
 
 # function to download limitos.js
