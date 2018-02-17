@@ -25,7 +25,7 @@ function install_pm2()
   echo 'Installing pm2 node.js process manager...'
 
   # install the pm2 module globally, and log output
-  sudo npm install pm2 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+  sudo npm install pm2@2.9.3 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
   # start the client<%= '_dev' if !Rails.env.production? %>.js node script
   # -s: silent mode
