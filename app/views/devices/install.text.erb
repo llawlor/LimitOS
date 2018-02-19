@@ -10,6 +10,15 @@ perform_install()
   # install nodejs
   install_nodejs
 
+  # todo: check if npm is installed and install it
+  # sudo apt-get install npm -y &< 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+
+  # todo: install ws node library
+  # sudo npm install ws
+
+  # todo: install rpio node library
+  # sudo npm install rpio
+
   # install pm2 to run the limitos javascript process via node
   install_pm2
 
