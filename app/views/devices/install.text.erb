@@ -134,8 +134,8 @@ function download_limitos_js()
   # get the auth token from the JSON
   registration_auth_token=$(echo $registration_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
 
-  # retrieve the nodejs script and save it as limitos.js
-  curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>.js
+  # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
+  curl -sS --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>.js
 }
 
 # run the main function
