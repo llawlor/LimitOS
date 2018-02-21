@@ -7,11 +7,11 @@ perform_install()
   # echo: output a message to the screen
   echo 'Starting installation...'
 
-  # install nodejs
+  # install nodejs (javascript runtime without a web browser)
   install_nodejs
 
-  # todo: check if npm is installed and install it
-  # sudo apt-get install npm -y &< 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+  # install npm (node.js package manager)
+  install_npm
 
   # todo: install ws node library
   # sudo npm install ws
@@ -50,6 +50,29 @@ function install_nodejs()
 
       # install nodejs, and log output
       sudo apt-get install -y nodejs &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+
+  # end the if statement
+  fi
+
+}
+
+
+# function to install npm
+function install_npm()
+{
+  # check if npm is installed
+  npm_installed=$(command -v npm | wc -l)
+
+  # if npm is not installed
+  if [ $npm_installed -eq 0 ]
+    # then execute the commands below
+    then
+
+      # output installation message
+      echo 'npm not found, installing...'
+
+      # install npm, and log output
+      sudo apt-get install npm -y &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
