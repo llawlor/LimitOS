@@ -33,9 +33,6 @@ perform_install()
 # function to install nodejs
 function install_nodejs()
 {
-  # output pm2 installation message
-  echo 'Installing node.js...'
-
   # check if nodejs is installed
   # command -v: outputs location of specified program, wc -l: count line numbers
   nodejs_installed=$(command -v nodejs | wc -l)
@@ -44,6 +41,9 @@ function install_nodejs()
   if [ $nodejs_installed -eq 0 ]
     # then execute the commands below
     then
+
+      # outpt installation message
+      echo 'node.js not found, installing...'
 
       # install version 6 of nodejs, and log output
       sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo bash - &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
@@ -59,9 +59,6 @@ function install_nodejs()
 # function to install pm2
 function install_pm2()
 {
-  # output pm2 installation message
-  echo 'Installing pm2 node.js process manager...'
-
   # install the pm2 module if it doesn't already exist, and log output
   # npm install: installs module via npm, -g: installs globally for command line use
   command -v pm2 >/dev/null 2>&1 || sudo npm install pm2@2.9.3 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
@@ -74,6 +71,9 @@ function install_pm2()
   if [ $limitos_processes -eq 0 ]
     # then execute the commands below
     then
+
+      # output installation message
+      echo 'pm2 node.js process manager not found, installing...'
 
       # start the limitos<%= '_dev' if !Rails.env.production? %>.js node script, -s: silent mode
       sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
