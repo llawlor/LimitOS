@@ -13,8 +13,8 @@ perform_install()
   # install npm (node.js package manager)
   install_npm
 
-  # todo: install ws node library
-  # sudo npm install ws
+  # install ws node.js library
+  install_ws
 
   # todo: install rpio node library
   # sudo npm install rpio
@@ -73,6 +73,29 @@ function install_npm()
 
       # install npm, and log output
       sudo apt-get install npm -y &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+
+  # end the if statement
+  fi
+
+}
+
+# function to install node.js websocket libary (ws)
+function install_ws()
+{
+  # check if ws is installed
+  # npm list --depth=0: show top-level node.js modules
+  ws_installed=$(npm list --depth=0 | grep " ws@" | wc -l)
+
+  # if ws is not installed
+  if [ $ws_installed -eq 0 ]
+    # then execute the commands below
+    then
+
+      # output installation message
+      echo 'ws not found, installing...'
+
+      # install ws, and log output
+      sudo npm install ws &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
