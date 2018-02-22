@@ -22,6 +22,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'therubyracer', platforms: :ruby
 
 # specify specific version of dependency to mitigate bundle install errors
+# this gem version can be removed after https://github.com/ffi/ffi/issues/607 is fixed
 gem 'ffi', '1.9.18'
 
 # Use jquery as the JavaScript library
