@@ -5,9 +5,14 @@
 //= require_self
 //= require_tree ./channels
 
-(function() {
-  this.App || (this.App = {});
+// only start actioncable on device pages
+if (window.location.pathname.indexOf("/devices/") === 0) {
 
-  App.cable = ActionCable.createConsumer();
+  (function() {
+    this.App || (this.App = {});
 
-}).call(this);
+    App.cable = ActionCable.createConsumer();
+
+  }).call(this);
+
+}
