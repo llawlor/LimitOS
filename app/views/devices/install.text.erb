@@ -16,8 +16,8 @@ perform_install()
   # install ws node.js library
   install_ws
 
-  # todo: install rpio node library
-  # sudo npm install rpio
+  # install rpio node.js library
+  install_rpio
 
   # install pm2 to run the limitos javascript process via node
   install_pm2
@@ -96,6 +96,29 @@ function install_ws()
 
       # install ws, and log output
       sudo npm install ws &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+
+  # end the if statement
+  fi
+
+}
+
+# function to install node.js gpio library for the raspberry pi (rpio)
+function install_rpio()
+{
+  # check if rpio is installed
+  # npm list --depth=0: show top-level node.js modules
+  rpio_installed=$(npm list --depth=0 | grep " rpio@" | wc -l)
+
+  # if rpio is not installed
+  if [ $rpio_installed -eq 0 ]
+    # then execute the commands below
+    then
+
+      # output installation message
+      echo 'rpio not found, installing...'
+
+      # install rpio, and log output
+      sudo npm install rpio &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
