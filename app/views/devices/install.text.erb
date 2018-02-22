@@ -22,8 +22,11 @@ perform_install()
   # install pm2 to run the limitos javascript process via node
   install_pm2
 
-  # download the limitos.js file
+  # download the limitos<%= '_dev' if !Rails.env.production? %>.js file
   download_limitos_js
+
+  # start the limitos<%= '_dev' if !Rails.env.production? %>.js process
+  start_limitos_js
 
   # output the registration information
   echo "Register this device within 5 minutes at <%= full_url %>/register"
@@ -128,30 +131,23 @@ function install_rpio()
 # function to install pm2
 function install_pm2()
 {
-  # install the pm2 module if it doesn't already exist, and log output
-  # npm install: installs module via npm, -g: installs globally for command line use
-  command -v pm2 >/dev/null 2>&1 || sudo npm install pm2@2.9.3 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
-
-  # get the number of limitos<%= '_dev' if !Rails.env.production? %>.js processes that are running
-  # ps aux: show all processes, grep -w: search for a full word, grep -v: ignore the search itself
-  limitos_processes=$(ps aux | grep -w limitos<%= '_dev' if !Rails.env.production? %>.js | grep -vw grep | wc -l)
+  # check if pm2 is installed
+  pm2_installed=$(command -v pm2 | wc -l)
 
   # if the number of limitos.js processes is equal to 0
-  if [ $limitos_processes -eq 0 ]
+  if [ $pm2_installed -eq 0 ]
     # then execute the commands below
     then
 
       # output installation message
-      echo 'pm2 node.js process manager not found, installing...'
+      echo 'pm2 not found, installing...'
 
-      # start the limitos<%= '_dev' if !Rails.env.production? %>.js node script, -s: silent mode
-      sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
+      # install pm2
+      sudo npm install pm2@2.9.3 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
       # start pm2 when server is started, and log output
       sudo pm2 startup &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 
-      # save the current limitos<%= '_dev' if !Rails.env.production? %>.js process
-      sudo pm2 -s save
 
   # end the if statement
   fi
@@ -182,6 +178,22 @@ function download_limitos_js()
 
   # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
   curl -sS --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>.js
+}
+
+# function to start the limitos<%= '_dev' if !Rails.env.production? %>.js process
+function start_limitos_js()
+{
+  # output message
+  echo 'starting limitos<%= '_dev' if !Rails.env.production? %>.js process...'
+
+  # stop any previously running limitos<%= '_dev' if !Rails.env.production? %>.js processes
+  sudo pm2 stop limitos<%= '_dev' if !Rails.env.production? %>.js &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+
+  # start the limitos<%= '_dev' if !Rails.env.production? %>.js node script, -s: silent mode
+  sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
+
+  # save the current limitos<%= '_dev' if !Rails.env.production? %>.js process
+  sudo pm2 -s save
 }
 
 # run the main function
