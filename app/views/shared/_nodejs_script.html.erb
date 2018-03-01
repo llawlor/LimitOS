@@ -1,5 +1,5 @@
 // this script must be run via sudo for the i2c communication to work
-// example: sudo nodejs client.js
+// example: sudo nodejs limitos.js
 
 // variable for the device ID
 var device_id = '<%= @device.id %>';
@@ -63,6 +63,38 @@ ws.on('message', function(data, flags) {
 
 // handle a device message
 function handleDeviceMessage(message) {
+  // if this is an i2c message
+  if (message.i2c_address) {
+    handleI2cMessage(message);
+  // else this is a direct message for the raspberry pi
+  } else {
+    handleDirectMessage(message);
+  }
+}
+
+// handle a direct message to the raspberry pi
+function handleDirectMessage(message) {
+  // initialize variables
+  var pin_state;
+  var pin_number = parseInt(message.pin);
+
+  // if this is an on message
+  if (message.digital === 'on') {
+    pin_state = rpio.HIGH;
+  // else if this is an off message
+  } else if (message.digital === 'off') {
+    pin_state = rpio.LOW;
+  }
+
+  // if this is a digital message
+  if (message.digital && message.digital.length !== 0) {
+    // output the message to the correct pin
+    rpio.open(pin_number, rpio.OUTPUT, pin_state);
+  }
+}
+
+// handle an i2c message
+function handleI2cMessage(message) {
   // calculate the delay
   var start_time = (new Date).getTime();
   var delay = start_time - message.time;
