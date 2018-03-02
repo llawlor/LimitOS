@@ -134,7 +134,7 @@ function install_pm2()
   # check if pm2 is installed
   pm2_installed=$(command -v pm2 | wc -l)
 
-  # if the number of limitos.js processes is equal to 0
+  # if pm2 is not installed
   if [ $pm2_installed -eq 0 ]
     # then execute the commands below
     then
@@ -144,10 +144,6 @@ function install_pm2()
 
       # install pm2
       sudo npm install pm2@2.9.3 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
-
-      # start pm2 when server is started, and log output
-      sudo pm2 startup &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
-
 
   # end the if statement
   fi
@@ -194,6 +190,9 @@ function start_limitos_js()
 
   # save the current limitos<%= '_dev' if !Rails.env.production? %>.js process
   sudo pm2 -s save
+
+  # start pm2 when server is started, and log output
+  sudo pm2 startup &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
 }
 
 # run the main function
