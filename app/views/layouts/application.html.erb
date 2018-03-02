@@ -30,12 +30,12 @@
         </button>
         <a class="navbar-brand" href="/">LimitOS</a>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
-          <% if @devices.present? %>
-            <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav">
+            <% if @devices.present? %>
               <li><%= link_to "My Devices", devices_path %></li>
-              <li><%= link_to "Register Device", register_path  %></li>
-            </ul>
-          <% end %>
+            <% end %>
+            <li><%= link_to "Register Device", register_path  %></li>
+          </ul>
           <ul class="nav navbar-nav navbar-right">
             <% if current_user.present? %>
               <li><%= link_to 'My Account', account_path %></li>
