@@ -1,6 +1,7 @@
 class DevicesController < ApplicationController
   before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
   before_action :get_parent_device, only: [:new]
+  skip_before_action :verify_authenticity_token, only: [:install]
 
   # register a new device (take ownership of it)
   def submit_registration
@@ -48,6 +49,14 @@ class DevicesController < ApplicationController
 
   # create the dynamic raspberry pi setup script
   def install
+    # if this is for a specific device
+    if params[:id].present? && params[:auth_token].present?
+      # get the device
+      unauthorized_device = Device.find(params[:id])
+      # if the device is authenticated
+      @device = unauthorized_device if Devise.secure_compare(unauthorized_device.auth_token, params[:auth_token])
+    end
+
     # use a text template but don't use a layout
     render '/devices/install.text.erb', layout: false, content_type: 'text/plain'
   end
@@ -150,6 +159,9 @@ class DevicesController < ApplicationController
 
     # get the device for users that are logged in or out
     def get_device
+      # exit if no id in the params
+      return true if params[:id].blank?
+
       # if the user is logged in
       if current_user.present?
         @device = current_user.devices.find(params[:id])

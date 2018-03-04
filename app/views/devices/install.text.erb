@@ -28,9 +28,13 @@ perform_install()
   # start the limitos<%= '_dev' if !Rails.env.production? %>.js process
   start_limitos_js
 
+  <% if @device.present? %>
+  echo "LimitOS script installed successfully"
+  <% else %>
   # output the registration information
   echo "Register this device within 5 minutes at <%= full_url %>/register"
   echo "Registration code: $registration_auth_token"
+  <% end %>
 }
 
 # function to install nodejs
@@ -153,6 +157,10 @@ function install_pm2()
 # function to download limitos.js
 function download_limitos_js()
 {
+  <% if @device.present? %>
+  # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
+  curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_url %>/api/v1/devices/<%= @device.id %>/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>.js
+  <% else %>
   # create a new device and save the auth_token as device_json
   # curl: request a remote url, -s: silent, -S: show errors, -L: follow redirects, -X POST: use a HTTP POST request
   device_json=$(curl -sSL -X POST <%= full_url %>/api/v1/devices)
@@ -174,6 +182,7 @@ function download_limitos_js()
 
   # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
   curl -sS --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>.js
+  <% end %>
 }
 
 # function to start the limitos<%= '_dev' if !Rails.env.production? %>.js process

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       post :send_message
       get :nodejs_script
       get :arduino_script
+      post :install
     end
     resources :pins
     resources :synchronizations
