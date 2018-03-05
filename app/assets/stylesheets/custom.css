@@ -1,1 +1,5 @@
+/* bootstrap overrides */
+a                               { cursor: pointer; }
+
+/* custom CSS declarations */
 #servo_slider .slider-selection { background: #BABABA; }

@@ -38,8 +38,14 @@
 <% if @master_device.device_type == 'raspberry_pi' %>
   <%= link_to 'Raspberry Pi Nodejs Script', nodejs_script_device_path(@master_device) %>
   <br>
-  Reinstall LimitOS on device:
-  <pre>curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_url %>/devices/<%= @device.id %>/install | bash</pre>
+  <a id="reinstall_link">Reinstall LimitOS on device</a>
+  <br>
+  <div id="reinstall_div" class="hidden">
+    Enter the following command on your Raspberry Pi to reinstall the LimitOS process:
+    <br>
+    <pre>curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_url %>/devices/<%= @device.id %>/install | bash</pre>
+  </div>
+
 <% elsif @device.device_type == 'arduino' %>
   <%= link_to 'Arduino Script', arduino_script_device_path(@device) %>
 <% end %>
@@ -123,3 +129,16 @@
 <%= render 'controls' %>
 
 <br><br>
+
+<script>
+  // when the document is ready
+  $(document).ready(function() {
+
+    // when the reinstall link is clicked
+    $('#reinstall_link').on('click', function() {
+      // show the reinstall dive
+      $('#reinstall_div').removeClass('hidden');
+    });
+
+  });
+</script>

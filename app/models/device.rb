@@ -29,7 +29,7 @@ class Device < ApplicationRecord
 
   # name that is displayed for a device
   def display_name
-    self.name || "Device ##{self.id}"
+    self.name.present? ? self.name : "Device ##{self.id}"
   end
 
   # alias for device.device
