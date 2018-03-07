@@ -52,10 +52,25 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#master_device' do
+    it 'gets the master device' do
+      device2 = FactoryBot.create(:device, device: device)
+      expect(device2.master_device).to eq(device)
+    end
+
+    it 'returns self if no parent device' do
+      expect(device.master_device).to eq(device)
+    end
+  end
+
   describe '#parent_device' do
     it 'gets the parent device' do
       device2 = FactoryBot.create(:device, device: device)
       expect(device2.parent_device).to eq(device)
+    end
+
+    it 'does not return self if no parent device' do
+      expect(device.parent_device).to eq(nil)
     end
   end
 end
