@@ -4,6 +4,21 @@ RSpec.describe DevicesController, type: :controller do
 
   let(:user) { FactoryBot.create(:user) }
   let(:device) { FactoryBot.create(:device, user: user) }
+  let(:device_without_user) { FactoryBot.create(:device, user: nil) }
+
+  describe '#index' do
+    it 'sets @devices correctly for a user' do
+      sign_in(user)
+      get :index
+      expect(assigns(:devices)).to eq([device])
+    end
+
+    it 'sets @devices correctly for a visitor' do
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      get :index
+      expect(assigns(:devices)).to eq([device_without_user])
+    end
+  end
 
   describe '#nodejs_script' do
     render_views
@@ -12,6 +27,7 @@ RSpec.describe DevicesController, type: :controller do
       sign_in(user)
       get :nodejs_script, params: { id: device.id }
       expect(response).to be_successful
+      expect(assigns(:device)).to eq(device)
     end
 
     it 'does not show the nodejs script to a user if incorrect id' do
@@ -19,6 +35,13 @@ RSpec.describe DevicesController, type: :controller do
       expect {
         get :nodejs_script, params: { id: 0 }
       }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'shows the nodejs script to a visitor' do
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      get :nodejs_script, params: { id: device_without_user.id }
+      expect(response).to be_successful
+      expect(assigns(:device)).to eq(device_without_user)
     end
   end
 

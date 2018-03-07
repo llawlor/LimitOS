@@ -46,6 +46,7 @@ group :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'guard-rspec'
   gem 'factory_bot_rails'
+  gem 'rails-controller-testing'
 end
 
 group :development do
