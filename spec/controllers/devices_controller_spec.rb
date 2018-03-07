@@ -20,6 +20,32 @@ RSpec.describe DevicesController, type: :controller do
     end
   end
 
+  describe '#show' do
+    it 'sets @device correctly for a user' do
+      sign_in(user)
+      get :show, params{ id: device.id }
+      expect(assigns(:device)).to eq(device)
+    end
+
+    it 'does not set @device if incorrect id' do
+      sign_in(user)
+      get :show, params{ id: 0 }
+      expect(assigns(:device)).to eq(nil)
+    end
+
+    it 'sets @device correctly for a visitor' do
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      get :show, params{ id: device_without_user.id }
+      expect(assigns(:device)).to eq(device_without_user)
+    end
+
+    it 'does not set @device for a visitor if incorrect id' do
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      get :show, params{ id: 0 }
+      expect(assigns(:device)).to eq(nil)
+    end
+  end
+
   describe '#nodejs_script' do
     render_views
 
