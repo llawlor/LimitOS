@@ -5,6 +5,23 @@ RSpec.describe DevicesController, type: :controller do
   let(:user) { FactoryBot.create(:user) }
   let(:device) { FactoryBot.create(:device, user: user) }
 
+  describe '#nodejs_script' do
+    render_views
+
+    it 'shows the nodejs script to a user' do
+      sign_in(user)
+      get :nodejs_script, params: { id: device.id }
+      expect(response).to be_successful
+    end
+
+    it 'does not show the nodejs script to a user if incorrect id' do
+      sign_in(user)
+      expect {
+        get :nodejs_script, params: { id: 0 }
+      }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
   describe '#send_message' do
     before :each do
       allow(DevicesChannel).to receive(:broadcast_to) { nil }
