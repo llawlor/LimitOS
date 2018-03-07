@@ -40,6 +40,18 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#display_name' do
+    it "uses the device's name" do
+      expect(device.name).to_not eq(nil)
+      expect(device.display_name).to eq(device.name)
+    end
+
+    it 'uses a generic display name if the device name is blank' do
+      device.name = ''
+      expect(device.display_name).to eq("Device ##{device.id}")
+    end
+  end
+
   describe '#parent_device' do
     it 'gets the parent device' do
       device2 = FactoryBot.create(:device, device: device)
