@@ -49,6 +49,14 @@ RSpec.describe DevicesController, type: :controller do
     it 'does not set @device for a visitor if incorrect id' do
       cookies.encrypted[:device_ids] = [device_without_user.id]
       get :show, params: { id: 0 }
+      expect(response.body).to eq('No device')
+      expect(assigns(:device)).to eq(nil)
+    end
+
+    it 'does not set @device for a visitor if device has a user' do
+      cookies.encrypted[:device_ids] = [device.id]
+      get :show, params: { id: device.id }
+      expect(response.body).to eq('No device')
       expect(assigns(:device)).to eq(nil)
     end
   end
@@ -76,6 +84,13 @@ RSpec.describe DevicesController, type: :controller do
       get :nodejs_script, params: { id: device_without_user.id }
       expect(response).to be_successful
       expect(assigns(:device)).to eq(device_without_user)
+    end
+
+    it 'does not show the nodejs script for a visitor if device has a user' do
+      cookies.encrypted[:device_ids] = [device.id]
+      get :nodejs_script, params: { id: device.id }
+      expect(response.body).to eq('No device')
+      expect(assigns(:device)).to eq(nil)
     end
   end
 
