@@ -58,10 +58,10 @@ RSpec.describe "Devices", type: :request do
 
   describe 'not my device' do
     it "doesn't show a device if it doesn't belong to the user" do
-      sign_in user2
-      expect {
-        get device_url(device)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      sign_in(user2)
+      get device_url(device)
+      expect(response.body).to eq('No device')
+      expect(assigns(:device)).to eq(nil)
     end
   end
 
