@@ -6,6 +6,28 @@ RSpec.describe DevicesController, type: :controller do
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
 
+  describe '#install' do
+    render_views
+
+    it 'shows the install script for a new device' do
+      get :install
+      expect(response).to be_successful
+      expect(assigns(:device)).to eq(nil)
+    end
+
+    it 'shows the install script for an existing device' do
+      get :install, params: { id: device.id, auth_token: device.auth_token }
+      expect(response).to be_successful
+      expect(assigns(:device)).to eq(device)
+    end
+
+    it 'shows the install script but not for a specific device if the auth_token is invalid' do
+      get :install, params: { id: device.id, auth_token: 'INVALID_AUTH_TOKEN' }
+      expect(response).to be_successful
+      expect(assigns(:device)).to eq(nil)
+    end
+  end
+
   describe '#index' do
     render_views
 
