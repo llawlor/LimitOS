@@ -18,30 +18,37 @@ RSpec.describe DevicesController, type: :controller do
       get :index
       expect(assigns(:devices)).to eq([device_without_user])
     end
+
+    it 'does not set @devices for a visitor if device has a user_id' do
+      cookies.encrypted[:device_ids] = [device.id]
+      get :index
+      expect(assigns(:devices)).to eq([])
+    end
   end
 
   describe '#show' do
     it 'sets @device correctly for a user' do
       sign_in(user)
-      get :show, params{ id: device.id }
+      get :show, params: { id: device.id }
       expect(assigns(:device)).to eq(device)
     end
 
     it 'does not set @device if incorrect id' do
       sign_in(user)
-      get :show, params{ id: 0 }
+      get :show, params: { id: 0 }
+      expect(response.body).to eq('No device')
       expect(assigns(:device)).to eq(nil)
     end
 
     it 'sets @device correctly for a visitor' do
       cookies.encrypted[:device_ids] = [device_without_user.id]
-      get :show, params{ id: device_without_user.id }
+      get :show, params: { id: device_without_user.id }
       expect(assigns(:device)).to eq(device_without_user)
     end
 
     it 'does not set @device for a visitor if incorrect id' do
       cookies.encrypted[:device_ids] = [device_without_user.id]
-      get :show, params{ id: 0 }
+      get :show, params: { id: 0 }
       expect(assigns(:device)).to eq(nil)
     end
   end
@@ -58,9 +65,10 @@ RSpec.describe DevicesController, type: :controller do
 
     it 'does not show the nodejs script to a user if incorrect id' do
       sign_in(user)
-      expect {
-        get :nodejs_script, params: { id: 0 }
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      get :nodejs_script, params: { id: 0 }
+      expect(response).to be_successful
+      expect(response.body).to eq('No device')
+      expect(assigns(:device)).to eq(nil)
     end
 
     it 'shows the nodejs script to a visitor' do

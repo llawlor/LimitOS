@@ -69,6 +69,9 @@ class DevicesController < ApplicationController
 
   # create the dynamic nodejs script
   def nodejs_script
+    # output message if no device
+    render plain: 'No device' and return if @device.blank?
+    
     @websocket_server_url = Rails.env.production? ? 'wss://limitos.com/cable' : "ws://#{request.host}:#{request.port}/cable"
     # don't use a layout
     render layout: false
@@ -99,6 +102,9 @@ class DevicesController < ApplicationController
 
   # show a particular device
   def show
+    # output message if no device
+    render plain: 'No device' and return if @device.blank?
+
     @parent_device = @devices.find(@device.device_id) if @device.device_id.present?
     @master_device = @device.master_device
   end
@@ -164,7 +170,7 @@ class DevicesController < ApplicationController
 
       # if the user is logged in
       if current_user.present?
-        @device = current_user.devices.find(params[:id])
+        @device = current_user.devices.find_by(id: params[:id])
       # else the user is not logged in
       else
         @device = @devices.find_by(id: params[:id])
