@@ -7,7 +7,11 @@ RSpec.describe DevicesController, type: :controller do
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
 
   describe '#index' do
+    render_views
+
     it 'sets @devices correctly for a user' do
+      # save the device since it's lazy-loaded and hasn't been used yet
+      device.save
       sign_in(user)
       get :index
       expect(assigns(:devices)).to eq([device])
@@ -27,6 +31,8 @@ RSpec.describe DevicesController, type: :controller do
   end
 
   describe '#show' do
+    render_views
+
     it 'sets @device correctly for a user' do
       sign_in(user)
       get :show, params: { id: device.id }

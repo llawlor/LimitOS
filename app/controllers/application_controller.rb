@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
 
   # sets the @devices variable from the user account or the cookies
   def get_devices
+
     # if the user is logged in
     if current_user.present?
       @devices = current_user.devices
