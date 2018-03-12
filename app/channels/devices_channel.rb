@@ -11,4 +11,19 @@ class DevicesChannel < ApplicationCable::Channel
     # stream only if the auth_token matches
     stream_from "devices:#{device.id}" if Devise.secure_compare(device.auth_token, params[:auth_token])
   end
+
+  # receive input
+  def receive(input_data)
+    # get the device
+    device = Device.find(params[:id])
+
+    # if the auth_token matches
+    if Devise.secure_compare(device.auth_token, params[:auth_token])
+      # broadcast to the device
+      DevicesChannel.broadcast_to(
+        device.id,
+        input_data.merge({ time: (Time.now.to_f * 1000).to_i })
+      )
+    end
+  end
 end
