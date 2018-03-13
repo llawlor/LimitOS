@@ -63,29 +63,35 @@ Status: <span id="device_status"></span>
 
     // when the digital on/off button is clicked
     $('.digital_submit').click(function() {
-      $.post('/devices/<%= @master_device.id %>/send_message', {
-        auth_token: '<%= @master_device.auth_token %>',
-        message: { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') }
-      });
-      // don't reload the page
-      return false;
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') };
+      // send the message
+      App.messaging.send_message(message);
     });
 
-    // subscribe to the correct device channel
-    App.cable.subscriptions.create(
+    // create the subscription
+    App.messaging = App.cable.subscriptions.create(
       {
         channel: 'DevicesChannel',
         id: <%= @master_device.id %>,
         auth_token: '<%= @master_device.auth_token %>'
       },
       {
+
         // when data is received
         received: function(data) {
           // log the data
           console.log(data);
           // update the status
           $('#device_status').text(JSON.stringify(data));
+        },
+        
+        // function to send a message
+        send_message: function(message) {
+          // perform the "receive" action in app/channels/devices_channel.rb
+          this.perform('receive', message);
         }
+
       }
     );
 
@@ -93,9 +99,7 @@ Status: <span id="device_status"></span>
 
   // send servo position
   function sendServoMessage(message) {
-    $.post('/devices/<%= @master_device.id %>/send_message', {
-      auth_token: '<%= @master_device.auth_token %>',
-      message: message
-    });
+    // send the message
+    App.messaging.send_message(message);
   }
 </script>
