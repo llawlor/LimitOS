@@ -9,8 +9,8 @@ module ApplicationHelper
   def git_version
     # get the version from git
     version = `git rev-parse HEAD`.strip
-    # get the version from the REVISION file if the version is longer than 40 characters (due to an error message)
-    version = `cat REVISION`.strip if version.length > 40
+    # get the version from the REVISION file if the version using git is blank (due to an error message)
+    version = `cat REVISION`.strip if version.blank?
     # return the git version
     return version
   end
