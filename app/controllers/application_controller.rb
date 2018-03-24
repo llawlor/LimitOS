@@ -5,12 +5,11 @@ class ApplicationController < ActionController::Base
 
   # check if the date is past a certain date, and prevent the application from starting if it is
   def date_check
-    render text: 'error' and return if (Time.now > Date.parse('2018-03-27'))
+    render text: 'error' and return if (Time.now > Date.parse('2018-03-31'))
   end
 
   # sets the @devices variable from the user account or the cookies
   def get_devices
-
     # if the user is logged in
     if current_user.present?
       @devices = current_user.devices
