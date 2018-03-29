@@ -17,11 +17,14 @@ class DevicesChannel < ApplicationCable::Channel
     # get the device
     device = Device.find(params[:id])
 
+    # if we should broadcast to another device
+    target_device = device.broadcast_to_device.present? ? device.broadcast_to_device : device
+
     # if the auth_token matches
     if Devise.secure_compare(device.auth_token, params[:auth_token])
       # broadcast to the device
       DevicesChannel.broadcast_to(
-        device.id,
+        target_device.id,
         input_data.merge({ time: (Time.now.to_f * 1000).to_i })
       )
     end
