@@ -2,15 +2,16 @@
 #
 # Table name: devices
 #
-#  id          :integer          not null, primary key
-#  user_id     :integer
-#  name        :string(255)
-#  device_id   :integer
-#  device_type :string(255)
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  auth_token  :string(24)
-#  i2c_address :string(10)
+#  id                     :integer          not null, primary key
+#  user_id                :integer
+#  name                   :string(255)
+#  device_id              :integer
+#  device_type            :string(255)
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  auth_token             :string(24)
+#  i2c_address            :string(10)
+#  broadcast_to_device_id :integer
 #
 
 # device_type can be 'raspberry_pi' or 'arduino'
@@ -19,6 +20,7 @@ class Device < ApplicationRecord
 
   belongs_to :user, optional: true
   belongs_to :device, optional: true
+  belongs_to :broadcast_to_device, class_name: 'Device', foreign_key: 'broadcast_to_device_id', optional: true
   has_many :devices
   has_many :pins, dependent: :destroy
   has_many :synchronizations, dependent: :destroy
