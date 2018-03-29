@@ -33,6 +33,11 @@
     </dd>
   <% end %>
 
+  <% if @device.broadcast_to_device.present? %>
+    <dt><strong>Broadcast to Device:</strong></dt>
+    <dd><%= link_to @device.broadcast_to_device.name, @device.broadcast_to_device %></dd>
+  <% end %>
+
 </dl>
 
 <% if @master_device.device_type == 'raspberry_pi' %>
