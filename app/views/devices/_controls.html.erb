@@ -47,10 +47,7 @@ Status: <span id="device_status"></span>
         // get the slider value
         var value = slider_<%= pin.pin_number %>.getValue();
         // send the value via the master device
-        $.post('/devices/<%= @master_device.id %>/send_message', {
-          auth_token: '<%= @master_device.auth_token %>',
-          message: { i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: value }
-        });
+        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: value });
       });
 
       // when the servo form is submitted
@@ -85,7 +82,7 @@ Status: <span id="device_status"></span>
           // update the status
           $('#device_status').text(JSON.stringify(data));
         },
-        
+
         // function to send a message
         send_message: function(message) {
           // perform the "receive" action in app/channels/devices_channel.rb
