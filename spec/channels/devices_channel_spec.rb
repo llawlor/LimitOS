@@ -34,6 +34,30 @@ RSpec.describe DevicesChannel, type: :channel do
       message_hash = JSON.parse(broadcasted_message.first).symbolize_keys
       expect(message_hash).to include({ pin: 5, servo: 12 })
     end
+
+    it 'does not broadcast with no device id' do
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      # change params for the 'receive' method
+      subscription.instance_variable_set(:@params, { })
+      broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
+      expect(broadcasted_message).to eq(false)
+    end
+
+    it 'does not broadcast with incorrect device id' do
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      # change params for the 'receive' method
+      subscription.instance_variable_set(:@params, { id: 0 })
+      broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
+      expect(broadcasted_message).to eq(false)
+    end
+
+    it 'does not broadcast with incorrect auth token' do
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      # change params for the 'receive' method
+      subscription.instance_variable_set(:@params, { id: device.id, auth_token: 'INVALID_AUTH_TOKEN' })
+      broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
+      expect(broadcasted_message).to eq(false)
+    end
   end
 
 end
