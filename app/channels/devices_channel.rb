@@ -2,20 +2,29 @@ class DevicesChannel < ApplicationCable::Channel
 
   # called when someone subscribes to the device channel
   def subscribed
-    # if no id, then just return true
-    return true if params[:id].blank?
+    # reject if no id
+    reject and return if params[:id].blank?
 
     # get the device
-    device = Device.find(params[:id])
+    device = Device.find_by(id: params[:id])
 
-    # stream only if the auth_token matches
-    stream_from "devices:#{device.id}" if Devise.secure_compare(device.auth_token, params[:auth_token])
+    # reject if no device
+    reject and return if device.blank?
+
+    # reject if incorrect auth token
+    reject and return if !Devise.secure_compare(device.auth_token, params[:auth_token])
+
+    # start the stream
+    stream_from "devices:#{device.id}"
   end
 
   # receive input
   def receive(input_data)
     # get the device
-    device = Device.find(params[:id])
+    device = Device.find_by(id: params[:id])
+
+    # return false if no device
+    return false if device.blank?
 
     # if we should broadcast to another device
     target_device = device.broadcast_to_device.present? ? device.broadcast_to_device : device

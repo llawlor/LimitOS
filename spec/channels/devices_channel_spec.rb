@@ -1,5 +1,29 @@
 require 'rails_helper'
 
 RSpec.describe DevicesChannel, type: :channel do
-  pending "add some examples to (or delete) #{__FILE__}"
+  before :each do
+    @device = FactoryBot.create(:device)
+  end
+
+  it 'confirms with correct device id' do
+    subscribe(id: @device.id, auth_token: @device.auth_token)
+    expect(subscription).to be_confirmed
+    expect(streams).to include("devices:#{@device.id}")
+  end
+
+  it 'rejects when no device id' do
+    subscribe
+    expect(subscription).to be_rejected
+  end
+
+  it 'rejects when incorrect device id' do
+    subscribe(id: 0)
+    expect(subscription).to be_rejected
+  end
+
+  it 'rejects when incorrect auth token' do
+    subscribe(id: @device.id, auth_token: 'INVALID_AUTH_TOKEN')
+    expect(subscription).to be_rejected
+  end
+
 end
