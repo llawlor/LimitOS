@@ -15,13 +15,42 @@ RSpec.describe DevicesController, type: :controller do
       expect(device.name).to eq('new name')
     end
 
+    it "updates a device using @devices" do
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      patch :update, params: { id: device_without_user.id, device: { name: 'new name' } }
+      expect(response).to redirect_to(device_path(device_without_user))
+      device_without_user.reload
+      expect(device_without_user.name).to eq('new name')
+    end
+
     it "does not update a user's device when the user is not signed in" do
       patch :update, params: { id: device.id, device: { name: 'new name' } }
       expect(response.body).to eq('No device')
     end
 
-    xit 'allows a broadcast_to_device to be set if the user is the same' do
-      patch :update, params: { id: device.id, name: 'new name' }
+    it 'does not update a device if @devices is blank' do
+      cookies.encrypted[:device_ids] = []
+      patch :update, params: { id: device_without_user.id, device: { name: 'new name' } }
+      expect(response.body).to eq('No device')
+    end
+
+    it 'allows a broadcast_to_device to be set if the user is the same' do
+      sign_in(user)
+      device_2 = FactoryBot.create(:device, user: user)
+      patch :update, params: { id: device.id,  device: { broadcast_to_device_id: device_2.id } }
+      expect(response).to redirect_to(device_path(device))
+      device.reload
+      expect(device.broadcast_to_device).to eq(device_2)
+    end
+
+    it 'does not allow a broadcast_to_device to be set if the user is different' do
+      sign_in(user)
+      user_2 = FactoryBot.create(:user)
+      device_2 = FactoryBot.create(:device, user: user_2)
+      patch :update, params: { id: device.id,  device: { broadcast_to_device_id: device_2.id } }
+      expect(response.body).to eq('Unauthorized')
+      device.reload
+      expect(device.broadcast_to_device).to eq(nil)
     end
   end
 
