@@ -145,12 +145,17 @@ class DevicesController < ApplicationController
 
   # update a device
   def update
+    # get the broad_cast_to_device
+    broadcast_to_device = Device.find_by(id: device_params[:broadcast_to_device_id]) if device_params[:broadcast_to_device_id].present?
+
     # if there is a user
     if current_user.present?
-      # get the broad_cast_to_device
-      broadcast_to_device = Device.find_by(id: device_params[:broadcast_to_device_id]) if device_params[:broadcast_to_device_id].present?
-      # error if the users don't match
-      render plain: 'Unauthorized' and return if broadcast_to_device.present? && broadcast_to_device.user_id != @device.user_id
+      # error if the broadcast_to_device is not owned by the current user
+      render plain: 'Unauthorized' and return if broadcast_to_device.present? && broadcast_to_device.user != current_user
+    # else no user logged in
+    else
+      # error if the broadcast_to_device and device aren't both in @devices
+      render plain: 'Unauthorized' and return if broadcast_to_device.present? && !@devices.include?(broadcast_to_device)
     end
 
     # if the device was updated successfully
