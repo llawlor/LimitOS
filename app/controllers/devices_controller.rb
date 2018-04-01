@@ -132,6 +132,9 @@ class DevicesController < ApplicationController
       @device.device_id = @parent_device.id
     end
 
+    # don't allow broadcast_to_id to be set on create
+    @device.broadcast_to_device_id = nil
+
     # if the device was saved
     if @device.save
       # if the user is logged out, add the device

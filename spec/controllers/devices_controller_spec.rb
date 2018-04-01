@@ -6,6 +6,23 @@ RSpec.describe DevicesController, type: :controller do
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
 
+  describe '#create' do
+    it 'creates a new device' do
+      post :create, params: { device: { name: 'new name' } }
+      new_device = Device.last
+      expect(response).to redirect_to(device_path(new_device))
+      expect(new_device.name).to eq('new name')
+    end
+
+    it "creates a new device but doesn't allow broadcast_to_device_id to be set" do
+      post :create, params: { device: { name: 'new name', broadcast_to_device_id: device.id } }
+      new_device = Device.last
+      expect(response).to redirect_to(device_path(new_device))
+      expect(new_device.name).to eq('new name')
+      expect(new_device.broadcast_to_device_id).to eq(nil)
+    end
+  end
+
   describe '#update' do
     it "updates a user's device when the user is signed in" do
       sign_in(user)
