@@ -59,7 +59,10 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       # change params for the 'receive' method
       subscription.instance_variable_set(:@params, { id: 0 })
-      broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
+      broadcasted_message = nil
+      expect {
+        broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
+      }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
 
@@ -67,7 +70,10 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       # change params for the 'receive' method
       subscription.instance_variable_set(:@params, { id: device.id, auth_token: 'INVALID_AUTH_TOKEN' })
-      broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
+      broadcasted_message = nil
+      expect {
+        broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
+      }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
   end
