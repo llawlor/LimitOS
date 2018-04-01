@@ -30,16 +30,28 @@ RSpec.describe DevicesChannel, type: :channel do
   describe '#receive' do
     it 'receives and broadcasts successfully' do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
-      broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
-      message_hash = JSON.parse(broadcasted_message.first).symbolize_keys
-      expect(message_hash).to include({ pin: 5, servo: 12 })
+      expect {
+        subscription.receive({ pin: 5, servo: 12 })
+      }.to have_broadcasted_to(device.id).with(hash_including({ pin: 5, servo: 12 }))
+    end
+
+    it 'broadcasts to a target device' do
+      target_device = FactoryBot.create(:device)
+      device.update_attributes(broadcast_to_device_id: target_device.id)
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      expect {
+        subscription.receive({ pin: 5, servo: 12 })
+      }.to have_broadcasted_to(target_device.id).with(hash_including({ pin: 5, servo: 12 }))
     end
 
     it 'does not broadcast with no device id' do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       # change params for the 'receive' method
       subscription.instance_variable_set(:@params, { })
-      broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
+      broadcasted_message = nil
+      expect {
+        broadcasted_message = subscription.receive({ pin: 5, servo: 12 })
+      }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
 
