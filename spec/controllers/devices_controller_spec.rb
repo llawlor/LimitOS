@@ -6,6 +6,25 @@ RSpec.describe DevicesController, type: :controller do
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
 
+  describe '#update' do
+    it "updates a user's device when the user is signed in" do
+      sign_in(user)
+      patch :update, params: { id: device.id, device: { name: 'new name' } }
+      expect(response).to redirect_to(device_path(device))
+      device.reload
+      expect(device.name).to eq('new name')
+    end
+
+    it "does not update a user's device when the user is not signed in" do
+      patch :update, params: { id: device.id, device: { name: 'new name' } }
+      expect(response.body).to eq('No device')
+    end
+
+    xit 'allows a broadcast_to_device to be set if the user is the same' do
+      patch :update, params: { id: device.id, name: 'new name' }
+    end
+  end
+
   describe '#install' do
     render_views
 
