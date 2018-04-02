@@ -217,12 +217,34 @@ RSpec.describe DevicesController, type: :controller do
       expect {
         post :send_message, params: { id: device.id, auth_token: device.auth_token, message: { pin: 5, servo: 12 } }
       }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
+      expect(response).to be_successful
+      expect(response.body).to be_blank
+    end
+
+    it 'sends a message to a target device' do
+      target_device = FactoryBot.create(:device)
+      device.update_attributes(broadcast_to_device_id: target_device.id)
+      expect {
+        post :send_message, params: { id: device.id, auth_token: device.auth_token, message: { pin: 5, servo: 12 } }
+      }.to have_broadcasted_to(target_device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
+      expect(response).to be_successful
+      expect(response.body).to be_blank
+    end
+
+    it 'does not send a message with incorrect device id' do
+      expect {
+        post :send_message, params: { id: 0, auth_token: 'INVALID_TOKEN', message: { pin: 5, servo: 12 } }
+      }.to_not have_broadcasted_to(device.id).from_channel(DevicesChannel)
+      expect(response).to be_successful
+      expect(response.body).to eq('Unauthorized')
     end
 
     it 'does not send a message if the auth_token is incorrect' do
       expect {
         post :send_message, params: { id: device.id, auth_token: 'INVALID_TOKEN', message: { pin: 5, servo: 12 } }
       }.to_not have_broadcasted_to(device.id).from_channel(DevicesChannel)
+      expect(response).to be_successful
+      expect(response.body).to eq('Unauthorized')
     end
   end
 end
