@@ -213,18 +213,16 @@ RSpec.describe DevicesController, type: :controller do
   end
 
   describe '#send_message' do
-    before :each do
-      allow(DevicesChannel).to receive(:broadcast_to) { nil }
-    end
-
     it 'sends a message' do
-      expect(DevicesChannel).to receive(:broadcast_to)
-      post :send_message, params: { id: device.id, auth_token: device.auth_token, message: { pin: 1 } }
+      expect {
+        post :send_message, params: { id: device.id, auth_token: device.auth_token, message: { pin: 5, servo: 12 } }
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
     end
 
     it 'does not send a message if the auth_token is incorrect' do
-      expect(DevicesChannel).to_not receive(:broadcast_to)
-      post :send_message, params: { id: device.id, auth_token: 'INVALID_TOKEN', message: { pin: 1 } }
+      expect {
+        post :send_message, params: { id: device.id, auth_token: 'INVALID_TOKEN', message: { pin: 5, servo: 12 } }
+      }.to_not have_broadcasted_to(device.id).from_channel(DevicesChannel)
     end
   end
 end
