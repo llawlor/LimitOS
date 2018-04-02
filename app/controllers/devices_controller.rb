@@ -83,17 +83,11 @@ class DevicesController < ApplicationController
     # return false if no device
     render plain: 'Unauthorized' and return if device.blank?
 
-    # if we should broadcast to another device
-    target_device = device.broadcast_to_device.present? ? device.broadcast_to_device : device
-
     # return false if auth_token doesn't match
     render plain: 'Unauthorized' and return if !Devise.secure_compare(device.auth_token, params[:auth_token])
 
     # broadcast to the device
-    DevicesChannel.broadcast_to(
-      target_device.id,
-      params[:message].merge({ time: (Time.now.to_f * 1000).to_i })
-    )
+    device.broadcast_message(params[:message])
 
     # blank response
     head :ok

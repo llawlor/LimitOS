@@ -49,4 +49,16 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
+  # broadcasts a message
+  def broadcast_message(message)
+    # if we should broadcast to another device
+    target_device = self.broadcast_to_device.present? ? self.broadcast_to_device : self
+
+    # broadcast to the target device
+    DevicesChannel.broadcast_to(
+      target_device.id,
+      message.merge({ time: (Time.now.to_f * 1000).to_i })
+    )
+  end
+
 end
