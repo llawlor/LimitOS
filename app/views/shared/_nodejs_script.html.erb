@@ -127,3 +127,58 @@ function handleI2cMessage(message) {
   console.log(log_message + ', ws delay: ' + delay + 'ms, i2c delay: ' + i2c_delay + 'ms');
 
 }
+
+
+/*
+
+
+// keep track of the last position
+var last_position = '';
+
+// request i2c data
+function requestI2CData() {
+  rpio.i2cBegin();
+  rpio.i2cSetSlaveAddress(4);
+  // set baudrate high for faster polling speed
+  rpio.i2cSetBaudRate(100000);
+  // buffer with max message length of 32 characters
+  var receive_buffer = new Buffer(32);
+  rpio.i2cRead(receive_buffer);
+  rpio.i2cEnd();
+  // convert the buffer to a string
+  var message = receive_buffer.toString();
+  // only get the relevant portion of the message
+  var current_position = message.substring(message.indexOf('position') + 10, message.indexOf('end') - 1);
+
+  // if the last_position is more than 1 degree different than the current position
+  if (last_position > (current_position + 1) || last_position < (current_position - 1)) {
+    console.log(current_position);
+    last_position = current_position;
+    sendWebsocketCommand(current_position);
+  }
+}
+
+// send websocket command with the correct position
+function sendWebsocketCommand(position) {
+  // exit if websocket isn't ready
+  if (ws.readyState === 0) { return }
+
+  // create the command to send
+  var input = {
+    command: 'message',
+    identifier: channel_json,
+    data: JSON.stringify({
+      i2c_address: '0x04',
+      pin: '3',
+      servo: position
+    })
+  }
+
+  // send the websocket input
+  ws.send(JSON.stringify(input));
+}
+
+// continually request i2c data
+setInterval(function() { requestI2CData(); }, 1);
+
+*/
