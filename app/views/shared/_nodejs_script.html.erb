@@ -5,6 +5,8 @@
 var device_id = '<%= @device.id %>';
 // variable for the auth_token
 var auth_token = '<%= @device.auth_token %>';
+// variable for the slave i2c addresses
+var slave_i2c_addresses = [];
 
 // set up the websocket object
 const WebSocket = require('ws');
@@ -77,9 +79,17 @@ function requestI2CAddresses() {
 
 // handle a device message
 function handleDeviceMessage(message) {
-  // if this is an i2c message
+  // if this is an i2c command
   if (message.i2c_address) {
     handleI2cMessage(message);
+  // else if this is a message with the slave i2c addresses
+  } else if (message.i2c_addresses) {
+    // set the addresses
+    slave_i2c_addresses = message.i2c_addresses;
+    // for each address
+    slave_i2c_addresses.forEach(function(i2c_address) {
+      console.log('slave address: ' + parseInt(i2c_address, 16));
+    });
   // else this is a direct message for the raspberry pi
   } else {
     handleDirectMessage(message);
