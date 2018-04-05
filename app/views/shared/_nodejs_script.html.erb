@@ -51,6 +51,8 @@ ws.on('message', function(data, flags) {
   // else if this is a subscription confirmation
   } else if (json_data.type === 'confirm_subscription') {
     console.log('subscribed to: ' + json_data.identifier);
+    // after subscription confirmation, send request for i2c addresses
+    requestI2CAddresses();
   // else if this is a device message, handle it
   } else if (json_data.identifier === channel_json) {
     handleDeviceMessage(json_data.message);
@@ -60,6 +62,18 @@ ws.on('message', function(data, flags) {
   }
 
 });
+
+// send a request to get the i2c slave addresses
+function requestI2CAddresses() {
+  // create the command to send
+  var input = {
+    command: 'message',
+    identifier: channel_json,
+    data: JSON.stringify({ action: 'request_i2c_addresses' })
+  }
+  // send the message
+  ws.send(JSON.stringify(input));
+}
 
 // handle a device message
 function handleDeviceMessage(message) {
@@ -130,7 +144,6 @@ function handleI2cMessage(message) {
 
 
 /*
-
 
 // keep track of the last position
 var last_position = '';

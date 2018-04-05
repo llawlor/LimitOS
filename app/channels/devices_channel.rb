@@ -18,6 +18,24 @@ class DevicesChannel < ApplicationCable::Channel
     stream_from "devices:#{device.id}"
   end
 
+  # get i2c addresses
+  def request_i2c_addresses
+    # get the device
+    device = Device.find_by(id: params[:id])
+
+    # return false if no device
+    return false if device.blank?
+
+    # return false if auth_token doesn't match
+    return false if !Devise.secure_compare(device.auth_token, params[:auth_token])
+
+    # get the i2c_addresses
+    i2c_addresses = device.devices.any? ? device.devices.collect(&:i2c_address) : []
+
+    # transmit the i2c_addresses only to this device
+    transmit({ i2c_addresses: i2c_addresses })
+  end
+
   # receive input
   def receive(input_data)
     # get the device
