@@ -13,6 +13,9 @@ const WebSocket = require('ws');
 // set up the rpio object
 var rpio = require('rpio');
 
+// keep track of the last position
+var last_position = '';
+
 // variable for the websocket, with the websocket server URL
 const ws = new WebSocket('<%= @websocket_server_url %>');
 
@@ -152,16 +155,10 @@ function handleI2cMessage(message) {
 
 }
 
-
-/*
-
-// keep track of the last position
-var last_position = '';
-
 // request i2c data
-function requestI2CData() {
+function requestI2CData(i2c_address) {
   rpio.i2cBegin();
-  rpio.i2cSetSlaveAddress(4);
+  rpio.i2cSetSlaveAddress(parseInt(i2c_address, 16));
   // set baudrate high for faster polling speed
   rpio.i2cSetBaudRate(100000);
   // buffer with max message length of 32 characters
@@ -177,12 +174,12 @@ function requestI2CData() {
   if (last_position > (current_position + 1) || last_position < (current_position - 1)) {
     console.log(current_position);
     last_position = current_position;
-    sendWebsocketCommand(current_position);
+    sendWebsocketCommand(i2c_address, current_position);
   }
 }
 
 // send websocket command with the correct position
-function sendWebsocketCommand(position) {
+function sendWebsocketCommand(i2c_address, position) {
   // exit if websocket isn't ready
   if (ws.readyState === 0) { return }
 
@@ -191,7 +188,7 @@ function sendWebsocketCommand(position) {
     command: 'message',
     identifier: channel_json,
     data: JSON.stringify({
-      i2c_address: '0x04',
+      i2c_address: i2c_address,
       pin: '3',
       servo: position
     })
@@ -202,6 +199,4 @@ function sendWebsocketCommand(position) {
 }
 
 // continually request i2c data
-setInterval(function() { requestI2CData(); }, 1);
-
-*/
+//setInterval(function() { requestI2CData(); }, 1);
