@@ -54,6 +54,9 @@ class Device < ApplicationRecord
     # if we should broadcast to another device
     target_device = self.broadcast_to_device.present? ? self.broadcast_to_device : self
 
+    # remove the action portion of the message if it's present
+    message.delete("action") if message["action"].present?
+
     # broadcast to the target device
     DevicesChannel.broadcast_to(
       target_device.id,
