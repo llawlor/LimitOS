@@ -64,7 +64,7 @@ class Device < ApplicationRecord
     pin = input_device.pins.find_by(pin_number: message["pin"].to_i) if input_device.present?
 
     # if there is a transform
-    if pin.transform.present?
+    if pin.present? && pin.transform.present?
       # initialize the calculator
       calculator = Dentaku::Calculator.new
 
