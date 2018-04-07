@@ -57,6 +57,22 @@ class Device < ApplicationRecord
     # remove the action portion of the message if it's present
     message.delete("action") if message["action"].present?
 
+    # get the input device
+    input_device = message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self
+
+    # get the input pin
+    pin = input_device.pins.find_by(pin_number: message["pin"].to_i) if input_device.present?
+
+    # if there is a transform
+    if pin.transform.present?
+      # initialize the calculator
+      calculator = Dentaku::Calculator.new
+
+      # transform if there is a servo or digital message
+      message["servo"] = calculator.evaluate(pin.transform, x: message["servo"].to_i) if message["servo"].present?
+      message["digital"] = calculator.evaluate(pin.transform, x: message["servo"].to_i) if message["digital"].present?
+    end
+
     # broadcast to the target device
     DevicesChannel.broadcast_to(
       target_device.id,

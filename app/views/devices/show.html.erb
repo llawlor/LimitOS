@@ -80,6 +80,7 @@
         <th>Type</th>
         <th>Minimum Value</th>
         <th>Maximum Value</th>
+        <th>Transform</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -90,6 +91,7 @@
         <td><%= pin.pin_type %></td>
         <td><%= pin.min %></td>
         <td><%= pin.max %></td>
+        <td><%= pin.transform %></td>
         <td>
           <%= link_to 'Edit Pin', edit_device_pin_path(@device, pin), class: 'btn btn-sm btn-default' %>
           <%= link_to 'Remove Pin', device_pin_path(@device, pin), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
