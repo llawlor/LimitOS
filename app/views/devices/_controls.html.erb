@@ -52,7 +52,7 @@ Status: <span id="device_status"></span>
 
       // when the servo form is submitted
       $('#servo_form_<%= pin.pin_number %>').submit(function() {
-        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: $('#servo_input_' + pin_number).val() });
+        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: $('#servo_input_' + <%= pin.pin_number %>).val() });
         // don't reload the page
         return false;
       });
