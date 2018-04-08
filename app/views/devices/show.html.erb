@@ -50,8 +50,8 @@
     <br>
     <pre>curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_url %>/devices/<%= @device.id %>/install | bash</pre>
   </div>
-
-<% elsif @device.device_type == 'arduino' %>
+<% end %>
+<% if @device.device_type == 'arduino' %>
   <%= link_to 'Arduino Script', arduino_script_device_path(@device) %>
 <% end %>
 
