@@ -49,14 +49,8 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
-  # broadcasts a message
-  def broadcast_message(message)
-    # if we should broadcast to another device
-    target_device = self.broadcast_to_device.present? ? self.broadcast_to_device : self
-
-    # remove the action portion of the message if it's present
-    message.delete("action") if message["action"].present?
-
+  # transform the input message (should be invoked on the input/sending device)
+  def transform_input_message(message)
     # get the input device
     input_device = message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self
 
@@ -72,8 +66,14 @@ class Device < ApplicationRecord
       message["servo"] = calculator.evaluate(input_pin.transform, x: message["servo"].to_i) if message["servo"].present?
     end
 
+    # return the message
+    return message
+  end
+
+  # constrain the output message (should be invoked on the target device)
+  def constrain_output_message(message)
     # get the output device which may be a slave, and different than the target device
-    output_device = message["i2c_address"].present? ? target_device.devices.find_by(i2c_address: message["i2c_address"]) : target_device
+    output_device = message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self
 
     # get the output pin
     output_pin = output_device.pins.find_by(pin_number: message["pin"].to_i)
@@ -83,6 +83,24 @@ class Device < ApplicationRecord
 
     # don't go higher than the maximum
     message["servo"] = output_pin.max if output_pin.try(:max).present? && message["servo"].to_i > output_pin.max
+
+    # return the message
+    return message
+  end
+
+  # broadcasts a message
+  def broadcast_message(message)
+    # if we should broadcast to another device
+    target_device = self.broadcast_to_device.present? ? self.broadcast_to_device : self
+
+    # remove the action portion of the message if it's present
+    message.delete("action") if message["action"].present?
+
+    # transform the message
+    message = self.transform_input_message(message)
+
+    # constrain the message
+    message = target_device.constrain_output_message(message)
 
     # broadcast to the target device
     DevicesChannel.broadcast_to(
