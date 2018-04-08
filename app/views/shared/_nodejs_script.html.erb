@@ -152,7 +152,6 @@ function handleI2cMessage(message) {
   // set the i2c delay
   i2c_delay = (new Date).getTime() - start_time;
   console.log(log_message + ', ws delay: ' + delay + 'ms, i2c delay: ' + i2c_delay + 'ms');
-
 }
 
 // request i2c data
@@ -172,7 +171,7 @@ function requestI2CData(i2c_address) {
 
   // if the last_position is more than 1 degree different than the current position
   if (last_position > (current_position + 1) || last_position < (current_position - 1)) {
-    console.log(current_position);
+    //console.log(current_position);
     last_position = current_position;
     sendWebsocketCommand(i2c_address, current_position);
   }
@@ -202,8 +201,7 @@ function sendWebsocketCommand(i2c_address, position) {
 setInterval(function() {
   // for each address
   slave_i2c_addresses.forEach(function(i2c_address) {
-    console.log('slave address: ' + i2c_address);
     // request the i2c data from the connected slave
     requestI2CData(i2c_address);
   });
-}, 1);
+}, 5);
