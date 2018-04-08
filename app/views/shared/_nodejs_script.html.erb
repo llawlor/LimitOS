@@ -199,4 +199,11 @@ function sendWebsocketCommand(i2c_address, position) {
 }
 
 // continually request i2c data
-//setInterval(function() { requestI2CData(); }, 1);
+setInterval(function() {
+  // for each address
+  slave_i2c_addresses.forEach(function(i2c_address) {
+    console.log('slave address: ' + i2c_address);
+    // request the i2c data from the connected slave
+    requestI2CData(i2c_address);
+  });
+}, 1);
