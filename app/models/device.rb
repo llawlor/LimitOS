@@ -61,16 +61,28 @@ class Device < ApplicationRecord
     input_device = message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self
 
     # get the input pin
-    pin = input_device.pins.find_by(pin_number: message["pin"].to_i) if input_device.present?
+    input_pin = input_device.pins.find_by(pin_number: message["pin"].to_i) if input_device.present?
 
     # if there is a transform
-    if pin.present? && pin.transform.present?
+    if input_pin.present? && input_pin.transform.present?
       # initialize the calculator
       calculator = Dentaku::Calculator.new
 
       # transform if there is a servo message
-      message["servo"] = calculator.evaluate(pin.transform, x: message["servo"].to_i) if message["servo"].present?
+      message["servo"] = calculator.evaluate(input_pin.transform, x: message["servo"].to_i) if message["servo"].present?
     end
+
+    # get the output device which may be a slave, and different than the target device
+    output_device = message["i2c_address"].present? ? target_device.devices.find_by(i2c_address: message["i2c_address"]) : target_device
+
+    # get the output pin
+    output_pin = output_device.pins.find_by(pin_number: message["pin"].to_i)
+
+    # don't go lower than the minimum
+    message["servo"] = output_pin.min if output_pin.try(:min).present? && message["servo"].to_i < output_pin.min
+
+    # don't go higher than the maximum
+    message["servo"] = output_pin.max if output_pin.try(:max).present? && message["servo"].to_i > output_pin.max
 
     # broadcast to the target device
     DevicesChannel.broadcast_to(
