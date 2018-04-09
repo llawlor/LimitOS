@@ -55,6 +55,6 @@ class PinsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def pin_params
-      params.require(:pin).permit(:device_id, :name, :pin_type, :pin_number, :min, :max, :transform)
+      params.require(:pin).permit(:device_id, :name, :pin_type, :pin_number, :min, :max, :transform, :output_pin_number)
     end
 end

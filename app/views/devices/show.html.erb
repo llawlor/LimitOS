@@ -80,6 +80,7 @@
         <th>Type</th>
         <th>Minimum Value</th>
         <th>Maximum Value</th>
+        <th>Output Pin Number</th>
         <th>Transform</th>
         <th>Actions</th>
       </tr>
@@ -91,6 +92,7 @@
         <td><%= pin.pin_type %></td>
         <td><%= pin.min %></td>
         <td><%= pin.max %></td>
+        <td><%= pin.output_pin_number %></td>
         <td><%= pin.transform %></td>
         <td>
           <%= link_to 'Edit Pin', edit_device_pin_path(@device, pin), class: 'btn btn-sm btn-default' %>
