@@ -57,6 +57,9 @@ class Device < ApplicationRecord
     # get the input pin
     input_pin = input_device.pins.find_by(pin_number: message["pin"].to_i) if input_device.present?
 
+    # translate to a different output pin if necessary
+    message["pin"] = input_pin.output_pin_number if input_pin.try(:output_pin_number).present?
+
     # if there is a transform
     if input_pin.present? && input_pin.transform.present?
       # initialize the calculator
