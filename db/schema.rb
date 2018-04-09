@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180407183531) do
+ActiveRecord::Schema.define(version: 20180409040832) do
 
   create_table "devices", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20180407183531) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "transform"
+    t.integer "output_pin_number"
     t.index ["device_id", "pin_number"], name: "index_pins_on_device_id_and_pin_number"
     t.index ["device_id"], name: "index_pins_on_device_id"
   end
