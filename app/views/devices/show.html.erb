@@ -48,7 +48,7 @@
   <div id="reinstall_div" class="hidden">
     Enter the following command on your Raspberry Pi to reinstall the LimitOS process:
     <br>
-    <pre>curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_url %>/devices/<%= @device.id %>/install | bash</pre>
+    <pre>curl -sS --data "auth_token=<%= @device.master_device.auth_token %>" <%= full_url %>/devices/<%= @device.master_device.id %>/install | bash</pre>
   </div>
 <% end %>
 <% if @device.device_type == 'arduino' %>
