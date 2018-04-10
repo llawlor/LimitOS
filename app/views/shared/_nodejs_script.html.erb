@@ -166,19 +166,21 @@ function requestI2CData(i2c_address) {
   rpio.i2cEnd();
   // convert the buffer to a string
   var message = receive_buffer.toString();
-  // only get the relevant portion of the message
-  var current_position = message.substring(message.indexOf('value:') + 6, message.indexOf(';end') - 1);
+  // get the pin number
+  var pin_number = message.substring(message.indexOf('pin:') + 4, message.indexOf(';value'));
+  // get the value
+  var current_position = message.substring(message.indexOf('value:') + 6, message.indexOf(';end'));
 
-  // if the last_position is more than 1 degree different than the current position
-  if (last_position > (current_position + 1) || last_position < (current_position - 1)) {
+  // if the last_position is different than the current position
+  if (last_position !== current_position) {
     //console.log(current_position);
     last_position = current_position;
-    sendWebsocketCommand(i2c_address, current_position);
+    sendWebsocketCommand(i2c_address, pin_number, current_position);
   }
 }
 
 // send websocket command with the correct position
-function sendWebsocketCommand(i2c_address, position) {
+function sendWebsocketCommand(i2c_address, pin_number, position) {
   // exit if websocket isn't ready
   if (ws.readyState === 0) { return }
 
@@ -188,7 +190,7 @@ function sendWebsocketCommand(i2c_address, position) {
     identifier: channel_json,
     data: JSON.stringify({
       i2c_address: i2c_address,
-      pin: '3',
+      pin: pin_number,
       servo: position
     })
   }
