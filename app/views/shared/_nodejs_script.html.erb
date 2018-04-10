@@ -167,7 +167,7 @@ function requestI2CData(i2c_address) {
   // convert the buffer to a string
   var message = receive_buffer.toString();
   // only get the relevant portion of the message
-  var current_position = message.substring(message.indexOf('position') + 10, message.indexOf('end') - 1);
+  var current_position = message.substring(message.indexOf('value:') + 6, message.indexOf(';end') - 1);
 
   // if the last_position is more than 1 degree different than the current position
   if (last_position > (current_position + 1) || last_position < (current_position - 1)) {
