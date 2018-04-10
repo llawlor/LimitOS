@@ -84,7 +84,7 @@ function requestI2CAddresses() {
 function handleDeviceMessage(message) {
   // if this is an i2c command
   if (message.i2c_address) {
-    handleI2cMessage(message);
+    sendI2cCommand(message);
   // else if this is a message with the slave i2c addresses
   } else if (message.i2c_addresses) {
     // set the addresses
@@ -120,8 +120,8 @@ function handleDirectMessage(message) {
   }
 }
 
-// handle an i2c message
-function handleI2cMessage(message) {
+// send an i2c command message to a connected slave device
+function sendI2cCommand(message) {
   // calculate the delay
   var start_time = (new Date).getTime();
   var delay = start_time - message.time;
