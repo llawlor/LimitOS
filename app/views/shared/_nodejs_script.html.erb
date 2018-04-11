@@ -158,8 +158,8 @@ function sendI2cCommand(message) {
 function requestI2CData(i2c_address) {
   rpio.i2cBegin();
   rpio.i2cSetSlaveAddress(parseInt(i2c_address, 16));
-  // set baudrate high for faster polling speed
-  rpio.i2cSetBaudRate(100000);
+  // set baudrate high for faster polling speed; don't set to 100000 or message corruption occurs
+  rpio.i2cSetBaudRate(50000);
   // buffer with max message length of 32 characters
   var receive_buffer = new Buffer(32);
   rpio.i2cRead(receive_buffer);
