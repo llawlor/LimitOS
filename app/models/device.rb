@@ -49,6 +49,21 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
+  # get the slave devices as an array, for example: [{ i2c_address: '0x04', pin_numbers: [3, 4, 5]}]
+  def slave_device_information
+    # output array
+    output = []
+
+    # for each slave device
+    self.devices.each do |device|
+      # append the data to the array
+      output << { i2c_address: device.i2c_address, pin_numbers: device.pins.collect(&:pin_number) }
+    end
+
+    # return the array
+    return output
+  end
+
   # transform the input message (should be invoked on the input/sending device)
   def transform_input_message(message)
     # get the input device

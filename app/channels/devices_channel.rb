@@ -29,11 +29,8 @@ class DevicesChannel < ApplicationCable::Channel
     # return false if auth_token doesn't match
     return false if !Devise.secure_compare(device.auth_token, params[:auth_token])
 
-    # get the slave_devices
-    slave_devices = device.devices.any? ? device.devices.collect(&:i2c_address) : []
-
     # transmit the slave_devices only to this device
-    transmit({ slave_devices: slave_devices })
+    transmit({ slave_devices: device.slave_device_information })
   end
 
   # receive input
