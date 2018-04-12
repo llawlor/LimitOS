@@ -160,23 +160,31 @@ function requestI2CData(i2c_address) {
   rpio.i2cSetSlaveAddress(parseInt(i2c_address, 16));
   // set baudrate high for faster polling speed; don't set to 100000 or message corruption occurs
   rpio.i2cSetBaudRate(50000);
-  // buffer with max message length of 32 characters
-  var receive_buffer = new Buffer(32);
+  // buffer with max message length of 64 characters
+  var receive_buffer = new Buffer(64);
   rpio.i2cRead(receive_buffer);
   rpio.i2cEnd();
   // convert the buffer to a string
   var message = receive_buffer.toString();
+  // remove extra data from the end of the string
+  message = message.substring(0, message.indexOf(',end'));
+  // console.log(message);
   // get the pin number
   var pin_number = message.substring(message.indexOf('pin:') + 4, message.indexOf(';value'));
   // get the value
   var current_position = message.substring(message.indexOf('value:') + 6, message.indexOf(';end'));
 
-  // if the last_position is different than the current position
-  if (last_position !== current_position) {
-    //console.log(current_position);
-    last_position = current_position;
-    sendWebsocketCommand(i2c_address, pin_number, current_position);
-  }
+  // for each pin/value pair
+  message.split(',').forEach(function(pin_value) {
+    var pin_number = pin_value.split(':')[0];
+    var value = pin_value.split(':')[1];
+    // if the last_position is different than the current position
+    if (last_position !== value) {
+      //console.log(value);
+      last_position = value;
+      sendWebsocketCommand(i2c_address, pin_number, value);
+    }
+  });
 }
 
 // send websocket command with the correct position
