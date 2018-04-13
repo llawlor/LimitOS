@@ -44,6 +44,12 @@ void receiveCallback() {
   //Serial.print("data received: ");
   //Serial.println(message);
 
+  // process the message
+  processMessage(message);
+}
+
+// function to process message
+void processMessage(String message) {
   // get the pin number
   int pin_number = message.substring(message.indexOf("pin:") + 4, message.indexOf(",")).toInt();
   // get the index of the digital command

@@ -93,6 +93,7 @@ function handleDeviceMessage(message) {
     // for each address
     slave_devices.forEach(function(slave_device) {
       console.log('slave address: ' + parseInt(slave_device.i2c_address, 16));
+      console.log('pin_numbers: ' + slave_device.pin_numbers);
     });
   // else this is a direct message for the raspberry pi
   } else {
