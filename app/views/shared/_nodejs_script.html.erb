@@ -81,23 +81,35 @@ function requestI2CAddresses() {
   ws.send(JSON.stringify(input));
 }
 
+
 // handle a device message
 function handleDeviceMessage(message) {
   // if this is an i2c command
   if (message.i2c_address) {
+
+    // send the command
     sendI2cCommand(message);
+
   // else if this is a message with the slave i2c addresses
   } else if (message.slave_devices) {
+
     // set the device information
     slave_devices = message.slave_devices;
+
     // for each address
     slave_devices.forEach(function(slave_device) {
       console.log('slave address: ' + parseInt(slave_device.i2c_address, 16));
       console.log('pin_numbers: ' + slave_device.pin_numbers);
+      // send the setup command with the pin numbers
+      sendI2cCommand(slave_device);
     });
+
   // else this is a direct message for the raspberry pi
   } else {
+
+    // handle the direct message
     handleDirectMessage(message);
+
   }
 }
 
@@ -134,18 +146,29 @@ function sendI2cCommand(message) {
   // set i2c address (parsed in hex)
   rpio.i2cSetSlaveAddress(parseInt(message.i2c_address, 16));
   // set baudrate
-  rpio.i2cSetBaudRate(9600);
+  rpio.i2cSetBaudRate(50000);
 
   // if there is a digital output command
   if (message.digital && message.digital.length !== 0) {
+
     // send the digital command
     rpio.i2cWrite(new Buffer("pin:" + message.pin + ",digital:" + message.digital));
     log_message = "digital_" + message.digital + ",pin_" + message.pin;
+
   // if there is a servo command
   } else if (message.servo && message.servo.length !== 0) {
+
     // send the servo command
     rpio.i2cWrite(new Buffer("pin:" + message.pin + ",servo:" + message.servo));
     log_message = "servo_" + message.servo + ",pin_" + message.pin;
+
+  // if there is a pin setup command
+  } else if (message.pin_numbers) {
+
+    // send the setup command to the slave
+    rpio.i2cWrite(new Buffer("setup_pins:" + message.pin_numbers));
+    log_message = "setup_pins:" + message.pin_numbers;
+
   }
 
   // end i2c
@@ -153,7 +176,8 @@ function sendI2cCommand(message) {
 
   // set the i2c delay
   i2c_delay = (new Date).getTime() - start_time;
-  console.log(log_message + ', ws delay: ' + delay + 'ms, i2c delay: ' + i2c_delay + 'ms');
+  var websocket_delay_string = (message.time ? ', ws delay: ' + delay + 'ms' : '');
+  console.log(log_message + websocket_delay_string + ', i2c delay: ' + i2c_delay + 'ms');
 }
 
 // request i2c data
