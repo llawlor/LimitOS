@@ -74,7 +74,7 @@ ws.on('message', function(data, flags) {
   } else {
 
     console.log('message received: ' + data);
-    
+
   }
 
 });
@@ -177,7 +177,7 @@ function sendI2cCommand(message) {
   } else if (message.input_pins) {
 
     // send the setup command to the slave
-    rpio.i2cWrite(new Buffer("s:" + message.input_pins));
+    rpio.i2cWrite(new Buffer("setup_pins:" + message.input_pins));
     log_message = "setup_pins:" + message.input_pins;
 
   }
