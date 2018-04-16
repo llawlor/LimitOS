@@ -99,7 +99,7 @@ function handleDeviceMessage(message) {
     // for each address
     slave_devices.forEach(function(slave_device) {
       console.log('slave address: ' + parseInt(slave_device.i2c_address, 16));
-      console.log('pin_numbers: ' + slave_device.pin_numbers);
+      console.log('input_pins: ' + slave_device.input_pins);
       // send the setup command with the pin numbers
       sendI2cCommand(slave_device);
     });
@@ -163,11 +163,11 @@ function sendI2cCommand(message) {
     log_message = "servo_" + message.servo + ",pin_" + message.pin;
 
   // if there is a pin setup command
-  } else if (message.pin_numbers) {
+  } else if (message.input_pins) {
 
     // send the setup command to the slave
-    rpio.i2cWrite(new Buffer("setup_pins:" + message.pin_numbers));
-    log_message = "setup_pins:" + message.pin_numbers;
+    rpio.i2cWrite(new Buffer("setup_pins:" + message.input_pins));
+    log_message = "setup_pins:" + message.input_pins;
 
   }
 

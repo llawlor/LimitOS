@@ -41,6 +41,16 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#input_pins' do
+    it 'gets input pins' do
+      device.save
+      pin_3 = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input')
+      pin_5 = FactoryBot.create(:pin, pin_number: 5, device: device, pin_type: 'input')
+      pin_7 = FactoryBot.create(:pin, pin_number: 7, device: device, pin_type: 'servo')
+      expect(device.input_pins.collect(&:pin_number)).to eq([3, 5])
+    end
+  end
+
   describe '#display_name' do
     it "uses the device's name" do
       expect(device.name).to_not eq(nil)
