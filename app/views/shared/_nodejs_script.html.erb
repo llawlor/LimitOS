@@ -54,19 +54,27 @@ ws.on('message', function(data, flags) {
 
   // if this is a ping command
   if (json_data.type === 'ping') {
+
     // log the ping message
     //console.log('ping: ' + json_data.message);
+
   // else if this is a subscription confirmation
   } else if (json_data.type === 'confirm_subscription') {
+
     console.log('subscribed to: ' + json_data.identifier);
     // after subscription confirmation, send request for i2c addresses
     requestI2CAddresses();
+
   // else if this is a device message, handle it
   } else if (json_data.identifier === channel_json) {
+
     handleDeviceMessage(json_data.message);
+
   // else log the full message
   } else {
+
     console.log('message received: ' + data);
+    
   }
 
 });
@@ -239,7 +247,7 @@ function sendWebsocketCommand(i2c_address, pin_number, position) {
 // continually request i2c data
 setInterval(function() {
   // return if the slave devices are not ready
-  if (slave_devices_ready !== true) { return false; }
+  if (slave_devices_ready === false) { return false; }
 
   // for each address
   slave_devices.forEach(function(slave_device) {
