@@ -7,6 +7,8 @@ var device_id = '<%= @device.id %>';
 var auth_token = '<%= @device.auth_token %>';
 // variable for the slave device information
 var slave_devices = [];
+// variable to keep track of whether slaves have been set up
+var slave_devices_ready = false;
 
 // set up the websocket object
 const WebSocket = require('ws');
@@ -104,6 +106,9 @@ function handleDeviceMessage(message) {
       sendI2cCommand(slave_device);
     });
 
+    // mark the slave devices as having been set up
+    slave_devices_ready = true;
+
   // else this is a direct message for the raspberry pi
   } else {
 
@@ -166,7 +171,7 @@ function sendI2cCommand(message) {
   } else if (message.input_pins) {
 
     // send the setup command to the slave
-    rpio.i2cWrite(new Buffer("setup_pins:" + message.input_pins));
+    rpio.i2cWrite(new Buffer("s:" + message.input_pins));
     log_message = "setup_pins:" + message.input_pins;
 
   }
@@ -235,6 +240,9 @@ function sendWebsocketCommand(i2c_address, pin_number, position) {
 
 // continually request i2c data
 setInterval(function() {
+  // return if the slave devices are not ready
+  if (slave_devices_ready !== true) { return false; }
+  
   // for each address
   slave_devices.forEach(function(slave_device) {
     // request the i2c data from the connected slave
