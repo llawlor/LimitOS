@@ -9,6 +9,8 @@ var auth_token = '<%= @device.auth_token %>';
 var slave_devices = [];
 // variable to keep track of whether slaves have been set up
 var slave_devices_ready = false;
+// time of last successful request for i2c data
+var last_i2c_data_received = (new Date).getTime();
 
 // set up the websocket object
 const WebSocket = require('ws');
@@ -206,6 +208,22 @@ function requestI2CData(i2c_address) {
   // remove extra data from the end of the string
   message = message.substring(0, message.indexOf(',end'));
   // console.log(message);
+
+  // if there is a message
+  if (message.length > 0) {
+    // mark the time
+    last_i2c_data_received = (new Date).getTime();
+  }
+
+  // if the message is blank and we haven't received data for 5 seconds
+  if (message.length === 0 && (last_i2c_data_received + 5000) < (new Date).getTime()) {
+    // mark the time
+    last_i2c_data_received = (new Date).getTime()
+    // mark the slave devices as not ready
+    slave_devices_ready = false;
+    // rerequest the i2c addresses
+    requestI2CAddresses();
+  }
 
   // for each pin/value pair
   message.split(',').forEach(function(pin_value) {
