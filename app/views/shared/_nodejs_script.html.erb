@@ -100,14 +100,12 @@ function handleDeviceMessage(message) {
 
     // for each address
     slave_devices.forEach(function(slave_device) {
-      console.log('slave address: ' + parseInt(slave_device.i2c_address, 16));
-      console.log('input_pins: ' + slave_device.input_pins);
       // send the setup command with the pin numbers
       sendI2cCommand(slave_device);
-    });
 
-    // mark the slave devices as having been set up
-    slave_devices_ready = true;
+      // mark the slave devices as having been set up
+      slave_devices_ready = true;
+    });
 
   // else this is a direct message for the raspberry pi
   } else {
@@ -242,7 +240,7 @@ function sendWebsocketCommand(i2c_address, pin_number, position) {
 setInterval(function() {
   // return if the slave devices are not ready
   if (slave_devices_ready !== true) { return false; }
-  
+
   // for each address
   slave_devices.forEach(function(slave_device) {
     // request the i2c data from the connected slave
