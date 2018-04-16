@@ -46,7 +46,9 @@ RSpec.describe Device, type: :model do
       device.save
       slave_device = FactoryBot.create(:device, device_id: device.id, i2c_address: '0x04')
       slave_pin_3 = FactoryBot.create(:pin, pin_number: 3, device: slave_device, pin_type: 'input')
-      expect(device.slave_device_information).to eq([{ i2c_address: '0x04', input_pins: [3] }])
+      slave_pin_5 = FactoryBot.create(:pin, pin_number: 5, device: slave_device, pin_type: 'input')
+      slave_pin_7 = FactoryBot.create(:pin, pin_number: 7, device: slave_device, pin_type: 'servo')
+      expect(device.slave_device_information).to eq([{ i2c_address: '0x04', input_pins: [3, 5] }])
     end
   end
 
