@@ -209,20 +209,24 @@ function requestI2CData(i2c_address) {
   message = message.substring(0, message.indexOf(',end'));
   // console.log(message);
 
-  // if there is a message
-  if (message.length > 0) {
-    // mark the time
-    last_i2c_data_received = (new Date).getTime();
-  }
+  // if there is a message, mark the time
+  if (message.length > 0) { last_i2c_data_received = (new Date).getTime(); }
 
   // if the message is blank and we haven't received data for 5 seconds
   if (message.length === 0 && (last_i2c_data_received + 5000) < (new Date).getTime()) {
+
     // mark the time
-    last_i2c_data_received = (new Date).getTime()
-    // mark the slave devices as not ready
-    slave_devices_ready = false;
-    // rerequest the i2c addresses
-    requestI2CAddresses();
+    last_i2c_data_received = (new Date).getTime();
+
+    // for each address
+    slave_devices.forEach(function(slave_device) {
+      // if the i2c addresses match
+      if (i2c_address === slave_device.i2c_address) {
+        // send the setup command with the pin numbers
+        sendI2cCommand(slave_device);
+      }
+    });
+
   }
 
   // for each pin/value pair
