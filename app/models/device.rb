@@ -114,7 +114,7 @@ class Device < ApplicationRecord
   # broadcasts a message
   def broadcast_message(message)
     # exit if the data is malformed (pin is not a number)
-    return false if message["pin"].to_s != message["pin"].to_i.to_s
+    return false if message.keys.include?("pin") && (message["pin"].to_s != message["pin"].to_i.to_s)
 
     # if we should broadcast to another device
     target_device = self.broadcast_to_device.present? ? self.broadcast_to_device : self
