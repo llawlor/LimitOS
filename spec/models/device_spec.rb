@@ -2,15 +2,16 @@
 #
 # Table name: devices
 #
-#  id          :integer          not null, primary key
-#  user_id     :integer
-#  name        :string(255)
-#  device_id   :integer
-#  device_type :string(255)
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  auth_token  :string(24)
-#  i2c_address :string(10)
+#  id                     :integer          not null, primary key
+#  user_id                :integer
+#  name                   :string(255)
+#  device_id              :integer
+#  device_type            :string(255)
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  auth_token             :string(24)
+#  i2c_address            :string(10)
+#  broadcast_to_device_id :integer
 #
 
 require 'rails_helper'
@@ -37,6 +38,27 @@ RSpec.describe Device, type: :model do
       expect(device.auth_token).to eq(nil)
       device.save
       expect(device.auth_token.length).to eq(24)
+    end
+  end
+
+  describe '#slave_device_information' do
+    it 'gets the information' do
+      device.save
+      slave_device = FactoryBot.create(:device, device_id: device.id, i2c_address: '0x04')
+      slave_pin_3 = FactoryBot.create(:pin, pin_number: 3, device: slave_device, pin_type: 'input')
+      slave_pin_5 = FactoryBot.create(:pin, pin_number: 5, device: slave_device, pin_type: 'input')
+      slave_pin_7 = FactoryBot.create(:pin, pin_number: 7, device: slave_device, pin_type: 'servo')
+      expect(device.slave_device_information).to eq([{ i2c_address: '0x04', input_pins: [3, 5] }])
+    end
+  end
+
+  describe '#input_pins' do
+    it 'gets input pins' do
+      device.save
+      pin_3 = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input')
+      pin_5 = FactoryBot.create(:pin, pin_number: 5, device: device, pin_type: 'input')
+      pin_7 = FactoryBot.create(:pin, pin_number: 7, device: device, pin_type: 'servo')
+      expect(device.input_pins.collect(&:pin_number)).to eq([3, 5])
     end
   end
 

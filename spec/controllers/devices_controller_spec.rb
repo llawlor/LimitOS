@@ -6,6 +6,96 @@ RSpec.describe DevicesController, type: :controller do
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
 
+  describe '#create' do
+    it 'creates a new device' do
+      post :create, params: { device: { name: 'new name' } }
+      new_device = Device.last
+      expect(response).to redirect_to(device_path(new_device))
+      expect(new_device.name).to eq('new name')
+    end
+
+    it "creates a new device but doesn't allow broadcast_to_device_id to be set" do
+      post :create, params: { device: { name: 'new name', broadcast_to_device_id: device.id } }
+      new_device = Device.last
+      expect(response).to redirect_to(device_path(new_device))
+      expect(new_device.name).to eq('new name')
+      expect(new_device.broadcast_to_device_id).to eq(nil)
+    end
+  end
+
+  describe '#update' do
+    it "updates a user's device when the user is signed in" do
+      sign_in(user)
+      patch :update, params: { id: device.id, device: { name: 'new name' } }
+      expect(response).to redirect_to(device_path(device))
+      device.reload
+      expect(device.name).to eq('new name')
+    end
+
+    it "updates a device using @devices" do
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      patch :update, params: { id: device_without_user.id, device: { name: 'new name' } }
+      expect(response).to redirect_to(device_path(device_without_user))
+      device_without_user.reload
+      expect(device_without_user.name).to eq('new name')
+    end
+
+    it "does not update a user's device when the user is not signed in" do
+      patch :update, params: { id: device.id, device: { name: 'new name' } }
+      expect(response.body).to eq('No device')
+    end
+
+    it "does not update a user's device when the user is incorrect" do
+      user_2 = FactoryBot.create(:user)
+      sign_in(user_2)
+      patch :update, params: { id: device.id, device: { name: 'new name' } }
+      expect(response.body).to eq('No device')
+    end
+
+    it 'does not update a device if @devices is blank' do
+      cookies.encrypted[:device_ids] = []
+      patch :update, params: { id: device_without_user.id, device: { name: 'new name' } }
+      expect(response.body).to eq('No device')
+    end
+
+    it 'allows a broadcast_to_device to be set if the user is the same' do
+      sign_in(user)
+      device_2 = FactoryBot.create(:device, user: user)
+      patch :update, params: { id: device.id,  device: { broadcast_to_device_id: device_2.id } }
+      expect(response).to redirect_to(device_path(device))
+      device.reload
+      expect(device.broadcast_to_device).to eq(device_2)
+    end
+
+    it 'allows a broadcast_to_device to be set if both are in @devices' do
+      device_2 = FactoryBot.create(:device, user: nil)
+      cookies.encrypted[:device_ids] = [device_without_user.id, device_2.id]
+      patch :update, params: { id: device_without_user.id,  device: { broadcast_to_device_id: device_2.id } }
+      expect(response).to redirect_to(device_path(device_without_user))
+      device_without_user.reload
+      expect(device_without_user.broadcast_to_device).to eq(device_2)
+    end
+
+    it 'does not allow a broadcast_to_device to be set if the user is different' do
+      sign_in(user)
+      user_2 = FactoryBot.create(:user)
+      device_2 = FactoryBot.create(:device, user: user_2)
+      patch :update, params: { id: device.id,  device: { broadcast_to_device_id: device_2.id } }
+      expect(response.body).to eq('Unauthorized')
+      device.reload
+      expect(device.broadcast_to_device).to eq(nil)
+    end
+
+    it 'does not allow a broadcast_to_device to be set if both are not in @devices' do
+      device_2 = FactoryBot.create(:device, user: nil)
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      patch :update, params: { id: device_without_user.id,  device: { broadcast_to_device_id: device_2.id } }
+      expect(response.body).to eq('Unauthorized')
+      device.reload
+      expect(device.broadcast_to_device).to eq(nil)
+    end
+  end
+
   describe '#install' do
     render_views
 
@@ -123,18 +213,38 @@ RSpec.describe DevicesController, type: :controller do
   end
 
   describe '#send_message' do
-    before :each do
-      allow(DevicesChannel).to receive(:broadcast_to) { nil }
+    it 'sends a message' do
+      expect {
+        post :send_message, params: { id: device.id, auth_token: device.auth_token, message: { pin: 5, servo: 12 } }
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
+      expect(response).to be_successful
+      expect(response.body).to be_blank
     end
 
-    it 'sends a message' do
-      expect(DevicesChannel).to receive(:broadcast_to)
-      post :send_message, params: { id: device.id, auth_token: device.auth_token, message: { pin: 1 } }
+    it 'sends a message to a target device' do
+      target_device = FactoryBot.create(:device)
+      device.update_attributes(broadcast_to_device_id: target_device.id)
+      expect {
+        post :send_message, params: { id: device.id, auth_token: device.auth_token, message: { pin: 5, servo: 12 } }
+      }.to have_broadcasted_to(target_device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
+      expect(response).to be_successful
+      expect(response.body).to be_blank
+    end
+
+    it 'does not send a message with incorrect device id' do
+      expect {
+        post :send_message, params: { id: 0, auth_token: 'INVALID_TOKEN', message: { pin: 5, servo: 12 } }
+      }.to_not have_broadcasted_to(device.id).from_channel(DevicesChannel)
+      expect(response).to be_successful
+      expect(response.body).to eq('Unauthorized')
     end
 
     it 'does not send a message if the auth_token is incorrect' do
-      expect(DevicesChannel).to_not receive(:broadcast_to)
-      post :send_message, params: { id: device.id, auth_token: 'INVALID_TOKEN', message: { pin: 1 } }
+      expect {
+        post :send_message, params: { id: device.id, auth_token: 'INVALID_TOKEN', message: { pin: 5, servo: 12 } }
+      }.to_not have_broadcasted_to(device.id).from_channel(DevicesChannel)
+      expect(response).to be_successful
+      expect(response.body).to eq('Unauthorized')
     end
   end
 end

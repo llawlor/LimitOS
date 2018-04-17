@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    action-cable-testing (0.3.0)
+      actioncable (~> 5.0)
     actioncable (5.1.4)
       actionpack (= 5.1.4)
       nio4r (~> 2.0)
@@ -62,6 +64,7 @@ GEM
     commonjs (0.2.7)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
+    dentaku (3.2.0)
     devise (4.4.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -253,11 +256,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  action-cable-testing
   byebug
   capistrano (~> 3.8)
   capistrano-bundler
   capistrano-passenger
   capistrano-rails
+  dentaku
   devise
   devise-bootstrap-views
   factory_bot_rails

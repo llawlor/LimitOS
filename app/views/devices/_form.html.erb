@@ -33,12 +33,28 @@
     </div>
     <%= f.error_span(:device_type) %>
   </div>
-  <div class="form-group">
-    <%= f.label :i2c_address, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-6">
-      <%= f.text_field :i2c_address, class: 'form-control', placeholder: 'only applicable for slave devices, example: 0x04' %>
+
+  <% if @device.parent_device.present? %>
+    <div class="form-group">
+      <%= f.label :i2c_address, :class => 'control-label col-lg-2' %>
+      <div class="col-lg-6">
+        <%= f.text_field :i2c_address, class: 'form-control', placeholder: 'only applicable for slave devices, example: 0x04' %>
+      </div>
+      <%= f.error_span(:i2c_address) %>
     </div>
-    <%= f.error_span(:i2c_address) %>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :broadcast_to_device, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-6">
+      <%= f.text_field :broadcast_to_device_id, :class => 'form-control' %>
+    </div>
+    <%= f.error_span(:broadcast_to_device) %>
+    <% if @device.devices.present? %>
+      <div class="col-lg-6 col-push-2">
+        *Note: broadcasts will be sent to the same i2c address if using a slave device, so make sure the input system uses the same i2c address as the output system
+      </div>
+    <% end %>
   </div>
 
   <div class="form-group">

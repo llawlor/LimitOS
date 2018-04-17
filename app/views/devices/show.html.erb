@@ -33,6 +33,11 @@
     </dd>
   <% end %>
 
+  <% if @device.broadcast_to_device.present? %>
+    <dt><strong>Broadcast to Device:</strong></dt>
+    <dd><%= link_to @device.broadcast_to_device.name, @device.broadcast_to_device %></dd>
+  <% end %>
+
 </dl>
 
 <% if @master_device.device_type == 'raspberry_pi' %>
@@ -43,10 +48,10 @@
   <div id="reinstall_div" class="hidden">
     Enter the following command on your Raspberry Pi to reinstall the LimitOS process:
     <br>
-    <pre>curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_url %>/devices/<%= @device.id %>/install | bash</pre>
+    <pre>curl -sS --data "auth_token=<%= @device.master_device.auth_token %>" <%= full_url %>/devices/<%= @device.master_device.id %>/install | bash</pre>
   </div>
-
-<% elsif @device.device_type == 'arduino' %>
+<% end %>
+<% if @device.device_type == 'arduino' %>
   <%= link_to 'Arduino Script', arduino_script_device_path(@device) %>
 <% end %>
 
@@ -75,6 +80,8 @@
         <th>Type</th>
         <th>Minimum Value</th>
         <th>Maximum Value</th>
+        <th>Output Pin Number</th>
+        <th>Transform</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -85,6 +92,8 @@
         <td><%= pin.pin_type %></td>
         <td><%= pin.min %></td>
         <td><%= pin.max %></td>
+        <td><%= pin.output_pin_number %></td>
+        <td><%= pin.transform %></td>
         <td>
           <%= link_to 'Edit Pin', edit_device_pin_path(@device, pin), class: 'btn btn-sm btn-default' %>
           <%= link_to 'Remove Pin', device_pin_path(@device, pin), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>

@@ -2,28 +2,49 @@ class DevicesChannel < ApplicationCable::Channel
 
   # called when someone subscribes to the device channel
   def subscribed
-    # if no id, then just return true
-    return true if params[:id].blank?
+    # reject if no id
+    reject and return if params[:id].blank?
 
     # get the device
-    device = Device.find(params[:id])
+    device = Device.find_by(id: params[:id])
 
-    # stream only if the auth_token matches
-    stream_from "devices:#{device.id}" if Devise.secure_compare(device.auth_token, params[:auth_token])
+    # reject if no device
+    reject and return if device.blank?
+
+    # reject if incorrect auth token
+    reject and return if !Devise.secure_compare(device.auth_token, params[:auth_token])
+
+    # start the stream
+    stream_from "devices:#{device.id}"
+  end
+
+  # get i2c addresses and pin numbers for slave devices
+  def request_slave_devices
+    # get the device
+    device = Device.find_by(id: params[:id])
+
+    # return false if no device
+    return false if device.blank?
+
+    # return false if auth_token doesn't match
+    return false if !Devise.secure_compare(device.auth_token, params[:auth_token])
+
+    # transmit the slave_devices only to this device
+    transmit({ slave_devices: device.slave_device_information })
   end
 
   # receive input
   def receive(input_data)
     # get the device
-    device = Device.find(params[:id])
+    device = Device.find_by(id: params[:id])
 
-    # if the auth_token matches
-    if Devise.secure_compare(device.auth_token, params[:auth_token])
-      # broadcast to the device
-      DevicesChannel.broadcast_to(
-        device.id,
-        input_data.merge({ time: (Time.now.to_f * 1000).to_i })
-      )
-    end
+    # return false if no device
+    return false if device.blank?
+
+    # return false if auth_token doesn't match
+    return false if !Devise.secure_compare(device.auth_token, params[:auth_token])
+
+    # broadcast to the device
+    device.broadcast_message(input_data)
   end
 end

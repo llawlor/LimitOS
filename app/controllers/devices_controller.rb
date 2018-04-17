@@ -78,16 +78,16 @@ class DevicesController < ApplicationController
   # params[:message] should be a hash
   def send_message
     # get the device
-    device = Device.find(params[:id])
+    device = Device.find_by(id: params[:id])
 
-    # if the auth_token matches
-    if Devise.secure_compare(device.auth_token, params[:auth_token])
-      # broadcast to the device
-      DevicesChannel.broadcast_to(
-        device.id,
-        params[:message].merge({ time: (Time.now.to_f * 1000).to_i })
-      )
-    end
+    # return false if no device
+    render plain: 'Unauthorized' and return if device.blank?
+
+    # return false if auth_token doesn't match
+    render plain: 'Unauthorized' and return if !Devise.secure_compare(device.auth_token, params[:auth_token])
+
+    # broadcast to the device
+    device.broadcast_message(params[:message])
 
     # blank response
     head :ok
@@ -129,6 +129,9 @@ class DevicesController < ApplicationController
       @device.device_id = @parent_device.id
     end
 
+    # don't allow broadcast_to_id to be set on create
+    @device.broadcast_to_device_id = nil
+
     # if the device was saved
     if @device.save
       # if the user is logged out, add the device
@@ -142,8 +145,23 @@ class DevicesController < ApplicationController
 
   # update a device
   def update
+    # get the broad_cast_to_device
+    broadcast_to_device = Device.find_by(id: device_params[:broadcast_to_device_id]) if device_params[:broadcast_to_device_id].present?
+
+    # if there is a user
+    if current_user.present?
+      # error if the broadcast_to_device is not owned by the current user
+      render plain: 'Unauthorized' and return if broadcast_to_device.present? && broadcast_to_device.user != current_user
+    # else no user logged in
+    else
+      # error if the broadcast_to_device and device aren't both in @devices
+      render plain: 'Unauthorized' and return if broadcast_to_device.present? && !@devices.include?(broadcast_to_device)
+    end
+
+    # if the device was updated successfully
     if @device.update(device_params)
       redirect_to @device, notice: 'Device was successfully updated.'
+    # else the device was not updated
     else
       :edit
     end
@@ -190,7 +208,7 @@ class DevicesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def device_params
-      params.fetch(:device, {}).permit(:name, :device_type, :i2c_address)
+      params.fetch(:device, {}).permit(:name, :device_type, :i2c_address, :broadcast_to_device_id)
     end
 
     # save this device to the logged out user
