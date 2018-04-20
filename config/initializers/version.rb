@@ -3,7 +3,8 @@ def git_version
   # get the version from git
   version = `git rev-parse HEAD`.strip
   # get the version from the REVISION file if the version using git is blank (due to an error message)
-  version = `cat REVISION`.strip if version.blank?
+  # don't use ".blank?" since this file is used outside of rails via auto_update.rb
+  version = `cat REVISION`.strip if version.nil? || version.length == 0
   # return the git version
   return version
 end
