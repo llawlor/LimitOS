@@ -5,7 +5,7 @@ require_relative 'initializers/version.rb'
 remote_version = `git ls-remote https://github.com/llawlor/LimitOS.git refs/heads/master | cut -f 1`
 
 # if the git versions are present and the remote version is not the same as the local version
-if !GIT_VERSION.nil? && GIT_VERSION.length > 0 && !remote_version.nil? && remote_version.length > 0 && remote_version != GIT_VERSION
+if !GIT_VERSION.nil? && GIT_VERSION.length > 0 && !remote_version.nil? && remote_version.length > 0 && remote_version.strip != GIT_VERSION.strip
   # initialize the repository
   `git init`
   # add the remote
