@@ -23,6 +23,9 @@ if !GIT_VERSION.nil? && GIT_VERSION.length > 0 && !remote_version.nil? && remote
   # run database migrations
   `RAILS_ENV=production bundle exec rake db:migrate`
 
+  # set up scheduled tasks
+  `bundle exec whenever --update-crontab limitos --set environment=production --roles=app,web,db`
+
   # check if phusion passenger is running (via nginx)
   phusion_passenger_is_running = (`ps aux | grep nginx | grep -v grep | wc -l`.to_i > 0)
   # check if puma is running
@@ -41,6 +44,5 @@ if !GIT_VERSION.nil? && GIT_VERSION.length > 0 && !remote_version.nil? && remote
     # restart the webserver if the process ID is greater than 0
     `kill -SIGUSR1 #{puma_process_id}` if puma_process_id > 0
   end
-
 
 end
