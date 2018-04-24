@@ -37,6 +37,9 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# for scheduled tasks
+gem 'whenever'
+
 # enable string calculations
 gem 'dentaku'
 
