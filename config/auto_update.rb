@@ -17,6 +17,12 @@ if !GIT_VERSION.nil? && GIT_VERSION.length > 0 && !remote_version.nil? && remote
   # switch to the master branch
   `git checkout origin/master`
 
+  # install the necessary gems
+  `bundle install`
+
+  # run database migrations
+  `RAILS_ENV=production bundle exec rake db:migrate`
+
   # check if phusion passenger is running (via nginx)
   phusion_passenger_is_running = (`ps aux | grep nginx | grep -v grep | wc -l`.to_i > 0)
   # check if puma is running
