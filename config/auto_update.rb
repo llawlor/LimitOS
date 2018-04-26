@@ -14,6 +14,8 @@ if !GIT_VERSION.nil? && GIT_VERSION.length > 0 && !remote_version.nil? && remote
   `git fetch`
   # revert local changes
   `git reset origin/master`
+  # revert more local changes
+  `git checkout .`
   # switch to the master branch
   `git checkout origin/master`
 
