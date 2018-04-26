@@ -1,3 +1,5 @@
+# set the path
+env :PATH, ENV['PATH']
 # set the output
 set :output, 'log/crontab.log'
 
