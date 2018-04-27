@@ -1,3 +1,6 @@
+# exit if this is run under Rails
+abort("config/auto_update.rb cannot be run from within Rails") if defined?(Rails)
+
 # require the version file
 require_relative 'initializers/version.rb'
 
