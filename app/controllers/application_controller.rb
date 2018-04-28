@@ -1,12 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  before_action :date_check
   before_action :get_devices
-
-  # check if the date is past a certain date, and prevent the application from starting if it is
-  def date_check
-    render text: 'error' and return if (Time.now > Date.parse('2018-05-01'))
-  end
 
   # sets the @devices variable from the user account or the cookies
   def get_devices
