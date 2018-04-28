@@ -249,7 +249,7 @@ function requestI2CData(i2c_address) {
 // send websocket command with the correct position
 function sendWebsocketCommand(i2c_address, pin_number, position) {
   // exit if websocket isn't ready
-  if (ws.readyState === 0) { return }
+  if (ws.readyState !== WebSocket.OPEN) { return }
 
   // create the command to send
   var input = {
