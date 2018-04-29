@@ -20,24 +20,26 @@ class DevicesController < ApplicationController
       redirect_to register_path and return
     end
 
+    # add a flash notice
+    flash[:notice] = 'Your device has been registered.'
+
     # if the user is logged in
     if current_user.present?
       # assign ownership of the device
       registration.device.update_attributes(user_id: current_user.id)
       # remove the registration
       registration.destroy
+
       # redirect to the user's devices page
-      redirect_to devices_path and return
+      redirect_to edit_device_path(registration.device) and return
     # else no user
     else
       # save this device to the logged out user
       save_device_to_cookie(registration.device.id)
       # remove the registration
       registration.destroy
-      # add a flash notice
-      flash[:notice] = 'Your device has been registered'
       # redirect to the device page
-      redirect_to devices_path and return
+      redirect_to edit_device_path(registration.device) and return
     end
 
   end
