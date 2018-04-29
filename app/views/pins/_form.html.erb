@@ -63,6 +63,17 @@
     <%= f.label :transform, :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
       <%= f.text_field :transform, :class => 'form-control' %>
+
+      <div class="pull-right">
+        <a id="common-transforms-link">common transforms</a>
+      </div>
+
+      <div id="common-transforms-div" class="hide">
+        absolute value
+        <br>
+        map input range to output range
+      </div>
+
     </div>
     <%=f.error_span(:transform) %>
   </div>
@@ -76,3 +87,20 @@
   </div>
 
 <% end %>
+
+<script>
+
+  // when the document is ready
+  $(document).ready(function() {
+
+    // when the 'common transforms' link is clicked
+    $('#common-transforms-link').on('click', function() {
+      // hide the link
+      $('#common-transforms-link').addClass('hide');
+      // show the common-transforms div
+      $('#common-transforms-div').removeClass('hide');
+    });
+
+  });
+
+</script>
