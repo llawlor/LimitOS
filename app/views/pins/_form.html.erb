@@ -75,6 +75,9 @@
         <div class="radio">
           <label><input type="radio" name="common-transforms-radio" id="map-transform">map input range to output range</label>
         </div>
+        <div class="radio">
+          <label><input type="radio" name="common-transforms-radio" id="round-transform">round</label>
+        </div>
       </div>
 
     </div>
@@ -113,6 +116,12 @@
     // when the map transform is clicked
     $('#map-transform').on('click', function() {
       console.log('map');
+    });
+
+    // when the round transform is clicked
+    $('#round-transform').on('click', function() {
+      // set the transform value
+      $('#pin_transform').val('ROUND(X)');
     });
 
   });

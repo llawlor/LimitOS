@@ -86,7 +86,7 @@ class Device < ApplicationRecord
       calculator = Dentaku::Calculator.new
 
       # transform if there is a servo message
-      message["servo"] = calculator.evaluate(input_pin.transform, x: message["servo"].to_i) if message["servo"].present?
+      message["servo"] = calculator.evaluate(input_pin.transform, x: message["servo"].to_f) if message["servo"].present?
     end
 
     # return the message
