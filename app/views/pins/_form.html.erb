@@ -74,6 +74,12 @@
         </div>
         <div class="radio">
           <label><input type="radio" name="common-transforms-radio" id="map-transform">map input range to output range</label>
+          <div id="map-tranform-form" style="padding-left: 20px;" class="hide">
+            Input range start: <input type="text" class="map-input" id="map-from-low" value="0"><br>
+            Input range end: <input type="text" class="map-input" id="map-from-high" value="1023"><br>
+            Output range start: <input type="text" class="map-input" id="map-to-low" value="0"><br>
+            Output range end: <input type="text" class="map-input" id="map-to-high" value="100"><br>
+          </div>
         </div>
         <div class="radio">
           <label><input type="radio" name="common-transforms-radio" id="round-transform">round</label>
@@ -110,19 +116,40 @@
     // when the absolute value transform is clicked
     $('#absolute-value-transform').on('click', function() {
       // set the transform value
-      $('#pin_transform').val('IF (x > 0, x, -x)');
+      $('#pin_transform').val('if (x > 0, x, -x)');
     });
 
     // when the map transform is clicked
     $('#map-transform').on('click', function() {
-      console.log('map');
+      // show the form
+      $('#map-tranform-form').removeClass('hide');
+      // calculate the map equation
+      displayMapEquation();
+    });
+
+    // when the map values are changed
+    $('.map-input').on('input', function() {
+      // calculate the map equation
+      displayMapEquation();
     });
 
     // when the round transform is clicked
     $('#round-transform').on('click', function() {
       // set the transform value
-      $('#pin_transform').val('ROUND(X)');
+      $('#pin_transform').val('round(X)');
     });
+
+    // function to display map values
+    function displayMapEquation() {
+      // get the values
+      var input_low = $('#map-from-low').val();
+      var input_high = $('#map-from-high').val();
+      var output_low = $('#map-to-low').val();
+      var output_high = $('#map-to-high').val();
+
+      // set the transform value
+      $('#pin_transform').val('round((x - ' + input_low + ') * (' + output_high + ' - ' + output_low + ') / (' + input_high + ' - ' + input_low + ') + ' + output_low + ')');
+    }
 
   });
 
