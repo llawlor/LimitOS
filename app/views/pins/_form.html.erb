@@ -69,9 +69,12 @@
       </div>
 
       <div id="common-transforms-div" class="hide">
-        absolute value
-        <br>
-        map input range to output range
+        <div class="radio">
+          <label><input type="radio" name="common-transforms-radio" id="absolute-value-transform">absolute value</label>
+        </div>
+        <div class="radio">
+          <label><input type="radio" name="common-transforms-radio" id="map-transform">map input range to output range</label>
+        </div>
       </div>
 
     </div>
@@ -99,6 +102,16 @@
       $('#common-transforms-link').addClass('hide');
       // show the common-transforms div
       $('#common-transforms-div').removeClass('hide');
+    });
+
+    // when the absolute value transform is clicked
+    $('#absolute-value-transform').on('click', function() {
+      console.log('absolute value');
+    });
+
+    // when the map transform is clicked
+    $('#map-transform').on('click', function() {
+      console.log('map');
     });
 
   });
