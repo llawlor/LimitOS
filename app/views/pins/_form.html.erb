@@ -106,7 +106,8 @@
 
     // when the absolute value transform is clicked
     $('#absolute-value-transform').on('click', function() {
-      console.log('absolute value');
+      // set the transform value
+      $('#pin_transform').val('IF (x > 0, x, -x)');
     });
 
     // when the map transform is clicked
