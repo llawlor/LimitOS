@@ -37,6 +37,11 @@
       <%= f.text_field :pin_number, :class => 'form-control' %>
     </div>
     <%=f.error_span(:pin_number) %>
+    <% if @device.device_type == 'raspberry_pi' %>
+      <div class="col-lg-push-2 col-lg-10">
+        Please use <a href="https://www.raspberrypi.org/documentation/usage/gpio/README.md" target="blank">GPIO pin numbering</a> when setting your pin number.
+      </div>
+    <% end %>
   </div>
   <div class="form-group">
     <%= f.label :min, :class => 'control-label col-lg-2' %>
