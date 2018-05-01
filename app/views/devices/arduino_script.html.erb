@@ -95,7 +95,7 @@ void setupPins(String input_pin_numbers) {
   // get the first pin number by splitting the string on a comma (after converting the string into a character array)
   pin_number_string = strtok(input_pin_numbers.c_str(), ",");
 
-  // while there are still pin numberss left
+  // while there are still pin numbers left
   while(pin_number_string != NULL) {
     // convert the pin number to an integer
     int pin_number = atoi(pin_number_string);
