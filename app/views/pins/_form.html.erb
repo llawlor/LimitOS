@@ -37,11 +37,19 @@
       <%= f.text_field :pin_number, :class => 'form-control' %>
     </div>
     <%=f.error_span(:pin_number) %>
+
     <% if @device.device_type == 'raspberry_pi' %>
       <div class="col-lg-push-2 col-lg-10">
         Please use <a href="https://www.raspberrypi.org/documentation/usage/gpio/README.md" target="blank">GPIO pin numbering</a> when setting your pin number.
       </div>
+    <% elsif @device.device_type == 'arduino' %>
+      <div class="col-lg-push-2 col-lg-10">
+        Please use <a href="https://playground.arduino.cc/Learning/AnalogPins" target="blank">Arduino pin numbers</a> when setting your pin number.
+        <br>
+        For example on an Arduino Uno use <b>14</b> for the <b>A0</b> pin, and on an Arduino Mega use <b>54</b> for the <b>A0</b> pin.
+      </div>
     <% end %>
+
   </div>
   <div class="form-group">
     <%= f.label :min, :class => 'control-label col-lg-2' %>
