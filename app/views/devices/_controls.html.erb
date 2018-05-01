@@ -12,7 +12,7 @@ Status: <span id="device_status"></span>
 
 <br>
 
-<% @device.pins.where(pin_type: 'servo').order("pin_number asc").each do |pin| %>
+<% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").order("pin_number asc").each do |pin| %>
   <div class="well">
     <%= pin.name %> (pin number: <%= pin.pin_number %>)
     <form id="servo_form_<%= pin.pin_number %>">
@@ -26,7 +26,7 @@ Status: <span id="device_status"></span>
 
 <script>
 
-  <% @device.pins.where(pin_type: 'servo').each do |pin| %>
+  <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
     // initialize this slider
     var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {
       formatter: sliderFormatter
@@ -41,7 +41,7 @@ Status: <span id="device_status"></span>
   // when the document is ready
   $(document).ready(function() {
 
-    <% @device.pins.where(pin_type: 'servo').each do |pin| %>
+    <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
       // when the slider is moved
       slider_<%= pin.pin_number %>.on('change', function() {
         // get the slider value
