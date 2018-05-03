@@ -69,10 +69,25 @@ class Device < ApplicationRecord
     self.pins.where(pin_type: 'input')
   end
 
+  # get the input device (which may be a slave if the i2c_address is present)
+  def get_input_device_based_on_message(message)
+    # if the i2c_address is present get the slave, otherwise return the parent
+    return (message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self)
+  end
+
+  # get the target device based on the message; may be a slave
+  def get_target_device_based_on_message(message)
+    # get the input device
+    input_device = get_input_device_based_on_message(message)
+
+    # if we should broadcast to another device
+    return (input_device.broadcast_to_device.present? ? input_device.broadcast_to_device : self)
+  end
+
   # transform the input message (should be invoked on the input/sending device)
   def transform_input_message(message)
     # get the input device
-    input_device = message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self
+    input_device = get_input_device_based_on_message(message)
 
     # get the input pin
     input_pin = input_device.pins.find_by(pin_number: message["pin"].to_i) if input_device.present?
@@ -93,13 +108,10 @@ class Device < ApplicationRecord
     return message
   end
 
-  # constrain the output message (should be invoked on the target device)
+  # constrain the output message (should be invoked on the target device, which may be a slave)
   def constrain_output_message(message)
-    # get the output device which may be a slave, and different than the target device
-    output_device = message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self
-
     # get the output pin
-    output_pin = output_device.pins.find_by(pin_number: message["pin"].to_i)
+    output_pin = self.pins.find_by(pin_number: message["pin"].to_i)
 
     # don't go lower than the minimum
     message["servo"] = output_pin.min if output_pin.try(:min).present? && message["servo"].to_i < output_pin.min
@@ -116,8 +128,8 @@ class Device < ApplicationRecord
     # exit if the data is malformed (pin is not a number)
     return false if message.keys.include?("pin") && (message["pin"].to_s != message["pin"].to_i.to_s)
 
-    # if we should broadcast to another device
-    target_device = self.broadcast_to_device.present? ? self.broadcast_to_device : self
+    # if we should broadcast to another device (which may be a slave)
+    target_device = get_target_device_based_on_message(message)
 
     # remove the action portion of the message if it's present
     message.delete("action") if message["action"].present?
@@ -128,9 +140,9 @@ class Device < ApplicationRecord
     # constrain the message
     message = target_device.constrain_output_message(message)
 
-    # broadcast to the target device
+    # broadcast to the target device's master (since we can't broadcast directly to a slave)
     DevicesChannel.broadcast_to(
-      target_device.id,
+      target_device.master_device.id,
       message.merge({ time: (Time.now.to_f * 1000).to_i })
     )
   end
