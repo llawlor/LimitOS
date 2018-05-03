@@ -69,28 +69,10 @@ class Device < ApplicationRecord
     self.pins.where(pin_type: 'input')
   end
 
-  # get the input device (which may be a slave if the i2c_address is present)
-  def get_input_device_based_on_message(message)
-    # if the i2c_address is present get the slave, otherwise return the parent
-    return (message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self)
-  end
-
-  # get the target device based on the message; may be a slave
-  def get_target_device_based_on_message(message)
-    # get the input device
-    input_device = get_input_device_based_on_message(message)
-
-    # if we should broadcast to another device
-    return (input_device.broadcast_to_device.present? ? input_device.broadcast_to_device : self)
-  end
-
   # transform the input message (should be invoked on the input/sending device)
   def transform_input_message(message)
-    # get the input device
-    input_device = get_input_device_based_on_message(message)
-
     # get the input pin
-    input_pin = input_device.pins.find_by(pin_number: message["pin"].to_i) if input_device.present?
+    input_pin = self.pins.find_by(pin_number: message["pin"].to_i)
 
     # translate to a different output pin if necessary
     message["pin"] = input_pin.output_pin_number if input_pin.try(:output_pin_number).present?
@@ -128,17 +110,23 @@ class Device < ApplicationRecord
     # exit if the data is malformed (pin is not a number)
     return false if message.keys.include?("pin") && (message["pin"].to_s != message["pin"].to_i.to_s)
 
+    # if the i2c_address is present get the slave, otherwise return the parent
+    input_device = (message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self)
+
     # if we should broadcast to another device (which may be a slave)
-    target_device = get_target_device_based_on_message(message)
+    target_device = (input_device.broadcast_to_device.present? ? input_device.broadcast_to_device : self)
 
     # remove the action portion of the message if it's present
     message.delete("action") if message["action"].present?
 
     # transform the message
-    message = self.transform_input_message(message)
+    message = input_device.transform_input_message(message)
 
     # constrain the message
     message = target_device.constrain_output_message(message)
+
+    # change the i2c_address to the target_device's i2c_address
+    message["i2c_address"] = target_device.i2c_address if target_device.i2c_address.present?
 
     # broadcast to the target device's master (since we can't broadcast directly to a slave)
     DevicesChannel.broadcast_to(
