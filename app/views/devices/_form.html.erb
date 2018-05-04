@@ -47,7 +47,7 @@
   <div class="form-group">
     <%= f.label :broadcast_to_device, :class => 'control-label col-lg-2' %>
     <div class="col-lg-6">
-      <%= f.select :broadcast_to_device_id, @devices.map{ |device| [device.display_name, device.id] }, { include_blank: true }, { class: 'form-control' } %>
+      <%= f.select :broadcast_to_device_id, @devices.select{ |device| device.id != @device.id }.map{ |device| [device.display_name, device.id] }, { include_blank: true }, { class: 'form-control' } %>
     </div>
     <%= f.error_span(:broadcast_to_device) %>
   </div>
