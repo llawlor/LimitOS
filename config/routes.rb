@@ -20,6 +20,9 @@ Rails.application.routes.draw do
       get :arduino_script
       post :install
     end
+    collection do
+      get :pretty_print_install
+    end
     resources :pins
     resources :synchronizations
   end

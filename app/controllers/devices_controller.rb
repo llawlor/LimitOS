@@ -60,8 +60,11 @@ class DevicesController < ApplicationController
     end
 
     # use a text template but don't use a layout
-    render '/devices/install.text.erb', layout: false, content_type: 'text/plain'
+    render '/devices/_install.text.erb', layout: false, content_type: 'text/plain'
   end
+
+  # pretty print the install script
+  def pretty_print_install; ; end
 
   # create the dynamic arduino script
   def arduino_script
