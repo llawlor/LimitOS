@@ -17,10 +17,8 @@ void setup()
 {
   //Serial.begin(9600);
 
-  // set each pin to 0 (not an active input pin)
-  for (int current_pin = 1; current_pin <= 70; current_pin++) {
-    input_pins[current_pin - 1] = 0;
-  }
+  // reset all input pins
+  resetPins();
 
   // set the baud rate and start the serial monitor
   //Serial.begin(9600);
@@ -33,6 +31,14 @@ void setup()
 }
 
 void loop() {
+}
+
+// reset all input pins
+void resetPins() {
+  // set each pin to 0 (not an active input pin)
+  for (int current_pin = 1; current_pin <= 70; current_pin++) {
+    input_pins[current_pin - 1] = 0;
+  }
 }
 
 // callback for requests
@@ -89,6 +95,9 @@ void receiveCallback() {
 
 // function to setup the pins
 void setupPins(String input_pin_numbers) {
+  // first set all pins inactive
+  resetPins();
+
   // add a pointer to keep track of each pin
   char *pin_number_string;
 
