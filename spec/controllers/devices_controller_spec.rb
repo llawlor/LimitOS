@@ -5,6 +5,18 @@ RSpec.describe DevicesController, type: :controller do
   let(:user) { FactoryBot.create(:user) }
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
+  let (:registration) { FactoryBot.create(:registration, device: device_without_user, expires_at: 1.minute.from_now) }
+
+  describe '#submit_registration' do
+    it 'registers a device for the current user' do
+      registration.save
+      sign_in(user)
+      expect {
+        post :submit_registration, params: { registration: { auth_token: registration.auth_token } }
+      }.to change{ Registration.count }.by(-1)
+      expect(device_without_user.reload.user_id).to eq(user.id)
+    end
+  end
 
   describe '#create' do
     it 'creates a new device' do
