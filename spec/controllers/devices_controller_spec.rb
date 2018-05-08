@@ -16,6 +16,19 @@ RSpec.describe DevicesController, type: :controller do
       }.to change{ Registration.count }.by(-1)
       expect(device_without_user.reload.user_id).to eq(user.id)
     end
+
+    it 'registers a device for an anonymous user' do
+      registration.save
+      expect {
+        post :submit_registration, params: { registration: { auth_token: registration.auth_token } }
+      }.to change{ Registration.count }.by(-1)
+      expect(device_without_user.reload.user_id).to eq(nil)
+      expect(cookies.encrypted[:device_ids]).to eq([device_without_user.id])
+    end
+
+    xit 'does not register an expired registration' do
+
+    end
   end
 
   describe '#create' do
