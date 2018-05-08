@@ -41,6 +41,35 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#transform_input_message' do
+    before :each do
+      device.save
+    end
+
+    it 'transforms the message if there is a transform' do
+      pin = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input', transform: 'x * 2')
+      message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 60 }
+      device.transform_input_message(message)
+      expect(message["servo"]).to eq(120)
+      expect(message["pin"]).to eq(3)
+    end
+
+    it 'transforms pin number' do
+      pin = FactoryBot.create(:pin, pin_number: 3, output_pin_number: 14, device: device, pin_type: 'input', transform: 'x * 2')
+      message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 60 }
+      device.transform_input_message(message)
+      expect(message["servo"]).to eq(120)
+      expect(message["pin"]).to eq(14)
+    end
+
+    it "doesn't transform if no transform present" do
+      pin = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input')
+      message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 60 }
+      device.transform_input_message(message)
+      expect(message["servo"]).to eq(60)
+    end
+  end
+
   describe '#slave_device_information' do
     it 'gets the information' do
       device.save
