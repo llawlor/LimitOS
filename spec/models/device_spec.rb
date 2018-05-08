@@ -41,6 +41,38 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#broadcast_message' do
+    before :each do
+      device.save
+    end
+
+    it 'broadcasts the message' do
+      expect {
+        device.broadcast_message({ "pin" => '5', "servo" => '12' })
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
+    end
+
+    it 'broadcasts to another device' do
+      device_2 = FactoryBot.create(:device)
+      device.update_attributes(broadcast_to_device_id: device_2.id)
+      expect {
+        device.broadcast_message({ "pin" => '5', "servo" => '12' })
+      }.to have_broadcasted_to(device_2.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
+    end
+
+    it 'broadcasts to another device and changes the i2c_address' do
+      arduino_output_device = FactoryBot.create(:device, i2c_address: '0x05')
+      arduino_input_device = FactoryBot.create(:device, device_id: device.id, broadcast_to_device_id: arduino_output_device.id, i2c_address: '0x04')
+      expect {
+        device.broadcast_message({ "pin" => '5', "servo" => '12', "i2c_address" => '0x04' })
+      }.to have_broadcasted_to(arduino_output_device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12', i2c_address: '0x05' }))
+    end
+
+    it 'returns false if the pin message is malformed' do
+      expect(device.broadcast_message({ "pin" => '33INVALID', "servo" => '12' })).to eq(false)
+    end
+  end
+
   describe '#constrain_output_message' do
     before :each do
       device.save
