@@ -5,29 +5,35 @@ RSpec.describe DevicesController, type: :controller do
   let(:user) { FactoryBot.create(:user) }
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
-  let (:registration) { FactoryBot.create(:registration, device: device_without_user, expires_at: 1.minute.from_now) }
 
   describe '#submit_registration' do
+    before :each do
+      @registration = FactoryBot.create(:registration, device: device_without_user, expires_at: 1.minute.from_now)
+    end
+
     it 'registers a device for the current user' do
-      registration.save
       sign_in(user)
       expect {
-        post :submit_registration, params: { registration: { auth_token: registration.auth_token } }
+        post :submit_registration, params: { registration: { auth_token: @registration.auth_token } }
       }.to change{ Registration.count }.by(-1)
       expect(device_without_user.reload.user_id).to eq(user.id)
     end
 
     it 'registers a device for an anonymous user' do
-      registration.save
       expect {
-        post :submit_registration, params: { registration: { auth_token: registration.auth_token } }
+        post :submit_registration, params: { registration: { auth_token: @registration.auth_token } }
       }.to change{ Registration.count }.by(-1)
       expect(device_without_user.reload.user_id).to eq(nil)
       expect(cookies.encrypted[:device_ids]).to eq([device_without_user.id])
     end
 
-    xit 'does not register an expired registration' do
-
+    it 'does not register an expired registration' do
+      sign_in(user)
+      @registration.update_attributes(expires_at: 1.minute.ago)
+      expect {
+        post :submit_registration, params: { registration: { auth_token: @registration.auth_token } }
+      }.to change{ Registration.count }.by(0)
+      expect(device_without_user.reload.user_id).to eq(nil)
     end
   end
 
