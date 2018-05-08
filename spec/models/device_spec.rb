@@ -41,6 +41,26 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#constrain_output_message' do
+    before :each do
+      device.save
+    end
+
+    it 'constrains the minimum' do
+      pin = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input', min: 30)
+      message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 10 }
+      device.constrain_output_message(message)
+      expect(message["servo"]).to eq(30)
+    end
+
+    it 'constrains the maximum' do
+      pin = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input', max: 30)
+      message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 50 }
+      device.constrain_output_message(message)
+      expect(message["servo"]).to eq(30)
+    end
+  end
+
   describe '#transform_input_message' do
     before :each do
       device.save
