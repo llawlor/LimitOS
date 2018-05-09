@@ -19,4 +19,19 @@ require 'rails_helper'
 
 RSpec.describe Pin, type: :model do
 
+  # lazy loaded variables
+  let(:device) { FactoryBot.create(:device) }
+  let(:pin) { FactoryBot.build(:pin, device_id: device.id) }
+
+  describe 'validations' do
+    it 'is valid' do
+      expect(pin).to be_valid
+    end
+
+    it 'checks for a device_id' do
+      pin.device_id = nil
+      expect(pin).to be_invalid
+    end
+  end
+
 end
