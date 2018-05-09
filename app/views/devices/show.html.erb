@@ -51,8 +51,17 @@
     <pre>curl -sS --data "auth_token=<%= @device.master_device.auth_token %>" <%= full_url %>/devices/<%= @device.master_device.id %>/install | bash</pre>
   </div>
 <% end %>
+
 <% if @device.device_type == 'arduino' %>
-  <%= link_to 'Arduino Script', arduino_script_device_path(@device) %>
+  <a id="arduino_setup_link">Arduino Setup</a>
+  <br>
+  <div id="arduino_setup_div" class="alert alert-info hidden">
+    <h4>Arduino Setup</h4>
+    <ol>
+      <li>Connect the Arduino to a Raspberry Pi using I2C by connecting the ground, SDA, and SCL pins on the Arduino to the same pins on the Raspberry Pi.</li>
+      <li>Copy and paste the <%= link_to 'Arduino script', arduino_script_device_path(@device) %> into the Arduino IDE and upload to the device.</li>
+    </ol>
+  </div>
 <% end %>
 
 <br><br>
@@ -147,6 +156,12 @@
     $('#reinstall_link').on('click', function() {
       // show the reinstall dive
       $('#reinstall_div').removeClass('hidden');
+    });
+
+    // when the arduino setup link is clicked
+    $('#arduino_setup_link').on('click', function() {
+      // show the arduino setup
+      $('#arduino_setup_div').removeClass('hidden');
     });
 
   });
