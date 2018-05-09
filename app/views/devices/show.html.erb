@@ -116,33 +116,37 @@
 
 <br><br>
 
-<h3>Synchronizations</h3>
-<% if @device.synchronizations.present? %>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <% @device.synchronizations.each do |synchronization| %>
-      <tr>
-        <td><%= synchronization.name %></td>
-        <td>
-          <%= link_to 'Edit Synchronization', edit_device_synchronization_path(@device, synchronization), class: 'btn btn-sm btn-default' %>
-          <%= link_to 'Remove Synchronization', device_synchronization_path(@device, synchronization), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
-        </td>
-      </tr>
-    <% end %>
-  </table>
-<% end %>
-<%= link_to 'Add New Synchronization', new_device_synchronization_path(@device), class: 'btn btn-default' %>
+<div class="hidden">
+  <h3>Synchronizations</h3>
+  <% if @device.synchronizations.present? %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <% @device.synchronizations.each do |synchronization| %>
+        <tr>
+          <td><%= synchronization.name %></td>
+          <td>
+            <%= link_to 'Edit Synchronization', edit_device_synchronization_path(@device, synchronization), class: 'btn btn-sm btn-default' %>
+            <%= link_to 'Remove Synchronization', device_synchronization_path(@device, synchronization), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+  <%= link_to 'Add New Synchronization', new_device_synchronization_path(@device), class: 'btn btn-default' %>
+</div>
 
 <br><br>
 
 <h3>Controls</h3>
 
-<%= render 'synchronization_controls' %>
+<div class="hidden">
+  <%= render 'synchronization_controls' %>
+</div>
 
 <%= render 'controls' %>
 
