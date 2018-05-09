@@ -40,7 +40,8 @@
 
 </dl>
 
-<% if @master_device.device_type == 'raspberry_pi' %>
+<% if @device.device_type == 'raspberry_pi' %>
+
   <%= link_to 'Raspberry Pi Nodejs Script', nodejs_script_device_path(@master_device) %>
   <br>
   <a id="reinstall_link">Reinstall LimitOS on device</a>
@@ -50,9 +51,9 @@
     <br>
     <pre>curl -sS --data "auth_token=<%= @device.master_device.auth_token %>" <%= full_url %>/devices/<%= @device.master_device.id %>/install | bash</pre>
   </div>
-<% end %>
 
-<% if @device.device_type == 'arduino' %>
+<% elsif @device.device_type == 'arduino' %>
+
   <a id="arduino_setup_link">Arduino Setup</a>
   <br>
   <div id="arduino_setup_div" class="alert alert-info hidden">
@@ -62,6 +63,7 @@
       <li>Copy and paste the <%= link_to 'Arduino script', arduino_script_device_path(@device) %> into the Arduino IDE and upload to the device.</li>
     </ol>
   </div>
+
 <% end %>
 
 <br><br>
