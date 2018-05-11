@@ -23,4 +23,17 @@ class Pin < ApplicationRecord
   # options for pin type
   PIN_TYPES = ['input', 'servo', 'digital']
 
+  after_save :send_slave_device_information
+  after_destroy :send_slave_device_information
+
+  private
+
+    # send slave device information via the master device
+    def send_slave_device_information
+      # get the master device
+      master_device = self.device.master_device
+      # broadcast the slave device information
+      master_device.broadcast_raw_message({ slave_devices: master_device.slave_device_information })
+    end
+
 end
