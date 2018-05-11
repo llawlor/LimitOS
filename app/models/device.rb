@@ -69,6 +69,14 @@ class Device < ApplicationRecord
     self.pins.where(pin_type: 'input')
   end
 
+  # send a raw message to the device, without any additional message manipulation
+  def broadcast_raw_message(message)
+    DevicesChannel.broadcast_to(
+      self.id,
+      message
+    )
+  end
+
   # transform the input message (should be invoked on the input/sending device)
   def transform_input_message(message)
     # get the input pin
