@@ -30,7 +30,7 @@ class DevicesChannel < ApplicationCable::Channel
     return false if !Devise.secure_compare(device.auth_token, params[:auth_token])
 
     # transmit the slave_devices only to this device
-    device.broadcast_raw_message({ slave_devices: device.slave_device_information })
+    device.broadcast_slave_device_information
   end
 
   # receive input

@@ -69,6 +69,12 @@ class Device < ApplicationRecord
     self.pins.where(pin_type: 'input')
   end
 
+  # send slave device information
+  def broadcast_slave_device_information
+    # broadcast the message
+    self.broadcast_raw_message({ slave_devices: self.slave_device_information })
+  end
+
   # send a raw message to the device, without any additional message manipulation
   def broadcast_raw_message(message)
     DevicesChannel.broadcast_to(
