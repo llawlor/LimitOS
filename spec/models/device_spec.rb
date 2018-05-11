@@ -17,6 +17,9 @@
 require 'rails_helper'
 
 RSpec.describe Device, type: :model do
+  before :each do
+    allow_any_instance_of(Device).to receive(:broadcast_slave_device_information).and_return(nil)
+  end
 
   # lazy loaded variables
   let(:user) { FactoryBot.create(:user) }
@@ -38,6 +41,40 @@ RSpec.describe Device, type: :model do
       expect(device.auth_token).to eq(nil)
       device.save
       expect(device.auth_token.length).to eq(24)
+    end
+  end
+
+  describe '#broadcast_slave_device_information' do
+    before :each do
+      device.save
+      allow_any_instance_of(Device).to receive(:broadcast_slave_device_information).and_call_original
+    end
+
+    it 'broadcasts the message' do
+      expect {
+        device.broadcast_slave_device_information
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ slave_devices: [] }))
+    end
+
+    it 'broadcasts the message to the master device' do
+      slave_device = FactoryBot.create(:device, device_id: device.id, i2c_address: '0x04')
+      expect(slave_device.master_device).to eq(device)
+      expect {
+        slave_device.broadcast_slave_device_information
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ slave_devices: [{"i2c_address": '0x04',"input_pins": []}] }))
+    end
+  end
+
+  describe '#broadcast_raw_message' do
+    before :each do
+      device.save
+      allow_any_instance_of(Device).to receive(:broadcast_slave_device_information).and_call_original
+    end
+
+    it 'broadcasts the message' do
+      expect {
+        device.broadcast_raw_message({ "some_key" => 'some_value' })
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ some_key: 'some_value' }))
     end
   end
 
