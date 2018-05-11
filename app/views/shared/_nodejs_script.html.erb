@@ -271,9 +271,13 @@ setInterval(function() {
   // return if the slave devices are not ready
   if (slave_devices_ready === false) { return false; }
 
+
   // for each address
   slave_devices.forEach(function(slave_device) {
-    // request the i2c data from the connected slave
-    requestI2CData(slave_device.i2c_address);
+    // if there are input pins
+    if (slave_device.input_pins.length !== 0) {
+      // request the i2c data from the connected slave
+      requestI2CData(slave_device.i2c_address);
+    }
   });
 }, 5);
