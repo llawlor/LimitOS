@@ -27,6 +27,48 @@ RSpec.describe DevicesChannel, type: :channel do
     end
   end
 
+  describe '#request_slave_devices' do
+    it 'broadcasts successfully' do
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      expect {
+        subscription.request_slave_devices
+      }.to have_broadcasted_to(device.id).with(hash_including({ slave_devices: [] }))
+    end
+
+    it 'does not broadcast with no device id' do
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      # change params for the 'receive' method
+      subscription.instance_variable_set(:@params, { })
+      broadcasted_message = nil
+      expect {
+        broadcasted_message = subscription.request_slave_devices
+      }.to_not have_broadcasted_to(device.id)
+      expect(broadcasted_message).to eq(false)
+    end
+
+    it 'does not broadcast with incorrect device id' do
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      # change params for the 'receive' method
+      subscription.instance_variable_set(:@params, { id: 0 })
+      broadcasted_message = nil
+      expect {
+        broadcasted_message = subscription.request_slave_devices
+      }.to_not have_broadcasted_to(device.id)
+      expect(broadcasted_message).to eq(false)
+    end
+
+    it 'does not broadcast with incorrect auth token' do
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      # change params for the 'receive' method
+      subscription.instance_variable_set(:@params, { id: device.id, auth_token: 'INVALID_AUTH_TOKEN' })
+      broadcasted_message = nil
+      expect {
+        broadcasted_message = subscription.request_slave_devices
+      }.to_not have_broadcasted_to(device.id)
+      expect(broadcasted_message).to eq(false)
+    end
+  end
+
   describe '#receive' do
     it 'receives and broadcasts successfully' do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
