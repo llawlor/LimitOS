@@ -20,18 +20,18 @@ class Pin < ApplicationRecord
 
   validates_presence_of :device_id
 
-  # options for pin type
-  PIN_TYPES = ['input', 'servo', 'digital']
-
   after_save :send_slave_device_information
   after_destroy :send_slave_device_information
+
+  # options for pin type
+  PIN_TYPES = ['input', 'servo', 'digital']
 
   private
 
     # send slave device information via the master device
     def send_slave_device_information
-      # broadcast the slave device information to the master device
-      self.device.master_device.broadcast_slave_device_information
+      # broadcast the slave device information
+      self.device.broadcast_slave_device_information
     end
 
 end

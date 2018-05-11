@@ -26,6 +26,9 @@ class Device < ApplicationRecord
   has_many :synchronizations, dependent: :destroy
   has_many :registrations, dependent: :destroy
 
+  after_save :broadcast_slave_device_information
+  after_destroy :broadcast_slave_device_information
+
   # options for device type
   DEVICE_TYPES = ['raspberry_pi', 'arduino']
 
@@ -71,8 +74,8 @@ class Device < ApplicationRecord
 
   # send slave device information
   def broadcast_slave_device_information
-    # broadcast the message
-    self.broadcast_raw_message({ slave_devices: self.slave_device_information })
+    # broadcast the message to the master device
+    self.master_device.broadcast_raw_message({ slave_devices: self.master_device.slave_device_information })
   end
 
   # send a raw message to the device, without any additional message manipulation
