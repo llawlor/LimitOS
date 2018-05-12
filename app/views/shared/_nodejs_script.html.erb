@@ -193,21 +193,25 @@ function sendI2cCommand(message) {
   console.log(log_message + websocket_delay_string + ', i2c delay: ' + i2c_delay + 'ms');
 }
 
-// request i2c data
-function requestI2CData(i2c_address) {
+
+// request i2c data for a single pin
+function requestI2CPinValue(i2c_address, pin_number) {
   rpio.i2cBegin();
   rpio.i2cSetSlaveAddress(parseInt(i2c_address, 16));
   // set baudrate high for faster polling speed; don't set to 100000 or message corruption occurs
   rpio.i2cSetBaudRate(30000);
-  // buffer with max message length of 64 characters
-  var receive_buffer = new Buffer(64);
+  // write the pin that we will be requesting data from
+  rpio.i2cWrite(new Buffer("request_pin:" + pin_number));
+  // buffer with max message length of 5 bytes, for 1023 (4 bytes) + terminating character (1 byte)
+  var receive_buffer = new Buffer(5);
+  // receive the data
   rpio.i2cRead(receive_buffer);
   rpio.i2cEnd();
   // convert the buffer to a string
   var message = receive_buffer.toString();
   // remove extra data from the end of the string
-  message = message.substring(0, message.indexOf(',end'));
-  // console.log(message);
+  message = message.substring(0, message.indexOf(';'));
+  // console.log(pin_number + ':' + message);
 
   // if there is a message, mark the time
   if (message.length > 0) { last_i2c_data_received = (new Date).getTime(); }
@@ -229,20 +233,24 @@ function requestI2CData(i2c_address) {
 
   }
 
-  // for each pin/value pair
-  message.split(',').forEach(function(pin_value) {
-    // get the pin number and value
-    var pin_number = pin_value.split(':')[0];
-    var value = pin_value.split(':')[1];
 
-    // if the last value for this pin is different than the current value
-    if (last_values[i2c_address + '_' + pin_number] !== value) {
-      //console.log(value);
-      // remember this value
-      last_values[i2c_address + '_' + pin_number] = value;
-      // send the websocket command
-      sendWebsocketCommand(i2c_address, pin_number, value);
-    }
+  // if the last value for this pin is different than the current value
+  if (last_values[i2c_address + '_' + pin_number] !== message) {
+    //console.log(message);
+    // remember this value
+    last_values[i2c_address + '_' + pin_number] = message;
+    // send the websocket command
+    sendWebsocketCommand(i2c_address, pin_number, message);
+  }
+
+}
+
+// request i2c data
+function requestI2CData(slave_device) {
+  // for each pin
+  slave_device.input_pins.forEach(function(pin_number) {
+    // request the value
+    requestI2CPinValue(slave_device.i2c_address, pin_number);
   });
 }
 
@@ -271,13 +279,12 @@ setInterval(function() {
   // return if the slave devices are not ready
   if (slave_devices_ready === false) { return false; }
 
-
   // for each address
   slave_devices.forEach(function(slave_device) {
     // if there are input pins
     if (slave_device.input_pins.length !== 0) {
       // request the i2c data from the connected slave
-      requestI2CData(slave_device.i2c_address);
+      requestI2CData(slave_device);
     }
   });
-}, 5);
+}, 20);
