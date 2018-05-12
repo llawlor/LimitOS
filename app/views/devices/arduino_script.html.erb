@@ -9,6 +9,9 @@
 // when referencing pins by pin number, use [pin_number - 1] since array index starts at 0 and pin numbering starts at 1
 byte input_pins[70];
 
+// the currently active input pin that data will be requested from
+int current_input_pin;
+
 // define an array of 48 servos
 // when referencing servos by pin number, use [pin_number - 1] since array index starts at 0 and pin numbering starts at 1
 Servo my_servos[48];
@@ -43,28 +46,11 @@ void resetPins() {
 
 // callback for requests
 void requestCallback() {
+  // read the current input pin's value
+  String stringOutput = String(analogRead(current_input_pin));
 
-  //Serial.println("request");
-
-  // initialize a 64 character string
-  String stringOutput = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-  // create the message one string at a time to avoid problems with the String class and garbage values
-  stringOutput = "";
-  // for each pin
-  for (int current_pin = 1; current_pin <= 70; current_pin++) {
-    // if the pin is active
-    if (input_pins[current_pin - 1] == 1) {
-      // add the pin number
-      stringOutput += String(current_pin);
-      // add the separator
-      stringOutput += ":";
-      // add the pin value
-      stringOutput += String(analogRead(current_pin));
-      stringOutput += ",";
-    }
-  }
   // add the end of the string
-  stringOutput += "end";
+  stringOutput += ";";
 
   // write the output after converting the String to a character array
   Wire.write(stringOutput.c_str());
@@ -131,9 +117,16 @@ void processMessage(String message) {
   int servo_message_position = message.indexOf("servo:");
   // get the index of the pin number setup command
   int setup_pins_position = message.indexOf("setup_pins:");
+  // get the index of the current pin for an i2c request
+  int request_pin = message.substring(message.indexOf("request_pin:") + 12).toInt();
+
+  // if we are setting a request pin
+  if (request_pin > 0) {
+    // set the current input pin to the pin that's being requested
+    current_input_pin = request_pin;
 
   // if we received a digital command
-  if (digital_message_position >= 0) {
+  } else if (digital_message_position >= 0) {
     // get the digital command
     String command = message.substring(digital_message_position + 8);
     // set pin to output mode
