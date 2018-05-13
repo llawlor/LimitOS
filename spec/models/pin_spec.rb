@@ -18,6 +18,9 @@
 require 'rails_helper'
 
 RSpec.describe Pin, type: :model do
+  before :each do
+    allow_any_instance_of(Device).to receive(:broadcast_slave_device_information).and_return(nil)
+  end
 
   # lazy loaded variables
   let(:device) { FactoryBot.create(:device) }
@@ -31,6 +34,28 @@ RSpec.describe Pin, type: :model do
     it 'checks for a device_id' do
       pin.device_id = nil
       expect(pin).to be_invalid
+    end
+  end
+
+  describe '#send_slave_device_information' do
+    it 'sends on create' do
+      device.save
+      expect_any_instance_of(Device).to receive(:broadcast_slave_device_information).once
+      pin.save
+    end
+
+    it 'sends on update' do
+      device.save
+      pin.save
+      expect_any_instance_of(Device).to receive(:broadcast_slave_device_information).once
+      pin.update_attributes(pin_number: 5)
+    end
+
+    it 'sends on destroy' do
+      device.save
+      pin.save
+      expect_any_instance_of(Device).to receive(:broadcast_slave_device_information).once
+      pin.destroy
     end
   end
 

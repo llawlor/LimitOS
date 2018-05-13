@@ -44,6 +44,25 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#broadcast_slave_device_information on create/update/destroy' do
+    it 'sends on create' do
+      expect_any_instance_of(Device).to receive(:broadcast_slave_device_information).once
+      device.save
+    end
+
+    it 'sends on update' do
+      device.save
+      expect_any_instance_of(Device).to receive(:broadcast_slave_device_information).once
+      device.update_attributes(name: 'newname')
+    end
+
+    it 'sends on destroy' do
+      device.save
+      expect_any_instance_of(Device).to receive(:broadcast_slave_device_information).once
+      device.destroy
+    end
+  end
+
   describe '#broadcast_slave_device_information' do
     before :each do
       device.save
