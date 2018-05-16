@@ -1,5 +1,11 @@
 /* bootstrap overrides */
 a                               { cursor: pointer; }
+body                            { background-color: #f8f8f8; color: #555; }
+h1                              { font-weight: 600; color: #9a9a9a; }
+
+.navbar-brand                   { font-weight: 600; }
 
 /* custom CSS declarations */
 #servo_slider .slider-selection { background: #BABABA; }
+
+.limitos-blue                   { color: #23b8ff; }
