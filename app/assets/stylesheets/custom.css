@@ -8,6 +8,7 @@ h1                              { font-weight: 600; color: #777; }
 
 .alert:hover                    { border-color: #888; }
 .alert-danger                   { background-color: #fff; border-color: #b5b5b5; color: #555; }
+.alert-success                  { background-color: #ededed; border-color: #9d9d9d; color: #464646; }
 .alert-warning                  { background-color: #eee; border-color: #b5b5b5; color: #555; }
 .btn                            { border-radius: 2px; }
 .btn-danger                     { background-color: #666; border-color: #999; }
