@@ -1,7 +1,7 @@
 /* bootstrap overrides */
 a                               { cursor: pointer; color: #222; font-weight: 600; }
 a:hover                         { color: #777; }
-body                            { background: linear-gradient(to left, #fafafa, #f6f6f6); color: #555; }
+body                            { font-family: 'Libre Franklin', sans-serif; background: linear-gradient(to left, #fafafa, #f6f6f6); color: #555; }
 h1                              { font-weight: 600; color: #777; }
 
 .alert:hover                    { border-color: #888; }
