@@ -15,6 +15,7 @@ h1                              { font-weight: 600; color: #777; }
 .btn-default                    { background-color: #f8f8f8; }
 .btn-primary                    { background-color: #fff; color: #333; border-color: #555; }
 .btn-primary:hover              { background-color: #23b8ff; }
+.form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
 .navbar-brand                   { font-weight: 600 !important; }
 .navbar-default                 { background-color: #eee; border-color: #b5b5b5; }
 .navbar-default a               { font-weight: 500; }
