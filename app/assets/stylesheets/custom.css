@@ -1,11 +1,21 @@
 /* bootstrap overrides */
-a                               { cursor: pointer; }
+a                               { cursor: pointer; color: #222; font-weight: 600; }
+a:hover                         { color: #777; }
 body                            { background-color: #f8f8f8; color: #555; }
-h1                              { font-weight: 600; color: #9a9a9a; }
+h1                              { font-weight: 600; color: #777; }
 
+.alert:hover                    { border-color: #888; }
+.alert-danger                   { background-color: #fff; border-color: #b5b5b5; color: #555; }
+.alert-warning                  { background-color: #eee; border-color: #b5b5b5; color: #555; }
 .navbar-brand                   { font-weight: 600; }
+.navbar:hover .limitos-blue { color: #23b8ff; }
+.navbar-default                 { background-color: #eee; border-color: #b5b5b5; }
+.navbar-default a               { font-weight: 500; }
 
 /* custom CSS declarations */
 #servo_slider .slider-selection { background: #BABABA; }
 
-.limitos-blue                   { color: #23b8ff; }
+.limitos-blue                   { color: #999; }
+.limitos-command                { background-color: #303030; color: #ddd; }
+.limitos-command:hover          { color: #3ee; }
+.limitos-logo:hover .limitos-blue                   { color: #23b8ff; }
