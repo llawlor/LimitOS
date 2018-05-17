@@ -2,6 +2,8 @@
 a                               { cursor: pointer; color: #222; font-weight: 600; }
 a:hover                         { color: #777; }
 body                            { font-family: 'Libre Franklin', sans-serif; background: linear-gradient(to left, #f3f6f7, #f6f6f6); color: #555; }
+footer                          { padding-bottom: 15px; }
+footer hr                       { border: 1px solid #eee; }
 h1                              { font-weight: 600; color: #777; }
 
 .alert:hover                    { border-color: #888; }

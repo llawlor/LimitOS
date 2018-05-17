@@ -57,11 +57,21 @@
         <%= yield %>
       </div><!--/row-->
 
-      <footer>
-        <p>&copy; LimitOS <%= Date.today.year %></p>
-      </footer>
-
     </div> <!-- /container -->
+
+    <footer>
+      <hr>
+      <div class="container row">
+        <div class="col-xs-12">
+          <div class="pull-left">
+            Questions? Comments? <a href="mailto:info@limitos.com">info@limitos.com</a>
+          </div>
+          <div class="pull-right">
+            &copy; LimitOS <%= Date.today.year %>
+          </div>
+        </div>
+      </div>
+    </footer>
 
   </body>
 </html>
