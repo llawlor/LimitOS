@@ -2,7 +2,11 @@
 <br>
 
 <%= form_for @registration, url: submit_registration_path do |f| %>
-  Registration code: <%= f.text_field :auth_token, autofocus: true %>
-  <br><br>
+  <div class="form-group row">
+    <div class="col-xs-3">
+      <%= f.label :registration_code%>
+      <%= f.text_field :auth_token, class: 'form-control', autofocus: true %>
+    </div>
+  </div>
   <%= f.submit 'Submit', class: 'btn btn-primary btn-lg' %>
 <% end %>
