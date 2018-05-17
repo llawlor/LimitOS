@@ -2,13 +2,19 @@
 a                               { cursor: pointer; color: #222; font-weight: 600; }
 a:hover                         { color: #777; }
 body                            { font-family: 'Libre Franklin', sans-serif; background: linear-gradient(to left, #f3f6f7, #f6f6f6); color: #555; }
-footer                          { padding-bottom: 15px; }
+footer                          { padding-bottom: 15px; font-size: 12px; }
 footer hr                       { border: 1px solid #eee; }
 h1                              { font-weight: 600; color: #777; }
 
 .alert:hover                    { border-color: #888; }
 .alert-danger                   { background-color: #fff; border-color: #b5b5b5; color: #555; }
 .alert-warning                  { background-color: #eee; border-color: #b5b5b5; color: #555; }
+.btn                            { border-radius: 2px; }
+.btn-danger                     { background-color: #666; border-color: #999; }
+.btn-danger:hover               { background-color: #ff7b0a; }
+.btn-default                    { background-color: #f8f8f8; }
+.btn-primary                    { background-color: #fff; color: #333; border-color: #555; }
+.btn-primary:hover              { background-color: #23b8ff; }
 .navbar-brand                   { font-weight: 600 !important; }
 .navbar-default                 { background-color: #eee; border-color: #b5b5b5; }
 .navbar-default a               { font-weight: 500; }
