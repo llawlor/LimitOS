@@ -82,6 +82,17 @@ left: 55px;
   animation-delay: 2.05s;
   animation-duration: 1.5s;
 }
+#current-connection {
+  border-left: 1px solid #3fdcff;;
+  border-right: none;
+  position: absolute;
+  top: 294px;
+  left: 52%;
+  margin-left: 55px;
+  animation-name: current-connection;
+  animation-delay: 3.5s;
+  animation-duration: 0.5s;
+}
 
 /* animation keyframes */
 @keyframes current-vertical {
@@ -98,5 +109,15 @@ left: 55px;
     }
     100% {
         width: 52%;
+    }
+}
+@keyframes current-connection {
+    0% {
+        height: 0;
+        top: 294px;
+    }
+    100% {
+        height: 24px;
+        top: 270px;
     }
 }
