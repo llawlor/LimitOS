@@ -68,5 +68,13 @@
       $('.circuit').fadeOut(1500);
     }, 4300);
 
+    // set a timeout to add logo hover state
+    setTimeout(function() {
+      // remove the animation
+      $('#logo-circuit').css('animation', 'none');
+      // add the class that will allow hover
+      $('#logo-circuit').addClass('animation-complete');
+    }, 11000);
+
   });
 </script>
