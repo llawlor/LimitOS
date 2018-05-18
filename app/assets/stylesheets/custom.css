@@ -30,3 +30,37 @@ h1                              { font-weight: 600; color: #777; }
 .limitos-command:hover          { color: #3ee; }
 .limitos-logo .limitos-blue     { color: #999; }
 .limitos-logo:hover .limitos-blue { color: #23b8ff; }
+
+/* current */
+#current-vertical {
+  border-left: 1px solid #e0e0e0;
+  height: 1130px;
+  position: absolute;
+  margin-left: 55px;
+  margin-top: -20px;
+  border-right: none;
+}
+
+.current {
+    background: #23b8ff;
+    position: absolute;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+#current-vertical .current {
+border-left: 1px solid #b9e6fb;
+position: absolute;
+left: -1px;
+border-right: none;
+animation-name: zap1;
+animation-duration: 5s;
+}
+@keyframes zap1 {
+    0% {
+        height: 0;
+    }
+    100% {
+        height: 1130px;
+    }
+}

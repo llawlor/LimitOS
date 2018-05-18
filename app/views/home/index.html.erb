@@ -1,3 +1,7 @@
+<div id="current-vertical">
+  <div class="current"></div>
+</div>
+
 <div class="row">
   <div class="col-sm-offset-4 col-sm-4 col-xs-12 text-center">
     <h1 class="limitos-logo" style="margin-top: 140px; font-size: 72px;">
@@ -50,3 +54,14 @@
     </div>
   </div>
 </div>
+
+<script>
+  // when the document is ready
+  $(document).ready(function() {
+    // after 4 seconds
+    setTimeout(function() {
+      // remove the current
+      $('#current-vertical').fadeOut();
+    }, 4000);
+  });
+</script>
