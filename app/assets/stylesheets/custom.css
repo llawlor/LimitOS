@@ -79,7 +79,7 @@ top: 293px;
 left: 55px;
   animation-name: current-horizontal;
   animation-delay: 2.05s;
-  animation-duration: 1.5s;
+  animation-duration: 2s;
 }
 #current-connection {
   border-left: 2px solid #3fdcff;;
@@ -89,12 +89,12 @@ left: 55px;
   left: 52%;
   margin-left: 55px;
   animation-name: current-connection;
-  animation-delay: 3.5s;
+  animation-delay: 4s;
   animation-duration: 0.2s;
 }
 #logo-circuit {
   color: #999;
-  animation: current-logo 0.3s linear 3.7s 1 forwards, revert-logo 0.8s linear 10s 1 forwards;
+  animation: current-logo 0.3s linear 4.2s 1 forwards, revert-logo 0.8s linear 10s 1 forwards;
 }
 
 /* animation keyframes */
