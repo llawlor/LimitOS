@@ -31,32 +31,49 @@ h1                              { font-weight: 600; color: #777; }
 .limitos-logo .limitos-blue     { color: #999; }
 .limitos-logo:hover .limitos-blue { color: #23b8ff; }
 
-/* current */
-#current-vertical {
+/* wires and current */
+#wire-vertical {
   border-left: 1px solid #e0e0e0;
+  border-right: none;
   height: 1130px;
   position: absolute;
-  margin-left: 55px;
+  left: 55px;
   margin-top: -20px;
-  border-right: none;
 }
-
+#wire-horizontal {
+  border-bottom: 1px solid #e0e0e0;
+  border-top: none;
+  width: 52%;
+  position: absolute;
+  top: 293px;
+  left: 55px;
+}
+#wire-connection {
+  border-left: 1px solid #e0e0e0;
+  border-right: none;
+  position: absolute;
+  height: 24px;
+  top: 270px;
+  left: 52%;
+  margin-left: 55px;
+}
 .current {
-    background: #23b8ff;
-    position: absolute;
+    background: #5bcaff;
     animation-iteration-count: 1;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
 }
-#current-vertical .current {
+#current-vertical {
 border-left: 1px solid #b9e6fb;
 position: absolute;
-left: -1px;
+left: 55px;
+margin-top: -20px;
 border-right: none;
-animation-name: zap1;
+animation-name: current-vertical;
+animation-delay: 1s;
 animation-duration: 5s;
 }
-@keyframes zap1 {
+@keyframes current-vertical {
     0% {
         height: 0;
     }
