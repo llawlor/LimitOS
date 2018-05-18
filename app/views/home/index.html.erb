@@ -8,7 +8,7 @@
 <div class="row">
   <div class="col-sm-offset-4 col-sm-4 col-xs-12 text-center">
     <h1 class="limitos-logo" style="margin-top: 140px; font-size: 72px;">
-      Limit<span class="limitos-blue">OS</span>
+      Limit<span id="logo-circuit" class="current">OS</span>
     </h1>
     <div>
       control your Internet of Things devices
@@ -61,10 +61,12 @@
 <script>
   // when the document is ready
   $(document).ready(function() {
-    // after 4 seconds
+
+    // set a timeout to remove the circuit
     setTimeout(function() {
       // remove the circuit
-      $('.circuit').fadeOut(5000);
-    }, 5000);
+      $('.circuit').fadeOut(1500);
+    }, 4300);
+
   });
 </script>
