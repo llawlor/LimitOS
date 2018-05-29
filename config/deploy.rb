@@ -21,7 +21,7 @@ set :deploy_to, "/u/apps/limitos"
 # set :pty, true
 
 # Default value for :linked_files is []
-append :linked_files, "config/database.yml", "config/secrets.yml", "config/cable.yml"
+append :linked_files, "config/database.yml", "config/secrets.yml", "config/cable.yml", "config/environments/production.rb"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
