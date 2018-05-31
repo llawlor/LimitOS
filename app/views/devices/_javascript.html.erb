@@ -1,0 +1,89 @@
+<script>
+
+  <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
+    // initialize this slider
+    var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {
+      formatter: sliderFormatter
+    });
+  <% end %>
+
+  // format slider tooltip
+  function sliderFormatter(value) {
+    return 'Current value: ' + value;
+  }
+
+  // when the document is ready
+  $(document).ready(function() {
+
+    // when the reinstall link is clicked
+    $('#reinstall_link').on('click', function() {
+      // show the reinstall dive
+      $('#reinstall_div').removeClass('hidden');
+    });
+
+    // when the arduino setup link is clicked
+    $('#arduino_setup_link').on('click', function() {
+      // show the arduino setup
+      $('#arduino_setup_div').removeClass('hidden');
+    });
+    
+    <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
+      // when the slider is moved
+      slider_<%= pin.pin_number %>.on('change', function() {
+        // get the slider value
+        var value = slider_<%= pin.pin_number %>.getValue();
+        // send the value via the master device
+        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: value });
+      });
+
+      // when the servo form is submitted
+      $('#servo_form_<%= pin.pin_number %>').submit(function() {
+        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: $('#servo_input_' + <%= pin.pin_number %>).val() });
+        // don't reload the page
+        return false;
+      });
+    <% end %>
+
+    // when the digital on/off button is clicked
+    $('.digital_submit').click(function() {
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') };
+      // send the message
+      App.messaging.send_message(message);
+    });
+
+    // create the subscription
+    App.messaging = App.cable.subscriptions.create(
+      {
+        channel: 'DevicesChannel',
+        id: <%= @master_device.id %>,
+        auth_token: '<%= @master_device.auth_token %>'
+      },
+      {
+
+        // when data is received
+        received: function(data) {
+          // log the data
+          console.log(data);
+          // update the status
+          $('#device_status').text(JSON.stringify(data));
+        },
+
+        // function to send a message
+        send_message: function(message) {
+          // perform the "receive" action in app/channels/devices_channel.rb
+          this.perform('receive', message);
+        }
+
+      }
+    );
+
+  });
+
+  // send servo position
+  function sendServoMessage(message) {
+    // send the message
+    App.messaging.send_message(message);
+  }
+
+</script>
