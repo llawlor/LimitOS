@@ -46,3 +46,15 @@ h1                              { font-weight: 600; color: #777; }
 @keyframes current-connection   { 0% { height: 0; top: 294px; } 100% { height: 24px; top: 270px; } }
 @keyframes current-logo         { 0% { color: #999; } 100% { color: #23b8ff; } }
 @keyframes revert-logo          { 0% { color: #23b8ff; } 100% { color: #999; } }
+
+/* extra small */
+@media only screen and (max-width: 767px) {
+  #wire-vertical                  { left: 35px; }
+  #wire-horizontal                { left: 35px; width: 55%; }
+  #wire-connection                { left: 55%; margin-left: 35px; }
+  #current-vertical               { left: 35px; }
+  #current-horizontal             { left: 35px; }
+  #current-connection             { left: 55%; margin-left: 35px; }
+
+  @keyframes current-horizontal   { 0% { width: 0; } 100% { width: 55%; } }
+}
