@@ -66,8 +66,13 @@
           var data_string = JSON.stringify(data);
           // update the status
           $('#device_status').text(data_string);
-          // log the data
-          $('#device_logs').text(data_string + $('#device_logs').text());
+          // if we should log commands
+          if ($('#log_commands_checkbox').is(':checked')) {
+            // show the logs
+            $('#device_logs').removeClass('hide');
+            // log the data
+            $('#device_logs').text(data_string + "\n" + $('#device_logs').text());
+          }
         },
 
         // function to send a message
