@@ -3,6 +3,9 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  # for the status page
+  get '/status' => 'home#status'
+
   get '/account' => 'users#account'
   resources :users
 
