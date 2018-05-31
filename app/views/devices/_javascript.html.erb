@@ -26,7 +26,7 @@
       // show the arduino setup
       $('#arduino_setup_div').removeClass('hidden');
     });
-    
+
     <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
       // when the slider is moved
       slider_<%= pin.pin_number %>.on('change', function() {
@@ -63,10 +63,11 @@
 
         // when data is received
         received: function(data) {
-          // log the data
-          console.log(data);
+          var data_string = JSON.stringify(data);
           // update the status
-          $('#device_status').text(JSON.stringify(data));
+          $('#device_status').text(data_string);
+          // log the data
+          $('#device_logs').text(data_string + $('#device_logs').text());
         },
 
         // function to send a message
