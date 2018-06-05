@@ -7,6 +7,9 @@
     });
   <% end %>
 
+  // keep track of the start transmission time
+  var start_transmission_time = 0;
+
   // format slider tooltip
   function sliderFormatter(value) {
     return 'Current value: ' + value;
@@ -63,6 +66,13 @@
 
         // when data is received
         received: function(data) {
+          // if we've sent a message from the webpage
+          if (start_transmission_time !== 0) {
+            // calculate the delay
+            $('#delay').text(((new Date).getTime() - start_transmission_time) + 'ms');
+          }
+
+          // get the data as a string
           var data_string = JSON.stringify(data);
           // update the status
           $('#device_status').text(data_string);
@@ -74,11 +84,14 @@
             // log the data
             $('#device_logs').text(data_string + "\n" + $('#device_logs').text());
           }
-          
+
         },
 
         // function to send a message
         send_message: function(message) {
+          // mark the start time
+          start_transmission_time = (new Date).getTime();
+
           // perform the "receive" action in app/channels/devices_channel.rb
           this.perform('receive', message);
         }
