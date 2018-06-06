@@ -162,6 +162,38 @@ RSpec.describe Device, type: :model do
       expect(message["pin"]).to eq(3)
     end
 
+    it 'transforms decimal rounding correctly' do
+      pin = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input', transform: 'round(7.3, 1)')
+      message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 60 }
+      device.transform_input_message(message)
+      expect(message["servo"].to_s).to eq('7.3')
+      expect(message["pin"]).to eq(3)
+    end
+
+    it 'transforms whole number rounding correctly' do
+      pin = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input', transform: 'round(7.3, 0)')
+      message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 60 }
+      device.transform_input_message(message)
+      expect(message["servo"].to_s).to eq('7')
+      expect(message["pin"]).to eq(3)
+    end
+
+    it 'transforms whole number rounding correctly if round is capitalized' do
+      pin = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input', transform: 'ROUND(7.3, 0)')
+      message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 60 }
+      device.transform_input_message(message)
+      expect(message["servo"].to_s).to eq('7')
+      expect(message["pin"]).to eq(3)
+    end
+
+    it 'transforms whole number rounding correctly if no space after the comma' do
+      pin = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input', transform: 'round(7.3,0)')
+      message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 60 }
+      device.transform_input_message(message)
+      expect(message["servo"].to_s).to eq('7')
+      expect(message["pin"]).to eq(3)
+    end
+
     it 'transforms pin number' do
       pin = FactoryBot.create(:pin, pin_number: 3, output_pin_number: 14, device: device, pin_type: 'input', transform: 'x * 2')
       message = { "i2c_address" => "0x04", "pin" => 3, "servo" => 60 }

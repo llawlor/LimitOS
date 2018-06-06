@@ -103,9 +103,9 @@ class Device < ApplicationRecord
       if message["servo"].present?
         # get the transformed message
         output = calculator.evaluate(input_pin.transform, x: message["servo"].to_f)
-        # set the output as an integer if the transform is meant to do that
+        # set the output as an integer if the transform is meant to do that; matches "round(" at beginning of string and ", 0" at end of string
         # gets around a problem with Dentaku where calculator.evaluate("round(3.3, 0)") returns #<BigDecimal:3011e60,'0.3E1',9(27)> instead of 3
-        output = output.to_i if input_pin.transform.starts_with?('round(') && input_pin.transform.ends_with?(', 0)')
+        output = output.to_i if !!(input_pin.transform =~ /\Around\(/i) && !!(input_pin.transform =~ /,\s?0\)\z/)
         # set the servo message
         message["servo"] = output
       end
