@@ -149,7 +149,7 @@
     // when the round transform is clicked
     $('#round-transform').on('click', function() {
       // set the transform value
-      $('#pin_transform').val('round(X)');
+      $('#pin_transform').val('round(X, 0)');
     });
 
     // function to display map values
@@ -161,7 +161,7 @@
       var output_high = $('#map-to-high').val();
 
       // set the transform value
-      $('#pin_transform').val('round((x - ' + input_low + ') * (' + output_high + ' - ' + output_low + ') / (' + input_high + ' - ' + input_low + ') + ' + output_low + ')');
+      $('#pin_transform').val('round((x - ' + input_low + ') * (' + output_high + ' - ' + output_low + ') / (' + input_high + ' - ' + input_low + ') + ' + output_low + ', 0)');
     }
 
   });
