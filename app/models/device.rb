@@ -99,8 +99,16 @@ class Device < ApplicationRecord
       # initialize the calculator
       calculator = Dentaku::Calculator.new
 
-      # transform if there is a servo message
-      message["servo"] = calculator.evaluate(input_pin.transform, x: message["servo"].to_f) if message["servo"].present?
+      # if there is a servo message
+      if message["servo"].present?
+        # get the transformed message
+        output = calculator.evaluate(input_pin.transform, x: message["servo"].to_f)
+        # set the output as an integer if the transform is meant to do that
+        # gets around a problem with Dentaku where calculator.evaluate("round(3.3, 0)") returns #<BigDecimal:3011e60,'0.3E1',9(27)> instead of 3
+        output = output.to_i if input_pin.transform.starts_with?('round(') && input_pin.transform.ends_with?(', 0)')
+        # set the servo message
+        message["servo"] = output
+      end
     end
 
     # return the message
