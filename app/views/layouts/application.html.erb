@@ -52,7 +52,9 @@
 
     <div class="container">
       <div style="min-height: 525px;">
-        <%= bootstrap_flash %>
+        <div id="flash-message">
+          <%= bootstrap_flash %>
+        </div>
         <%= yield %>
       </div><!--/row-->
 
