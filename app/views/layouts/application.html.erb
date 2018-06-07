@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="version" content="<%= GIT_VERSION %>">
     <title><%= content_for?(:title) ? yield(:title) : "LimitOS" %></title>
+    <link rel="icon" href="<%= image_url('favicon.png') %>">
     <%= csrf_meta_tags %>
 
     <link href="https://fonts.googleapis.com/css?family=Libre+Franklin" rel="stylesheet">
