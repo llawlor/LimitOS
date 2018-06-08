@@ -23,6 +23,9 @@ class Pin < ApplicationRecord
   after_save :send_slave_device_information
   after_destroy :send_slave_device_information
 
+  # remove leading and trailing whitespaces
+  strip_attributes
+  
   # options for pin type
   PIN_TYPES = ['input', 'servo', 'digital']
 

@@ -18,6 +18,9 @@ class Registration < ApplicationRecord
 
   before_create :set_auth_token
 
+  # remove leading and trailing whitespaces
+  strip_attributes
+  
   # generate a secure authentication token
   def set_auth_token
     # generate the 6-character auth token

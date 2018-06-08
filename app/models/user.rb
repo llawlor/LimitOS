@@ -24,4 +24,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :devices
+
+  # remove leading and trailing whitespaces
+  strip_attributes
 end

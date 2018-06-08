@@ -29,6 +29,9 @@ class Device < ApplicationRecord
   after_save :broadcast_slave_device_information
   after_destroy :broadcast_slave_device_information
 
+  # remove leading and trailing whitespaces
+  strip_attributes
+
   # options for device type
   DEVICE_TYPES = ['raspberry_pi', 'arduino']
 
