@@ -37,6 +37,13 @@ RSpec.describe Pin, type: :model do
     end
   end
 
+  describe 'strip_attributes' do
+    it 'removes whitespace' do
+      pin.update_attributes(transform: ' round(x) ')
+      expect(pin.transform).to eq('round(x)')
+    end
+  end
+
   describe '#send_slave_device_information' do
     it 'sends on create' do
       device.save
