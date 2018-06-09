@@ -22,7 +22,6 @@ h1                              { font-weight: 600; color: #777; }
 .navbar-default a               { font-weight: 500; }
 
 /* custom CSS declarations */
-#flash-message                  { position: absolute; z-index: 1; left: 20px; right: 20px; }
 #logo-circuit.animation-complete:hover { color: #23b8ff; }
 #security_note                  { font-size: 12px; }
 #servo_slider .slider-selection { background: #BABABA; }
