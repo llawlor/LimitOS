@@ -141,7 +141,7 @@ function handleDirectMessage(message) {
   }
 
   // if this is a digital message
-  if (message.digital && message.digital.length !== 0) {
+  if (message.digital !== undefined && message.digital.length !== 0) {
     // output the message to the correct pin
     rpio.open(pin_number, rpio.OUTPUT, pin_state);
   }
@@ -162,21 +162,21 @@ function sendI2cCommand(message) {
   rpio.i2cSetBaudRate(30000);
 
   // if there is a digital output command
-  if (message.digital && message.digital.length !== 0) {
+  if (message.digital !== undefined && message.digital.length !== 0) {
 
     // send the digital command
     rpio.i2cWrite(new Buffer("pin:" + message.pin + ",digital:" + message.digital));
     log_message = "digital_" + message.digital + ",pin_" + message.pin;
 
   // if there is a servo command
-  } else if (message.servo && message.servo.length !== 0) {
+  } else if (message.servo !== undefined && message.servo.length !== 0) {
 
     // send the servo command
     rpio.i2cWrite(new Buffer("pin:" + message.pin + ",servo:" + message.servo));
     log_message = "servo_" + message.servo + ",pin_" + message.pin;
 
   // if there is a pin setup command
-  } else if (message.input_pins) {
+  } else if (message.input_pins !== undefined) {
 
     // send the setup command to the slave
     rpio.i2cWrite(new Buffer("setup_pins:" + message.input_pins));
