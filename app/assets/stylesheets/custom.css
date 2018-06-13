@@ -23,6 +23,7 @@ h1                              { font-weight: 600; color: #777; }
 
 /* custom CSS declarations */
 #logo-circuit.animation-complete:hover { color: #23b8ff; }
+#particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
 #security_note                  { font-size: 12px; }
 #servo_slider .slider-selection { background: #BABABA; }
 
