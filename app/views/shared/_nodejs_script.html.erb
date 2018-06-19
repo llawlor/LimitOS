@@ -158,8 +158,8 @@ function sendI2cCommand(message) {
   rpio.i2cBegin();
   // set i2c address (parsed in hex)
   rpio.i2cSetSlaveAddress(parseInt(message.i2c_address, 16));
-  // set baudrate
-  rpio.i2cSetBaudRate(30000);
+  // set baudrate low (to 500) so that commands are sent reliably without interference from previous commands
+  rpio.i2cSetBaudRate(500);
 
   // if there is a digital output command
   if (message.digital !== undefined && message.digital.length !== 0) {
