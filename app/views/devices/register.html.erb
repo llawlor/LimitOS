@@ -1,20 +1,25 @@
 <br><br>
 
 <div class="row">
-  <div class="col-sm-6 col-sm-offset-3 col-xs-12 text-center">
+  <div class="col-sm-4 col-sm-offset-4 col-xs-12">
 
-    <h1>Register your device</h1>
-    <br>
-
-    <%= form_for @registration, url: submit_registration_path do |f| %>
-      <div class="form-group row">
-        <div class="col-xs-6 col-xs-offset-3">
-          <%= f.label :registration_code%>
-          <%= f.text_field :auth_token, class: 'form-control', autofocus: true %>
-        </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">Register Your Device</h1>
       </div>
-      <%= f.submit 'Submit', class: 'btn btn-primary btn-lg' %>
-    <% end %>
+      <div class="panel-body">
+
+        <%= form_for @registration, url: submit_registration_path do |f| %>
+          <div class="form-group">
+            <%= f.text_field :auth_token, class: 'form-control input-lg', autofocus: true, placeholder: 'Registration code' %>
+          </div>
+          <%= f.submit 'Submit', class: 'btn btn-primary btn-lg' %>
+        <% end %>
+
+      </div>
+    </div>
+
+    If you don't have a registration code, you'll need to install LimitOS on your Raspberry Pi.
 
   </div>
 </div>
