@@ -15,7 +15,7 @@
     <tr>
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:device_type) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th>Created</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -24,7 +24,7 @@
       <tr>
         <td><%= link_to device.display_name, device_path(device) %></td>
         <td><%= device.device_type %></td>
-        <td><%=l device.created_at %></td>
+        <td><%= device.created_at.strftime("%Y-%m-%d") %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
                       device_path(device), :class => 'btn btn-default btn-xs' %>
