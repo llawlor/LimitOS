@@ -81,35 +81,37 @@
 
 <h3>Pin Information</h3>
 <% if @device.pins.present? %>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Pin Number</th>
-        <th>Type</th>
-        <th>Minimum Value</th>
-        <th>Maximum Value</th>
-        <th>Output Pin Number</th>
-        <th>Transform</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <% @device.pins.each do |pin| %>
-      <tr>
-        <td><%= pin.name %></td>
-        <td><%= pin.pin_number %></td>
-        <td><%= pin.pin_type %></td>
-        <td><%= pin.min %></td>
-        <td><%= pin.max %></td>
-        <td><%= pin.output_pin_number %></td>
-        <td><%= pin.transform %></td>
-        <td>
-          <%= link_to 'Edit Pin', edit_device_pin_path(@device, pin), class: 'btn btn-sm btn-default' %>
-          <%= link_to 'Remove Pin', device_pin_path(@device, pin), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
-        </td>
-      </tr>
-    <% end %>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped table-condensed">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Pin Number</th>
+          <th>Type</th>
+          <th>Minimum Value</th>
+          <th>Maximum Value</th>
+          <th>Output Pin Number</th>
+          <th>Transform</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <% @device.pins.each do |pin| %>
+        <tr>
+          <td><%= pin.name %></td>
+          <td><%= pin.pin_number %></td>
+          <td><%= pin.pin_type %></td>
+          <td><%= pin.min %></td>
+          <td><%= pin.max %></td>
+          <td><%= pin.output_pin_number %></td>
+          <td><%= pin.transform %></td>
+          <td>
+            <%= link_to 'Edit Pin', edit_device_pin_path(@device, pin), class: 'btn btn-sm btn-default' %>
+            <%= link_to 'Remove Pin', device_pin_path(@device, pin), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
 <% end %>
 
 <%= link_to 'Add New Pin', new_device_pin_path(@device), class: 'btn btn-default' %>
