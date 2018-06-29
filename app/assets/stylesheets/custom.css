@@ -20,6 +20,7 @@ h1                              { font-weight: 600; color: #777; }
 .navbar-brand                   { font-weight: 600 !important; }
 .navbar-default                 { background-color: #eee; border-color: #b5b5b5; }
 .navbar-default a               { font-weight: 500; }
+.page-header                    { margin: 20px 0; }
 
 /* custom CSS declarations */
 #logo-circuit.animation-complete:hover { color: #23b8ff; }
