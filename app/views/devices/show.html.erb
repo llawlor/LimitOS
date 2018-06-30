@@ -3,11 +3,6 @@
     <%= @device.display_name %>
     <div class="pull-right">
       <%= link_to 'Edit Device', edit_device_path(@device), :class => 'btn btn-default btn-sm' %>
-      <%= link_to 'Delete Device',
-                    device_path(@device),
-                    :method => 'delete',
-                    :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                    :class => 'btn btn-danger btn-sm' %>
     </div>
   </h1>
 </div>
@@ -161,7 +156,7 @@
 
   <div class="col-xs-12 col-md-6">
     <h3>Logs</h3>
-    
+
     <br>
 
     <%= render 'logs' %>
