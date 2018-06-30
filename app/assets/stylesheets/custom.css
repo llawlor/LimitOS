@@ -1,6 +1,6 @@
 /* bootstrap overrides */
 a                               { cursor: pointer; color: #222; font-weight: 600; border-bottom: 1px solid #cacaca; }
-a:hover                         { color: #777; }
+a:hover                         { color: #777; border-bottom: 1px solid #23b8ff; text-decoration: none; }
 body                            { font-family: 'Libre Franklin', sans-serif; background: linear-gradient(to left, #f3f6f7, #f6f6f6); color: #555; }
 footer                          { padding-bottom: 15px; font-size: 12px; }
 footer hr                       { border: 1px solid #eee; }

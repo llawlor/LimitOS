@@ -22,7 +22,7 @@
     <% @devices.each do |device| %>
       <tr>
         <td><%= link_to device.display_name, device_path(device) %></td>
-        <td><%= device.device_type %></td>
+        <td><%= device.device_type.try(:titleize) %></td>
         <td><%= device.created_at.strftime("%Y-%m-%d") %></td>
       </tr>
     <% end %>
