@@ -1,13 +1,17 @@
-<h4>Current command:</h4>
-<div id="device_status"><br></div>
+<h4 style="margin-top: 0;">
+  Current Command
+  <div class="pull-right" style="font-size: 12px; text-align: left; width: 100px; margin-top: 5px;">
+    Delay: <span id="delay">0 ms</span>
+  </div>
+</h4>
 
-<h5>Delay: <span id="delay"></span></h5>
+<pre id="device_status"><span style="color: #aaa;">(command will appear here)</span></pre>
 
 <br>
 
 <form>
   <div class="checkbox">
-    <label><input type="checkbox" id="log_commands_checkbox"> Log commands</label>
+    <label><input type="checkbox" id="log_commands_checkbox" checked> Show command stream</label>
   </div>
 </form>
 

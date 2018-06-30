@@ -1,6 +1,6 @@
 <div class="row">
   <% @device.pins.where(pin_type: 'digital').order("pin_number asc").each do |pin| %>
-    <div class="col-xs-12 col-sm-6 col-md-3">
+    <div class="col-xs-12 col-md-6">
       <div class="well">
         <b><%= pin.name %></b> <small>(pin number: <%= pin.pin_number %>)</small>
         <br><br>
@@ -16,7 +16,7 @@
 
 <div class="row">
   <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").order("pin_number asc").each do |pin| %>
-    <div class="col-xs-12 col-sm-6 col-md-3">
+    <div class="col-xs-12 col-md-6">
       <div class="well">
         <b><%= pin.name %></b> <small>(pin number: <%= pin.pin_number %>)</small>
 
