@@ -1,23 +1,19 @@
 <div class="row">
   <% @device.pins.where(pin_type: 'digital').order("pin_number asc").each do |pin| %>
     <div class="col-xs-12 col-md-6">
-      <div class="well">
+      <div class="well" style="height: 155px;">
         <b><%= pin.name %></b> <small>(pin number: <%= pin.pin_number %>)</small>
-        <br><br>
-        <button data-pin="<%= pin.pin_number %>" data-digital="on" class="btn btn-primary btn-sm digital_submit">On</button>
+        <br><br><br>
+        <button data-pin="<%= pin.pin_number %>" data-digital="on" class="btn btn-primary btn-lg digital_submit">On</button>
         &nbsp; &nbsp;
-        <button data-pin="<%= pin.pin_number %>" data-digital="off" class="btn btn-primary btn-sm digital_submit">Off</button>
+        <button data-pin="<%= pin.pin_number %>" data-digital="off" class="btn btn-primary btn-lg digital_submit">Off</button>
       </div>
     </div>
   <% end %>
-</div>
 
-<br>
-
-<div class="row">
   <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").order("pin_number asc").each do |pin| %>
     <div class="col-xs-12 col-md-6">
-      <div class="well">
+      <div class="well" style="height: 155px;">
         <b><%= pin.name %></b> <small>(pin number: <%= pin.pin_number %>)</small>
 
         <br>
