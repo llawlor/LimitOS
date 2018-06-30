@@ -1,5 +1,5 @@
 /* bootstrap overrides */
-a                               { cursor: pointer; color: #222; font-weight: 600; }
+a                               { cursor: pointer; color: #222; font-weight: 600; border-bottom: 1px solid #cacaca; }
 a:hover                         { color: #777; }
 body                            { font-family: 'Libre Franklin', sans-serif; background: linear-gradient(to left, #f3f6f7, #f6f6f6); color: #555; }
 footer                          { padding-bottom: 15px; font-size: 12px; }
@@ -19,7 +19,7 @@ h1                              { font-weight: 600; color: #777; }
 .form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
 .navbar-brand                   { font-weight: 600 !important; }
 .navbar-default                 { background-color: #eee; border-color: #b5b5b5; }
-.navbar-default a               { font-weight: 500; }
+.navbar-default a               { font-weight: 500; border-bottom: none; }
 .page-header                    { margin: 20px 0; }
 
 /* custom CSS declarations */
