@@ -1,7 +1,7 @@
 /* bootstrap overrides */
 a                               { cursor: pointer; color: #222; font-weight: 600; border-bottom: 1px solid #cacaca; }
 a:hover                         { color: #777; border-bottom: 1px solid #23b8ff; text-decoration: none; }
-body                            { font-family: 'Libre Franklin', sans-serif; background: linear-gradient(to left, #f3f6f7, #f6f6f6); color: #555; }
+body                            { font-family: 'Libre Franklin', sans-serif; color: #00dde3; background-color:#01232B; background-image: linear-gradient(#0A2F37 1px, transparent 1px), linear-gradient(90deg, #0A2F37 1px, transparent 1px), linear-gradient(rgba(10,47,55,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(10,47,55,.3) 1px, transparent 1px); background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px; background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px; }
 footer                          { padding-bottom: 15px; font-size: 12px; }
 footer hr                       { border: 1px solid #eee; }
 h1                              { font-weight: 600; color: #777; }
@@ -18,8 +18,8 @@ h1                              { font-weight: 600; color: #777; }
 .btn-primary:hover              { background-color: #23b8ff !important; color: #fff !important; }
 .form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
 .navbar-brand                   { font-weight: 600 !important; }
-.navbar-default                 { background-color: #eee; border-color: #b5b5b5; }
-.navbar-default a               { font-weight: 500; border-bottom: none; }
+.navbar-default                 { background-color: transparent; border-color: #8db5b9; }
+.navbar-default a               { font-weight: 500; border-bottom: none; color: #00dde3 !important; }
 .page-header                    { margin: 20px 0; }
 
 /* custom CSS declarations */
