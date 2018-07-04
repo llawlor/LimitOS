@@ -48,7 +48,12 @@
 <br><br>
 
 <h3>Pin Information</h3>
-<% if @device.pins.present? %>
+<% if @device.pins.blank? %>
+  You haven't added any pins to this device yet.
+  <br>Pins are necessary so that LimitOS knows how to receive inputs from or send commands to your device.
+  <br><br>
+  <%= link_to 'Add a pin now!', new_device_pin_path(@device), class: 'btn btn-primary btn-lg' %>
+<% else %>
   <div class="table-responsive">
     <table class="table table-striped table-condensed">
       <thead>
@@ -80,9 +85,9 @@
       <% end %>
     </table>
   </div>
-<% end %>
 
-<%= link_to 'Add New Pin', new_device_pin_path(@device), class: 'btn btn-default' %>
+  <%= link_to 'Add New Pin', new_device_pin_path(@device), class: 'btn btn-default' %>
+<% end %>
 
 <br><br>
 
@@ -112,28 +117,30 @@
 
 <br><br>
 
-<div class="row">
-  <div class="col-xs-12 col-md-6">
-    <h3>Device Controls</h3>
+<% if @device.pins.present? %>
+  <div class="row">
+    <div class="col-xs-12 col-md-6">
+      <h3>Device Controls</h3>
 
-    <br>
+      <br>
 
-    <div class="hidden">
-      <%= render 'synchronization_controls' %>
+      <div class="hidden">
+        <%= render 'synchronization_controls' %>
+      </div>
+
+      <%= render 'controls' %>
     </div>
 
-    <%= render 'controls' %>
+    <div class="col-xs-12 col-md-6">
+      <h3>Logs</h3>
+
+      <br>
+
+      <%= render 'logs' %>
+    </div>
   </div>
 
-  <div class="col-xs-12 col-md-6">
-    <h3>Logs</h3>
-
-    <br>
-
-    <%= render 'logs' %>
-  </div>
-</div>
-
-<br><br>
+  <br><br>
+<% end %>
 
 <%= render 'javascript' %>
