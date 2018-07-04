@@ -1,7 +1,13 @@
 class DevicesController < ApplicationController
-  before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script]
+  before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script, :setup]
   before_action :get_parent_device, only: [:new]
   skip_before_action :verify_authenticity_token, only: [:install]
+
+  # setup and help page
+  def setup
+    @parent_device = @devices.find(@device.device_id) if @device.device_id.present?
+    @master_device = @device.master_device
+  end
 
   # register a new device (take ownership of it)
   def submit_registration

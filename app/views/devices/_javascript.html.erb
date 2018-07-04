@@ -18,18 +18,6 @@
   // when the document is ready
   $(document).ready(function() {
 
-    // when the reinstall link is clicked
-    $('#reinstall_link').on('click', function() {
-      // show the reinstall dive
-      $('#reinstall_div').removeClass('hidden');
-    });
-
-    // when the arduino setup link is clicked
-    $('#arduino_setup_link').on('click', function() {
-      // show the arduino setup
-      $('#arduino_setup_div').removeClass('hidden');
-    });
-
     <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
       // when the slider is moved
       slider_<%= pin.pin_number %>.on('change', function() {

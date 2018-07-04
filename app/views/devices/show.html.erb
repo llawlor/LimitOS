@@ -16,11 +16,6 @@
     <dd><%= @device.i2c_address %></dd>
   <% end %>
 
-  <% if @device == @master_device %>
-    <dt><strong>Auth Token:</strong></dt>
-    <dd><%= @master_device.auth_token %></dd>
-  <% end %>
-
   <% if @device.parent_device.present? %>
     <dt><strong>Parent Device:</strong></dt>
     <dd><%= link_to @device.parent_device.name, @device.parent_device %></dd>
@@ -42,31 +37,7 @@
 
 </dl>
 
-<% if @device.device_type == 'raspberry_pi' %>
-
-  <%= link_to 'Raspberry Pi Nodejs Script', nodejs_script_device_path(@master_device) %>
-  <br>
-  <a id="reinstall_link">Reinstall LimitOS on device</a>
-  <br>
-  <div id="reinstall_div" class="hidden">
-    Enter the following command on your Raspberry Pi to reinstall the LimitOS process:
-    <br>
-    <pre>curl -sS --data "auth_token=<%= @device.master_device.auth_token %>" <%= full_url %>/devices/<%= @device.master_device.id %>/install | bash</pre>
-  </div>
-
-<% elsif @device.device_type == 'arduino' %>
-
-  <a id="arduino_setup_link">Arduino Setup</a>
-  <br>
-  <div id="arduino_setup_div" class="alert alert-info hidden">
-    <h4>Arduino Setup</h4>
-    <ol>
-      <li>Connect the Arduino to a Raspberry Pi using I2C by connecting the ground, SDA, and SCL pins on the Arduino to the same pins on the Raspberry Pi.</li>
-      <li>Copy and paste the <%= link_to 'Arduino script', arduino_script_device_path(@device) %> into the Arduino IDE and upload to the device.</li>
-    </ol>
-  </div>
-
-<% end %>
+<%= link_to 'Setup', setup_device_path(@device) %>
 
 <br><br>
 

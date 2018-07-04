@@ -1,0 +1,39 @@
+<div class="page-header">
+  <h1>
+    <%= @device.display_name %>
+    <div class="pull-right">
+      <%= link_to 'Back', device_path(@device), :class => 'btn btn-default btn-sm' %>
+    </div>
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-xs-12 col-md-10">
+    <% if @device == @master_device %>
+      The authentication token for this device is:
+      <pre><b><%= @master_device.auth_token %></b></pre>
+    <% end %>
+
+    <br><br>
+
+    <% if @device.device_type == 'raspberry_pi' %>
+
+      You can view the <%= link_to 'Raspberry Pi nodejs script', nodejs_script_device_path(@master_device) %> associated with this device.
+      <br><br>
+      You can also reinstall LimitOS on this device by entering the following command on your Raspberry Pi:
+      <br><br>
+      <pre>curl -sS --data "auth_token=<%= @device.master_device.auth_token %>" <%= full_url %>/devices/<%= @device.master_device.id %>/install | bash</pre>
+
+    <% elsif @device.device_type == 'arduino' %>
+
+      <div>
+        <h4>Arduino Setup</h4>
+        <ol>
+          <li>Connect the Arduino to a Raspberry Pi using I2C by connecting the ground, SDA, and SCL pins on the Arduino to the same pins on the Raspberry Pi.</li>
+          <li>Copy and paste the <%= link_to 'Arduino script', arduino_script_device_path(@device) %> into the Arduino IDE and upload to the device.</li>
+        </ol>
+      </div>
+
+    <% end %>
+  </div>
+</div>

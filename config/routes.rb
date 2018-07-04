@@ -32,6 +32,7 @@ Rails.application.routes.draw do
       get :nodejs_script
       get :arduino_script
       post :install
+      get :setup
     end
     collection do
       get :pretty_print_install
