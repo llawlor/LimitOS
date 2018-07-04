@@ -35,11 +35,11 @@ h1                              { font-weight: 600; color: #777; }
 #security_note                  { font-size: 12px; }
 #servo_slider .slider-selection { background: #BABABA; }
 
-.limitos-blue                   { color: #23b8ff; }
+.limitos-yellow                   { color: #23b8ff; }
 .limitos-command                { background-color: #303030; color: #ddd; display: inline-block; padding: 10px 25px; }
 .limitos-command:hover          { color: #3ee; }
-.limitos-logo .limitos-blue     { color: #999; }
-.limitos-logo:hover .limitos-blue { color: #23b8ff; }
+.limitos-logo .limitos-yellow     { color: #999; }
+.limitos-logo:hover .limitos-yellow { color: #23b8ff; }
 .float-none {
   float: none; }
 
