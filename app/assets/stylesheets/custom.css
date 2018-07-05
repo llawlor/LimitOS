@@ -18,8 +18,8 @@ h1                              { font-weight: 600; }
 .btn-primary:hover              { background-color: #ffd829 !important; color: #fff !important; }
 .form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
 .navbar-default                 { background-color: rgba(20,57,70,0.5); border-color: #00dde3; }
-.navbar-default li              { padding: 20px; }
-.navbar-default .navbar-brand   { color: #00dde3; padding: 20px; background-color: transparent; }
+.navbar-default li              { padding: 13px 20px; }
+.navbar-default .navbar-brand   { color: #00dde3; padding: 16px 20px; background-color: transparent; }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus { color: #00dde3; }
 .navbar-default .navbar-nav > li > a { color: #01232b; }
