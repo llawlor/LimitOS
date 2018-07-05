@@ -18,7 +18,7 @@ h1                              { font-weight: 600; }
 .btn-primary                    { background-color: #00dde3 !important; color: #01232b !important; border-color: #555 !important; }
 .btn-primary:hover              { background-color: #ffd829 !important; color: #01232b !important; border-color: #11333b !important; }
 .form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
-.navbar-default                 { background-color: rgba(20,57,70,0.5); border-color: #00dde3; }
+.navbar-default                 { background-color: rgba(20,57,70,0.5); border-color: #00dde3; text-transform: uppercase; }
 .navbar-default li              { padding: 13px 20px; }
 .navbar-default .navbar-brand   { color: #00dde3; padding: 16px 20px; background-color: transparent; }
 .navbar-default .navbar-brand:hover,
@@ -27,6 +27,13 @@ h1                              { font-weight: 600; }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus { background-color: #ffd829; }
 .page-header                    { margin: 20px 0; border-bottom: 1px dashed #00dde3; }
+.panel                          { background-color: rgba(20,57,70,0.5); }
+.panel-body                     { background-color: #eee; color: #01232B; }
+.panel-body .btn-primary        { background-color: #fff !important; }
+.panel-body .btn-primary:hover  { background-color: #f9f9f9 !important; }
+.panel-default                  { border: 2px solid #00dde3; }
+.panel-default > .panel-heading { color: #00dde3; background-color: transparent; border-color: #00dde3; font-size: 14px; padding: 3px 5px; }
+.panel-heading h4               { font-size: 15px; text-transform: uppercase; }
 .table-bordered                 { border: 1px solid #00dde3; }
 .table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td { border: 1px solid #00dde3; }
 .well                           { background-color: transparent; border-color: #00dde3; }
