@@ -1,19 +1,7 @@
-<style>
-  /* change flash message style only on homepage */
-  #flash-message { position: absolute; z-index: 1; left: 20px; right: 20px; }
-</style>
-
-<div id="wire-vertical" class="circuit"></div>
-<div id="current-vertical" class="circuit current"></div>
-<div id="wire-horizontal" class="circuit"></div>
-<div id="current-horizontal" class="circuit current"></div>
-<div id="wire-connection" class="circuit"></div>
-<div id="current-connection" class="circuit current"></div>
-
 <div class="row">
   <div class="col-sm-offset-4 col-sm-4 col-xs-12 text-center">
     <h1 class="limitos-logo" style="margin-top: 140px; font-size: 72px;">
-      Limit<span id="logo-circuit" class="current">OS</span>
+      Limit<span class="limitos-yellow">OS</span>
     </h1>
     <div>
       control your Internet of Things devices
@@ -89,23 +77,4 @@
       maxParticles: 60
     });
   };
-
-  // when the document is ready
-  $(document).ready(function() {
-
-    // set a timeout to remove the circuit
-    setTimeout(function() {
-      // remove the circuit
-      $('.circuit').fadeOut(1500);
-    }, 4500);
-
-    // set a timeout to add logo hover state
-    setTimeout(function() {
-      // remove the animation
-      $('#logo-circuit').css('animation', 'none');
-      // add the class that will allow hover
-      $('#logo-circuit').addClass('animation-complete');
-    }, 11000);
-
-  });
 </script>
