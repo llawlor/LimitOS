@@ -7,7 +7,7 @@ footer hr                       { border: 1px solid #eee; }
 h1                              { font-weight: 600; }
 
 .alert:hover                    { border-color: #888; }
-.alert-danger                   { background-color: transparent; border-color: #b5b5b5; color: #ffd829; }
+.alert-danger                   { background-color: transparent; border-color: #ffd829; color: #ffd829; }
 .alert-success                  { background-color: #ededed; border-color: #9d9d9d; color: #464646; }
 .alert-warning                  { background-color: #eee; border-color: #b5b5b5; color: #555; }
 .btn                            { border-radius: 2px; }
@@ -21,7 +21,7 @@ h1                              { font-weight: 600; }
 .navbar-default                 { background-color: rgba(20,57,70,0.5); border-color: #00dde3; }
 .navbar-default li              { padding: 20px; }
 .page-header                    { margin: 20px 0; }
-.well                           { background-color: transparent; }
+.well                           { background-color: transparent; border-color: #00dde3; }
 
 /* custom CSS declarations */
 #logo-circuit.animation-complete:hover { color: #ffd829; }
