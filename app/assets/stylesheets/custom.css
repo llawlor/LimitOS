@@ -3,7 +3,7 @@ a                               { cursor: pointer; font-weight: 600; color: #012
 a:hover                         { color: #01232b; background-color: #ffd829; text-decoration: none; }
 body                            { font-family: 'Libre Franklin', sans-serif; color: #00dde3; background-color:#01232B; background-image: linear-gradient(#0A2F37 1px, transparent 1px), linear-gradient(90deg, #0A2F37 1px, transparent 1px), linear-gradient(rgba(10,47,55,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(10,47,55,.3) 1px, transparent 1px); background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px; background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px; }
 footer                          { padding-bottom: 15px; font-size: 12px; }
-footer hr                       { border: 1px solid #eee; }
+footer hr                       { border: 1px solid #00dde3; }
 h1                              { font-weight: 600; }
 
 .alert:hover                    { border-color: #888; }
@@ -25,7 +25,9 @@ h1                              { font-weight: 600; }
 .navbar-default .navbar-nav > li > a { color: #01232b; }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus { background-color: #ffd829; }
-.page-header                    { margin: 20px 0; }
+.page-header                    { margin: 20px 0; border-bottom: 1px dashed #00dde3; }
+.table-bordered                 { border: 1px solid #00dde3; }
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td { border: 1px solid #00dde3; }
 .well                           { background-color: transparent; border-color: #00dde3; }
 
 /* custom CSS declarations */
