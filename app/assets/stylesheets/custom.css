@@ -11,11 +11,12 @@ h1                              { font-weight: 600; }
 .alert-success                  { background-color: #ededed; border-color: #9d9d9d; color: #464646; }
 .alert-warning                  { background-color: rgba(20,57,70,0.5); border-color: #00dde3; color: #00dde3; }
 .btn                            { border-radius: 2px; }
-.btn-danger                     { background-color: #666; border-color: #999; }
+.btn-danger                     { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
 .btn-danger:hover               { background-color: #ff7b0a; }
-.btn-default                    { background-color: #f8f8f8; }
-.btn-primary                    { background-color: #fff !important; color: #333 !important; border-color: #555 !important; }
-.btn-primary:hover              { background-color: #ffd829 !important; color: #fff !important; }
+.btn-default                    { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
+.btn-default:hover              { background-color: #ffd829 !important; color: #11333b !important; border-color: #11333b !important; }
+.btn-primary                    { background-color: #00dde3 !important; color: #01232b !important; border-color: #555 !important; }
+.btn-primary:hover              { background-color: #ffd829 !important; color: #01232b !important; border-color: #11333b !important; }
 .form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
 .navbar-default                 { background-color: rgba(20,57,70,0.5); border-color: #00dde3; }
 .navbar-default li              { padding: 13px 20px; }
