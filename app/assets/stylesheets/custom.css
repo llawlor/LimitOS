@@ -1,6 +1,7 @@
 /* bootstrap overrides */
 a                               { cursor: pointer; font-weight: 600; color: #01232b; background-color: #00dde3; padding: 2px 5px; }
-a:hover                         { color: #01232b; background-color: #ffd829; text-decoration: none; }
+a:active, a:hover, a:focus      { text-decoration: none; }
+a:hover                         { color: #01232b; background-color: #ffd829; }
 body                            { font-family: 'Libre Franklin', sans-serif; color: #00dde3; background-color:#01232B; background-image: linear-gradient(#0A2F37 1px, transparent 1px), linear-gradient(90deg, #0A2F37 1px, transparent 1px), linear-gradient(rgba(10,47,55,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(10,47,55,.3) 1px, transparent 1px); background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px; background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px; }
 footer                          { padding-bottom: 15px; font-size: 12px; }
 footer hr                       { border: 1px solid #00dde3; }
@@ -54,7 +55,7 @@ pre                             { border-radius: 0; }
 #particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
 #security_note                  { font-size: 12px; }
 #servo_slider .slider-handle    { background-color: #00dde3; background-image: linear-gradient(to bottom,#00dde3 0,#00dde3 100%); }
-#servo_slider .slider-selection { background: #00bdc3; }
+#servo_slider .slider-selection { background: #ffd829; }
 #servo_slider .slider-track-high { background: #005057; }
 
 .limitos-yellow                 { color: #ffd829; }
