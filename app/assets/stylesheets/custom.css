@@ -5,17 +5,20 @@ body                            { font-family: 'Libre Franklin', sans-serif; col
 footer                          { padding-bottom: 15px; font-size: 12px; }
 footer hr                       { border: 1px solid #00dde3; }
 h1                              { font-weight: 600; }
+pre                             { border-radius: 0; }
 
+.alert                          { border-radius: 0; }
 .alert-danger                   { background: linear-gradient(to right, rgba(255, 150, 50, 0.05), rgba(0,0,0,0)); border-color: #ffd829; color: #ffd829; }
 .alert-success                  { background-color: #ededed; border-color: #9d9d9d; color: #464646; }
 .alert-warning                  { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); border-color: #00dde3; color: #00dde3; }
-.btn                            { border-radius: 2px; }
+.btn                            { border-radius: 0; }
 .btn-danger                     { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
 .btn-danger:hover               { background-color: #ff7b0a; }
 .btn-default                    { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
 .btn-default:hover              { background-color: #ffd829 !important; color: #11333b !important; border-color: #11333b !important; }
 .btn-primary                    { background-color: #00dde3 !important; color: #01232b !important; border-color: #555 !important; }
 .btn-primary:hover              { background-color: #ffd829 !important; color: #01232b !important; border-color: #11333b !important; }
+.form-control                   { border-radius: 0; }
 .form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
 .navbar-collapse                { text-transform: uppercase; }
 .navbar-default                 { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); border-color: #00dde3; }
@@ -27,7 +30,7 @@ h1                              { font-weight: 600; }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus { background-color: #ffd829; }
 .page-header                    { margin: 20px 0; border-bottom: 1px dashed #00dde3; }
-.panel                          { background-color: rgba(20,57,70,0.5); }
+.panel                          { background-color: rgba(20,57,70,0.5); border-radius: 0; }
 .panel-body                     { background-color: #eee; color: #01232B; }
 .panel-body .btn-primary        { background-color: #fff !important; }
 .panel-body .btn-primary:hover  { background-color: #f9f9f9 !important; }
@@ -36,7 +39,7 @@ h1                              { font-weight: 600; }
 .panel-heading h4               { font-size: 15px; text-transform: uppercase; }
 .table-bordered                 { border: 1px solid #00dde3; }
 .table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td { border: 1px solid #00dde3; }
-.well                           { background-color: transparent; border-color: #00dde3; }
+.well                           { background-color: transparent; border-color: #00dde3; border-radius: 0; }
 
 /* custom CSS declarations */
 #particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
