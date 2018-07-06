@@ -32,13 +32,13 @@
         </button>
         <a class="navbar-brand" href="/">Limit<span class="limitos-yellow">OS</span></a>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
-          <ul class="nav navbar-nav">
+          <ul class="nav navbar-nav skew">
             <% if @devices.present? %>
               <li><%= link_to "My Devices", devices_path %></li>
             <% end %>
             <li><%= link_to "Register Device", register_path  %></li>
           </ul>
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav navbar-right skew">
             <% if current_user.present? %>
               <li><%= link_to 'My Account', account_path %></li>
               <li><%= link_to 'Sign Out', destroy_user_session_path, method: :delete %></li>
