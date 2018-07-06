@@ -6,10 +6,9 @@ footer                          { padding-bottom: 15px; font-size: 12px; }
 footer hr                       { border: 1px solid #00dde3; }
 h1                              { font-weight: 600; }
 
-.alert:hover                    { border-color: #888; }
-.alert-danger                   { background-color: rgba(255, 150, 50, 0.1); border-color: #ffd829; color: #ffd829; }
+.alert-danger                   { background: linear-gradient(to right, rgba(255, 150, 50, 0.05), rgba(0,0,0,0)); border-color: #ffd829; color: #ffd829; }
 .alert-success                  { background-color: #ededed; border-color: #9d9d9d; color: #464646; }
-.alert-warning                  { background-color: rgba(20,57,70,0.5); border-color: #00dde3; color: #00dde3; }
+.alert-warning                  { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); border-color: #00dde3; color: #00dde3; }
 .btn                            { border-radius: 2px; }
 .btn-danger                     { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
 .btn-danger:hover               { background-color: #ff7b0a; }
@@ -19,7 +18,7 @@ h1                              { font-weight: 600; }
 .btn-primary:hover              { background-color: #ffd829 !important; color: #01232b !important; border-color: #11333b !important; }
 .form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
 .navbar-collapse                { text-transform: uppercase; }
-.navbar-default                 { background-color: rgba(20,57,70,0.5); border-color: #00dde3; }
+.navbar-default                 { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); border-color: #00dde3; }
 .navbar-default li              { padding: 13px 20px; }
 .navbar-default .navbar-brand   { color: #00dde3; padding: 16px 20px; background-color: transparent; }
 .navbar-default .navbar-brand:hover,
@@ -45,8 +44,8 @@ h1                              { font-weight: 600; }
 #servo_slider .slider-selection { background: #BABABA; }
 
 .limitos-yellow                 { color: #ffd829; }
-.limitos-command                { background-color: rgba(20,57,70,0.5); color: #00dde3; display: inline-block; padding: 10px 25px; border: 2px solid #00dde3; }
-.limitos-command:hover          { color: #ffd829; border: 2px solid #ffd829; }
+.limitos-command                { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); color: #00dde3; display: inline-block; padding: 10px 25px; border: 2px solid #00dde3; }
+.limitos-command:hover          { background: transparent; color: #ffd829; border: 2px solid #ffd829; }
 
 @media (min-width: 768px) {
   .navbar-nav > li > a          { padding: 2px 5px; }
