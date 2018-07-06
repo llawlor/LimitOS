@@ -1,38 +1,44 @@
 <div class="row">
   <% @device.pins.where(pin_type: 'digital').order("pin_number asc").each do |pin| %>
     <div class="col-xs-12 col-md-6">
-      <div class="well" style="height: 155px;">
-        <b><%= pin.name %></b> <small>(pin number: <%= pin.pin_number %>)</small>
-        <br><br><br>
-        <button data-pin="<%= pin.pin_number %>" data-digital="on" class="btn btn-primary btn-lg digital_submit">On</button>
-        &nbsp; &nbsp;
-        <button data-pin="<%= pin.pin_number %>" data-digital="off" class="btn btn-primary btn-lg digital_submit">Off</button>
+      <div class="panel panel-primary" style="height: 155px;">
+        <div class="panel-heading">
+          <h4><b><%= pin.name %></b> <small>(pin number: <%= pin.pin_number %>)</small></h4>
+        </div>
+
+        <div class="panel-body">
+          <button data-pin="<%= pin.pin_number %>" data-digital="on" class="btn btn-primary btn-lg digital_submit">On</button>
+          &nbsp; &nbsp;
+          <button data-pin="<%= pin.pin_number %>" data-digital="off" class="btn btn-primary btn-lg digital_submit">Off</button>
+        </div>
       </div>
     </div>
   <% end %>
 
   <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").order("pin_number asc").each do |pin| %>
     <div class="col-xs-12 col-md-6">
-      <div class="well" style="height: 155px;">
-        <b><%= pin.name %></b> <small>(pin number: <%= pin.pin_number %>)</small>
+      <div class="panel panel-primary" style="height: 155px;">
+        <div class="panel-heading">
+          <h4><b><%= pin.name %></b> <small>(pin number: <%= pin.pin_number %>)</small></h4>
+        </div>
 
-        <br>
-
-        <form id="servo_form_<%= pin.pin_number %>" class="form-horizontal" style="padding-top: 10px;">
-          <div class="form-group">
-            <div class="col-xs-8">
-              <input id="servo_input_<%= pin.pin_number %>" class="form-control servo_position" placeholder="Servo position"></input>
+        <div class="panel-body">
+          <form id="servo_form_<%= pin.pin_number %>" class="form-horizontal" style="padding-top: 10px;">
+            <div class="form-group">
+              <div class="col-xs-8">
+                <input id="servo_input_<%= pin.pin_number %>" class="form-control servo_position" placeholder="Servo position"></input>
+              </div>
+              <div class="col-xs-4">
+                <button id="servo_button_<%= pin.pin_number %>" class="btn btn-default servo_submit">Go</button>
+              </div>
             </div>
-            <div class="col-xs-4">
-              <button id="servo_button_<%= pin.pin_number %>" class="btn btn-default servo_submit">Go</button>
+            <div class="form-group">
+              <div class="col-xs-12" style="margin-left: 10px;">
+                <input id="slider_<%= pin.pin_number %>" data-slider-id='servo_slider' type="text" data-slider-min="<%= pin.min || 0 %>" data-slider-max="<%= pin.max || 90 %>" data-slider-step="1" data-slider-value="<%= pin.min || 0 %>" />
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="col-xs-12" style="margin-left: 10px;">
-              <input id="slider_<%= pin.pin_number %>" data-slider-id='servo_slider' type="text" data-slider-min="<%= pin.min || 0 %>" data-slider-max="<%= pin.max || 90 %>" data-slider-step="1" data-slider-value="<%= pin.min || 0 %>" />
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
 
       </div>
     </div>
