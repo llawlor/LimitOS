@@ -15,9 +15,9 @@ pre                             { border-radius: 0; }
 .btn-danger                     { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
 .btn-danger:hover               { background-color: #ff7b0a; }
 .btn-default                    { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
-.btn-default:hover              { background-color: #ffd829 !important; color: #11333b !important; border-color: #11333b !important; }
-.btn-primary                    { background-color: #00dde3 !important; color: #01232b !important; border-color: #00cdd3 !important; font-weight: 600; }
-.btn-primary:hover              { background-color: #ffd829 !important; color: #01232b !important; border-color: #efc819 !important; }
+.btn-default:hover              { background-color: #ffd829; color: #11333b; border-color: #11333b; }
+.btn-primary                    { background-color: #00dde3; color: #01232b; border-color: #00cdd3; font-weight: 600; }
+.btn-primary:hover              { background-color: #ffd829; color: #01232b; border-color: #efc819; }
 .close                          { color: #00dde3; opacity: 0.8; text-shadow: none; }
 .dl-horizontal dd               { margin-bottom: 5px; }
 .form-control                   { border-radius: 0; }
@@ -34,12 +34,14 @@ pre                             { border-radius: 0; }
 .page-header                    { margin: 20px 0; border-bottom: 1px dashed #00dde3; }
 .panel                          { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); border-radius: 0; }
 .panel-default .panel-body      { background-color: #eee; color: #01232B; }
-.panel-default .panel-body .btn-primary { background-color: #fff !important; }
+.panel-default .panel-body .btn-default { background-color: #e8e8e8; color: #333; border-color: #01232b; }
+.panel-default .panel-body .btn-default:hover { background-color: #f9f9f9 !important; }
+.panel-default .panel-body .btn-primary { background-color: #fff; border-color: #01232b; }
 .panel-default .panel-body .btn-primary:hover { background-color: #f9f9f9 !important; }
 .panel-default, .panel-primary  { border: 2px solid #00dde3; }
 .panel-default > .panel-heading,
-.panel-primary > .panel-heading { color: #00dde3; background-color: rgba(0, 221, 227, 0.13); border-color: #00dde3; font-size: 14px; padding: 3px 5px; }
-.panel-heading h4               { font-size: 15px; text-transform: uppercase; }
+.panel-primary > .panel-heading { color: #00dde3; background-color: rgba(0, 221, 227, 0.13); border-color: #00dde3; font-size: 14px; font-weight: 600; padding: 4px 5px; }
+.panel-heading h4               { font-size: 14px; text-transform: uppercase; font-weight: 600; }
 .panel-heading h4 small         { color: #00dde3; }
 .panel-primary .form-control    { background: transparent; color: #ffd829; border-color: #00dde3; }
 .panel-primary .form-control::placeholder { color: rgba(0, 221, 227, 0.35); }
