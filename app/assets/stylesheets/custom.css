@@ -15,8 +15,12 @@ pre                             { border-radius: 0; }
 .btn-danger                     { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
 .btn-danger:hover               { background-color: #ff7b0a; }
 .btn-default                    { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
+.btn-default:active,
+.btn-default:focus,
 .btn-default:hover              { background-color: #ffd829; color: #11333b; border-color: #11333b; }
 .btn-primary                    { background-color: #00dde3; color: #01232b; border-color: #00cdd3; font-weight: 600; }
+.btn-primary:active,
+.btn-primary:focus,
 .btn-primary:hover              { background-color: #ffd829; color: #01232b; border-color: #efc819; }
 .close                          { color: #00dde3; opacity: 0.8; text-shadow: none; }
 .dl-horizontal dd               { margin-bottom: 5px; }
@@ -42,7 +46,7 @@ pre                             { border-radius: 0; }
 .panel-default > .panel-heading,
 .panel-primary > .panel-heading { color: #00dde3; background-color: rgba(0, 221, 227, 0.13); border-color: #00dde3; font-size: 14px; font-weight: 600; padding: 4px 5px; }
 .panel-heading h4               { font-size: 14px; text-transform: uppercase; font-weight: 600; }
-.panel-heading h4 small         { color: #00dde3; }
+.panel-heading h4 small         { color: #00dde3; float: right; padding-top: 3px; color: rgba(0, 221, 227, 0.7); }
 .panel-primary .form-control    { background: transparent; color: #ffd829; border-color: #00dde3; }
 .panel-primary .form-control::placeholder { color: rgba(0, 221, 227, 0.35); }
 .table-bordered                 { border: 1px solid #00dde3; }
