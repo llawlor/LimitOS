@@ -16,9 +16,10 @@ pre                             { border-radius: 0; }
 .btn-danger:hover               { background-color: #ff7b0a; }
 .btn-default                    { background-color: rgba(20,57,70,0.5); color: #00dde3; border-color: #00dde3; }
 .btn-default:hover              { background-color: #ffd829 !important; color: #11333b !important; border-color: #11333b !important; }
-.btn-primary                    { background-color: #00dde3 !important; color: #01232b !important; border-color: #555 !important; font-weight: 600; }
-.btn-primary:hover              { background-color: #ffd829 !important; color: #01232b !important; border-color: #11333b !important; }
+.btn-primary                    { background-color: #00dde3 !important; color: #01232b !important; border-color: #00cdd3 !important; font-weight: 600; }
+.btn-primary:hover              { background-color: #ffd829 !important; color: #01232b !important; border-color: #efc819 !important; }
 .close                          { color: #00dde3; opacity: 0.8; text-shadow: none; }
+.dl-horizontal dd               { margin-bottom: 5px; }
 .form-control                   { border-radius: 0; }
 .form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
 .navbar-collapse                { text-transform: uppercase; }
