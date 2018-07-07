@@ -2,6 +2,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :get_devices
 
+  # redirect after sign in
+  def after_sign_in_path_for(user)
+    devices_url
+  end
+
   # sets the @devices variable from the user account or the cookies
   def get_devices
     # if the user is logged in
