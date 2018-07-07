@@ -46,7 +46,9 @@ pre                             { border-radius: 0; }
 .panel-default .panel-body .btn-primary:hover { background-color: #f9f9f9; }
 .panel-heading h4               { font-size: 14px; text-transform: uppercase; font-weight: 600; }
 .panel-heading h4 small         { color: #00dde3; float: right; padding-top: 3px; color: rgba(0, 221, 227, 0.7); }
-.panel-primary  { border: 2px solid rgba(0, 221, 227, 0.5); }
+.panel-primary                  { border: 2px solid rgba(0, 221, 227, 0.5); }
+.panel-primary:hover            { border: 2px solid rgba(0, 221, 227, 1.0); }
+.panel-primary:hover .panel-heading { border-bottom: 1px solid rgba(0, 221, 227, 1.0); }
 .panel-primary > .panel-heading { color: #00dde3; background-color: rgba(0, 221, 227, 0.13); border-color: rgba(0, 221, 227, 0.5); font-size: 14px; font-weight: 600; padding: 4px 5px; }
 .panel-primary .form-control    { background: transparent; color: #ffd829; border-color: rgba(0, 221, 227, 0.7); }
 .panel-primary .form-control::placeholder { color: rgba(0, 221, 227, 0.35); }
