@@ -34,17 +34,41 @@
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav skew">
             <% if @devices.present? %>
-              <li><%= link_to "My Devices", devices_path %></li>
+              <li>
+                <%= link_to devices_path do %>
+                  <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> My Devices
+                <% end %>
+              </li>
             <% end %>
-            <li><%= link_to "Register Device", register_path  %></li>
+            <li>
+              <%= link_to register_path do %>
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Register Device
+              <% end %>
+            </li>
           </ul>
           <ul class="nav navbar-nav navbar-right skew">
             <% if current_user.present? %>
-              <li><%= link_to 'My Account', account_path %></li>
-              <li><%= link_to 'Sign Out', destroy_user_session_path, method: :delete %></li>
+              <li>
+                <%= link_to account_path do %>
+                  <span class="glyphicon glyphicon-user" aria-hidden="true"></span> My Account
+                <% end %>
+              </li>
+              <li>
+                <%= link_to destroy_user_session_path, method: :delete do %>
+                  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Sign Out
+                <% end %>
+              </li>
             <% else %>
-              <li><%= link_to 'Sign In', new_user_session_path %></li>
-              <li><%= link_to 'Sign Up', new_user_registration_path %></li>
+              <li>
+                <%= link_to new_user_session_path do %>
+                  <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Sign In
+                <% end %>
+              </li>
+              <li>
+                <%= link_to new_user_registration_path do %>
+                  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Sign Up
+                <% end %>
+              </li>
             <% end %>
           </ul>
         </div>
