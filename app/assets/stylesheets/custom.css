@@ -37,11 +37,11 @@ pre                             { border-radius: 0; }
 .panel-default .panel-body .btn-primary:hover { background-color: #f9f9f9 !important; }
 .panel-default, .panel-primary  { border: 2px solid #00dde3; }
 .panel-default > .panel-heading,
-.panel-primary > .panel-heading { color: #00dde3; background-color: transparent; border-color: #00dde3; font-size: 14px; padding: 3px 5px; }
+.panel-primary > .panel-heading { color: #00dde3; background-color: rgba(0, 221, 227, 0.13); border-color: #00dde3; font-size: 14px; padding: 3px 5px; }
 .panel-heading h4               { font-size: 15px; text-transform: uppercase; }
 .panel-heading h4 small         { color: #00dde3; }
 .panel-primary .form-control    { background: transparent; color: #ffd829; border-color: #00dde3; }
-.panel-primary .form-control::placeholder { color: #00dde359; }
+.panel-primary .form-control::placeholder { color: rgba(0, 221, 227, 0.35); }
 .table-bordered                 { border: 1px solid #00dde3; }
 .table-bordered > thead         { background-color: rgba(0, 221, 227, 0.13); }
 .table-bordered > thead > tr > th,
@@ -62,7 +62,7 @@ pre                             { border-radius: 0; }
 .limitos-yellow                 { color: #ffd829; }
 .limitos-command                { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); color: #00dde3; display: inline-block; padding: 10px 25px; border: 2px solid #00dde3; }
 .limitos-command:hover          { background: transparent; color: #ffd829; border: 2px solid #ffd829; }
-.limitos-logs                   { width: 100%; background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); color: #00dde3cc; display: inline-block; padding: 10px; border: 1px solid #00dde3; }
+.limitos-logs                   { width: 100%; background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); color: rgba(0, 221, 227, 0.8); display: inline-block; padding: 10px; border: 1px solid #00dde3; }
 .skew                           { transform: skew(-12deg); }
 
 @media (min-width: 768px) {
