@@ -43,6 +43,7 @@ pre                             { border-radius: 0; }
 .panel-primary .form-control    { background: transparent; color: #ffd829; border-color: #00dde3; }
 .panel-primary .form-control::placeholder { color: #00dde359; }
 .table-bordered                 { border: 1px solid #00dde3; }
+.table-bordered > thead         { background-color: rgba(0, 221, 227, 0.13); }
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > th,
 .table-bordered > tfoot > tr > th,
