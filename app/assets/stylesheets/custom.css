@@ -83,6 +83,8 @@ pre                             { border-radius: 0; }
 /* small screens */
 @media screen and (max-width: 767px) {
   .limitos-command              { display: inherit; }
+  .navbar-default .navbar-brand { padding-left: 0; }
+  .navbar-default .navbar-toggle { margin-right: 0; }
   .table-responsive             { border: 1px solid rgba(0, 221, 227, 0.5); }
 }
 
