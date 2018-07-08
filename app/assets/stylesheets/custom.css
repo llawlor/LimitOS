@@ -86,6 +86,8 @@ pre                             { border-radius: 0; }
   .table-responsive             { border: 1px solid rgba(0, 221, 227, 0.5); }
 }
 
+/* larger screens */
 @media (min-width: 768px) {
+  #copyright                    { float: right; }
   .navbar-nav > li > a          { padding: 2px 5px; }
 }
