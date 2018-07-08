@@ -18,32 +18,32 @@
   <% end %>
 
   <div class="form-group">
-    <%= f.label :name, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
+    <%= f.label :name, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
       <%= f.text_field :name, :class => 'form-control' %>
     </div>
     <%=f.error_span(:name) %>
   </div>
   <div class="form-group">
-    <%= f.label :pin_type, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-6">
+    <%= f.label :pin_type, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
       <%= f.select :pin_type, Pin::PIN_TYPES, { include_blank: true }, { class: 'form-control' } %>
     </div>
     <%=f.error_span(:pin_type) %>
   </div>
   <div class="form-group">
-    <%= f.label :pin_number, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
+    <%= f.label :pin_number, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
       <%= f.text_field :pin_number, :class => 'form-control' %>
     </div>
     <%=f.error_span(:pin_number) %>
 
     <% if @device.device_type == 'raspberry_pi' %>
-      <div class="col-lg-push-2 col-lg-10">
+      <div class="col-lg-push-4 col-lg-8" style="padding-top: 5px;">
         Please use <a href="https://www.raspberrypi.org/documentation/usage/gpio/README.md" target="blank">GPIO pin numbering</a> when setting your pin number.
       </div>
     <% elsif @device.device_type == 'arduino' %>
-      <div class="col-lg-push-2 col-lg-10">
+      <div class="col-lg-push-4 col-lg-8" style="padding-top: 5px;">
         Please use <a href="https://playground.arduino.cc/Learning/AnalogPins" target="blank">Arduino pin numbers</a> when setting your pin number.
         <br>
         For example on an Arduino Uno use <b>14</b> for the <b>A0</b> pin, and on an Arduino Mega use <b>54</b> for the <b>A0</b> pin.
@@ -52,32 +52,32 @@
 
   </div>
   <div class="form-group">
-    <%= f.label :min, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
+    <%= f.label :min, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
       <%= f.text_field :min, :class => 'form-control' %>
     </div>
     <%=f.error_span(:min) %>
   </div>
   <div class="form-group">
-    <%= f.label :max, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
+    <%= f.label :max, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
       <%= f.text_field :max, :class => 'form-control' %>
     </div>
     <%=f.error_span(:max) %>
   </div>
   <div class="form-group">
-    <%= f.label :output_pin_number, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
+    <%= f.label :output_pin_number, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
       <%= f.text_field :output_pin_number, :class => 'form-control' %>
     </div>
     <%=f.error_span(:output_pin_number) %>
   </div>
   <div class="form-group">
-    <%= f.label :transform, :class => 'control-label col-lg-2' %>
-    <div class="col-lg-10">
+    <%= f.label :transform, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
       <%= f.text_field :transform, :class => 'form-control' %>
 
-      <div class="pull-right">
+      <div class="pull-right" style="padding-top: 5px;">
         <a id="common-transforms-link">common transforms</a>
       </div>
 
@@ -104,7 +104,7 @@
   </div>
 
   <div class="form-group">
-    <div class="col-lg-offset-2 col-lg-10">
+    <div class="col-lg-offset-4 col-lg-8">
       <%= f.submit nil, :class => 'btn btn-primary' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 device_path(@device), :class => 'btn btn-default' %>
