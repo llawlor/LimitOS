@@ -32,6 +32,7 @@ pre                             { border-radius: 0; }
 .navbar-default .navbar-brand   { color: #00dde3; padding: 16px 20px; background-color: transparent; }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus { color: #00dde3; }
+.navbar-default .navbar-collapse { width: 100%; border-color: #00dde3;}
 .navbar-default .navbar-nav > li > a { color: #01232b; }
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus { background-color: #ffd829; }
