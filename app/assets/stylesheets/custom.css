@@ -80,8 +80,10 @@ pre                             { border-radius: 0; }
 .limitos-logs                   { width: 100%; background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); color: rgba(0, 221, 227, 0.8); display: inline-block; padding: 10px; border: 1px solid rgba(0, 221, 227, 0.5); }
 .skew                           { transform: skew(-12deg); }
 
+/* small screens */
 @media screen and (max-width: 767px) {
-  .table-responsive { border: 1px solid rgba(0, 221, 227, 0.5); }
+  .limitos-command              { display: inherit; }
+  .table-responsive             { border: 1px solid rgba(0, 221, 227, 0.5); }
 }
 
 @media (min-width: 768px) {
