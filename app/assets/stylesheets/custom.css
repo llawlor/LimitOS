@@ -70,15 +70,15 @@ pre                             { border-radius: 0; }
 /* custom CSS declarations */
 #particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
 #security_note                  { font-size: 12px; }
-#servo_slider .slider-handle    { background-color: #00dde3; background-image: linear-gradient(to bottom,#00dde3 0,#00dde3 100%); }
-#servo_slider .slider-selection { background: #ffd829; }
-#servo_slider .slider-track-high { background: #005057; }
 
 .limitos-yellow                 { color: #ffd829; }
 .limitos-command                { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); color: #00dde3; display: inline-block; padding: 10px 25px; border: 2px solid #00dde3; }
 .limitos-command:hover          { background: transparent; color: #ffd829; border: 2px solid #ffd829; }
 .limitos-logs                   { width: 100%; background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); color: rgba(0, 221, 227, 0.8); display: inline-block; padding: 10px; border: 1px solid rgba(0, 221, 227, 0.5); }
 .skew                           { transform: skew(-12deg); }
+.slider .slider-handle          { background-color: #00dde3; background-image: linear-gradient(to bottom,#00dde3 0,#00dde3 100%); }
+.slider .slider-selection       { background: #ffd829; }
+.slider .slider-track-high      { background: #005057; }
 
 /* small screens */
 @media screen and (max-width: 767px) {
