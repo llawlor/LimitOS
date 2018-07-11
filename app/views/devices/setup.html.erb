@@ -11,7 +11,8 @@
   <div class="col-xs-12 col-md-10">
     <% if @device == @master_device %>
       The authentication token for this device is:
-      <pre><b><%= @master_device.auth_token %></b></pre>
+      <br>
+      <pre class="limitos-command"><%= @master_device.auth_token %></pre>
     <% end %>
 
     <br><br>
