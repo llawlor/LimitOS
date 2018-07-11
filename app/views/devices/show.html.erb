@@ -18,21 +18,21 @@
 
   <% if @device.parent_device.present? %>
     <dt><strong>Parent Device:</strong></dt>
-    <dd><%= link_to @device.parent_device.name, @device.parent_device %></dd>
+    <dd><%= link_to @device.parent_device.display_name, @device.parent_device %></dd>
   <% end %>
 
   <% if @device.devices.present? %>
     <dt><strong>Children Devices:</strong></dt>
     <dd>
       <% @device.devices.each do |device| %>
-        <%= link_to device.name, device %><br>
+        <%= link_to device.display_name, device %><br>
       <% end %>
     </dd>
   <% end %>
 
   <% if @device.broadcast_to_device.present? %>
     <dt><strong>Broadcast to Device:</strong></dt>
-    <dd><%= link_to @device.broadcast_to_device.name, @device.broadcast_to_device %></dd>
+    <dd><%= link_to @device.broadcast_to_device.display_name, @device.broadcast_to_device %></dd>
   <% end %>
 
 </dl>
