@@ -29,7 +29,7 @@
   <div class="form-group">
     <%= f.label :device_type, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
-      <%= f.select :device_type, Device::DEVICE_TYPES, { include_blank: true }, { class: 'form-control' } %>
+      <%= f.select :device_type, options_for_select(Device::DEVICE_TYPES.map{ |x| [x.titleize, x] }, @device.device_type), { include_blank: true }, { class: 'form-control' } %>
     </div>
     <%= f.error_span(:device_type) %>
   </div>

@@ -3,17 +3,12 @@
   <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
     // initialize this slider
     var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {
-      formatter: sliderFormatter
+      tooltip: 'hide'
     });
   <% end %>
 
   // keep track of the start transmission time
   var start_transmission_time = 0;
-
-  // format slider tooltip
-  function sliderFormatter(value) {
-    return 'Current value: ' + value;
-  }
 
   // when the document is ready
   $(document).ready(function() {
@@ -22,14 +17,21 @@
       // when the slider is moved
       slider_<%= pin.pin_number %>.on('change', function() {
         // get the slider value
-        var value = slider_<%= pin.pin_number %>.getValue();
+        var slider_value = slider_<%= pin.pin_number %>.getValue();
+        // update the text input
+        $('#servo_input_' + <%= pin.pin_number %>).val(slider_value);
         // send the value via the master device
-        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: value });
+        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: slider_value });
       });
 
       // when the servo form is submitted
       $('#servo_form_<%= pin.pin_number %>').submit(function() {
-        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: $('#servo_input_' + <%= pin.pin_number %>).val() });
+        // get the input value
+        var input_value = $('#servo_input_' + <%= pin.pin_number %>).val();
+        // update the slider value
+        slider_<%= pin.pin_number %>.setValue(input_value);
+        // send the value via the master device
+        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: input_value });
         // don't reload the page
         return false;
       });
