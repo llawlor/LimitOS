@@ -2,7 +2,7 @@
   <h1>New Device</h1>
 </div>
 
-<% if params[:type] != 'connected' %>
+<% if params[:device_type] != 'arduino' %>
   You can add a new Raspberry Pi device via the following command:
   <br><br>
   <%= render 'shared/install_command' %>

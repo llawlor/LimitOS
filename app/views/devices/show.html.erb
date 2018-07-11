@@ -42,7 +42,7 @@
 <br><br>
 
 <% if @device.parent_device.blank? %>
-  <%= link_to 'Add Connected I2C Device', new_device_path(device_id: @device, type: 'connected'), class: 'btn btn-default btn-sm' %>
+  <%= link_to 'Add Connected I2C Device', new_device_path(device_id: @device, device_type: 'arduino'), class: 'btn btn-default btn-sm' %>
 <% end %>
 
 <br><br>

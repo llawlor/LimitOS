@@ -118,6 +118,8 @@ class DevicesController < ApplicationController
   def new
     # default new device
     @device = Device.new
+    # set to arduino if necessary
+    @device.device_type = 'arduino' if params[:device_type] == 'arduino'
   end
 
   # edit a device
