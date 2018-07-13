@@ -68,6 +68,10 @@ pre                             { border-radius: 0; }
 .well                           { background-color: transparent; border-color: #00dde3; border-radius: 0; }
 
 /* custom CSS declarations */
+.form-group label               { font-size: 11px; color: #ccc; }
+.form-group small               { color: #ccc; }
+.form-group:focus-within label  { color: #555; font-weight: 600; }
+.form-group:focus-within small  { color: #777; }
 input[type="email"],
 input[type="password"],
 input[type="text"]  { border: none; border-bottom: 1px solid #ccc; background-color: transparent; box-shadow: none; padding-left: 0; }
