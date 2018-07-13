@@ -55,7 +55,7 @@ pre                             { border-radius: 0; }
 .panel-primary:hover            { border: 2px solid rgba(0, 221, 227, 1.0); }
 .panel-primary:hover .panel-heading { border-bottom: 1px solid rgba(0, 221, 227, 1.0); }
 .panel-primary > .panel-heading { color: #00dde3; background-color: rgba(0, 221, 227, 0.13); border-color: rgba(0, 221, 227, 0.5); font-size: 14px; font-weight: 600; padding: 4px 5px; }
-.panel-primary .form-control    { background: transparent; color: #ffd829; border-color: rgba(0, 221, 227, 0.7); }
+.panel-primary .form-control    { background: transparent; color: #ffd829; border: none; border-bottom: 1px solid rgba(0, 221, 227, 0.7); box-shadow: none; padding-left: 0; }
 .panel-primary .form-control::placeholder { color: rgba(0, 221, 227, 0.35); }
 .table-bordered                 { border: 1px solid rgba(0, 221, 227, 0.5); }
 .table-bordered > thead         { background-color: rgba(0, 221, 227, 0.13); }
@@ -74,7 +74,8 @@ pre                             { border-radius: 0; }
 .form-group:focus-within small  { color: #777; }
 input[type="email"],
 input[type="password"],
-input[type="text"]  { border: none; border-bottom: 1px solid #ccc; background-color: transparent; box-shadow: none; padding-left: 0; }
+input[type="text"],
+select.form-control             { border: none; border-bottom: 1px solid #ccc; background-color: transparent; box-shadow: none; padding-left: 0; }
 
 #particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
 #security_note                  { font-size: 12px; }
