@@ -1,4 +1,4 @@
-<%= form_for @device do |f| %>
+<%= form_for @device, :html => { :class => "form-horizontal device" } do |f| %>
 
   <% if @parent_device.present? %>
     <%= hidden_field_tag :parent_device_id, @parent_device.id %>
@@ -20,34 +20,44 @@
   <% end %>
 
   <div class="form-group">
-    <%= f.label :name %>
-    <%= f.text_field :name, class: 'form-control', autofocus: !@device.persisted? %>
+    <%= f.label :name, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
+      <%= f.text_field :name, class: 'form-control', autofocus: !@device.persisted? %>
+    </div>
     <%= f.error_span(:name) %>
   </div>
   <div class="form-group">
-    <%= f.label :device_type %>
-    <%= f.select :device_type, options_for_select(Device::DEVICE_TYPES.map{ |x| [x.titleize, x] }, @device.device_type), { include_blank: true }, { class: 'form-control' } %>
+    <%= f.label :device_type, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
+      <%= f.select :device_type, options_for_select(Device::DEVICE_TYPES.map{ |x| [x.titleize, x] }, @device.device_type), { include_blank: true }, { class: 'form-control' } %>
+    </div>
     <%= f.error_span(:device_type) %>
   </div>
 
   <% if @device.parent_device.present? %>
     <div class="form-group">
-      <%= f.label :i2c_address %>
-      <%= f.text_field :i2c_address, class: 'form-control', placeholder: 'only applicable for slave devices, example: 0x04' %>
+      <%= f.label :i2c_address, :class => 'control-label col-lg-4' %>
+      <div class="col-lg-8">
+        <%= f.text_field :i2c_address, class: 'form-control', placeholder: 'only applicable for slave devices, example: 0x04' %>
+      </div>
       <%= f.error_span(:i2c_address) %>
     </div>
   <% end %>
 
   <div class="form-group">
-    <%= f.label :broadcast_to_device %>
-    <%= f.select :broadcast_to_device_id, @devices.select{ |device| device.id != @device.id }.map{ |device| [device.display_name, device.id] }, { include_blank: true }, { class: 'form-control' } %>
+    <%= f.label :broadcast_to_device, :class => 'control-label col-lg-4' %>
+    <div class="col-lg-8">
+      <%= f.select :broadcast_to_device_id, @devices.select{ |device| device.id != @device.id }.map{ |device| [device.display_name, device.id] }, { include_blank: true }, { class: 'form-control' } %>
+    </div>
     <%= f.error_span(:broadcast_to_device) %>
   </div>
 
   <div class="form-group">
+    <div class="col-lg-offset-4 col-lg-8">
       <%= f.submit nil, class: 'btn btn-primary', style: 'margin-right: 20px;' %>
       <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 devices_path, :class => 'btn btn-default' %>
+    </div>
   </div>
 
 <% end %>

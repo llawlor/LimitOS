@@ -20,7 +20,7 @@
   <div class="form-group">
     <%= f.label :name, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
-      <%= f.text_field :name, :class => 'form-control' %>
+      <%= f.text_field :name, class: 'form-control', autofocus: !@pin.persisted? %>
     </div>
     <%=f.error_span(:name) %>
   </div>
