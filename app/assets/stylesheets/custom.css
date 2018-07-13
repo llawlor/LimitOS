@@ -39,7 +39,7 @@ pre                             { border-radius: 0; }
 .navbar-default .navbar-toggle  { border-color: #00dde3; }
 .navbar-default .navbar-toggle .icon-bar { background-color: #00dde3; }
 .navbar-default .navbar-toggle:hover,
- .navbar-default .navbar-toggle:focus { background-color: rgba(0, 221, 227, 0.5); }
+.navbar-default .navbar-toggle:focus { background-color: rgba(0, 221, 227, 0.5); }
 .page-header                    { margin: 20px 0; border-bottom: 1px dashed rgba(0, 221, 227, 0.5); }
 .panel                          { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); border-radius: 0; }
 .panel-default                  { border: 2px solid rgba(0, 221, 227, 1.0); }
@@ -68,6 +68,10 @@ pre                             { border-radius: 0; }
 .well                           { background-color: transparent; border-color: #00dde3; border-radius: 0; }
 
 /* custom CSS declarations */
+input[type="email"],
+input[type="password"],
+input[type="text"]  { border: none; border-bottom: 1px solid #ccc; background-color: transparent; box-shadow: none; padding-left: 0; }
+
 #particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
 #security_note                  { font-size: 12px; }
 
