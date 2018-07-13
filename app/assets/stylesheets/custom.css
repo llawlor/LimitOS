@@ -68,7 +68,7 @@ pre                             { border-radius: 0; }
 .well                           { background-color: transparent; border-color: #00dde3; border-radius: 0; }
 
 /* custom CSS declarations */
-.form-group label               { font-size: 11px; color: #ccc; }
+.form-group label               { font-size: 11px; color: #aaa; }
 .form-group small               { color: #ccc; }
 .form-group:focus-within label  { color: #555; font-weight: 600; }
 .form-group:focus-within small  { color: #777; }
