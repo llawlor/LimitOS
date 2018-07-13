@@ -9,7 +9,13 @@
 
 <dl class="dl-horizontal">
   <dt><strong>Device Type:</strong></dt>
-  <dd><%= @device.device_type.try(:titleize) %></dd>
+  <dd>
+    <% if @device.device_type.blank? %>
+      <%= link_to '(set device type)', edit_device_path(@device) %>
+    <% else %>
+      <%= @device.device_type.try(:titleize) %>
+    <% end %>
+  </dd>
 
   <% if @device.parent_device.present? %>
     <dt><strong>I2C Address:</strong></dt>

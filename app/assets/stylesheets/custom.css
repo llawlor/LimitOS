@@ -6,6 +6,10 @@ body                            { font-family: 'Libre Franklin', sans-serif; col
 footer                          { padding-bottom: 15px; font-size: 12px; }
 footer hr                       { border: 1px solid #00dde3; }
 h1                              { font-weight: 600; }
+input[type="email"],
+input[type="password"],
+input[type="text"],
+select.form-control             { border: none; border-bottom: 1px solid #ccc; background-color: transparent; box-shadow: none; padding-left: 0; }
 pre                             { border-radius: 0; }
 
 .alert                          { border-radius: 0; }
@@ -26,6 +30,11 @@ pre                             { border-radius: 0; }
 .dl-horizontal dd               { margin-bottom: 5px; }
 .form-control                   { border-radius: 0; }
 .form-control:focus             { border-color: #555; box-shadow: none; -webkit-box-shadow: none; }
+.form-group label               { font-size: 11px; color: #aaa; }
+.form-group small               { color: #ccc; }
+.form-group:focus-within label  { color: #555; font-weight: 600; }
+.form-group:focus-within small  { color: #777; }
+.form-horizontal .form-group label { color: #555; font-size: 14px; }
 .navbar-collapse                { text-transform: uppercase; }
 .navbar-default                 { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); border-color: #00dde3; }
 .navbar-default li              { padding: 13px 20px; }
@@ -39,7 +48,7 @@ pre                             { border-radius: 0; }
 .navbar-default .navbar-toggle  { border-color: #00dde3; }
 .navbar-default .navbar-toggle .icon-bar { background-color: #00dde3; }
 .navbar-default .navbar-toggle:hover,
- .navbar-default .navbar-toggle:focus { background-color: rgba(0, 221, 227, 0.5); }
+.navbar-default .navbar-toggle:focus { background-color: rgba(0, 221, 227, 0.5); }
 .page-header                    { margin: 20px 0; border-bottom: 1px dashed rgba(0, 221, 227, 0.5); }
 .panel                          { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); border-radius: 0; }
 .panel-default                  { border: 2px solid rgba(0, 221, 227, 1.0); }
@@ -55,7 +64,7 @@ pre                             { border-radius: 0; }
 .panel-primary:hover            { border: 2px solid rgba(0, 221, 227, 1.0); }
 .panel-primary:hover .panel-heading { border-bottom: 1px solid rgba(0, 221, 227, 1.0); }
 .panel-primary > .panel-heading { color: #00dde3; background-color: rgba(0, 221, 227, 0.13); border-color: rgba(0, 221, 227, 0.5); font-size: 14px; font-weight: 600; padding: 4px 5px; }
-.panel-primary .form-control    { background: transparent; color: #ffd829; border-color: rgba(0, 221, 227, 0.7); }
+.panel-primary .form-control    { background: transparent; color: #ffd829; border: none; border-bottom: 1px solid rgba(0, 221, 227, 0.7); box-shadow: none; padding-left: 0; }
 .panel-primary .form-control::placeholder { color: rgba(0, 221, 227, 0.35); }
 .table-bordered                 { border: 1px solid rgba(0, 221, 227, 0.5); }
 .table-bordered > thead         { background-color: rgba(0, 221, 227, 0.13); }
