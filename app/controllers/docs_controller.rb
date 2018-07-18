@@ -4,4 +4,8 @@ class DocsController < ApplicationController
   def installation
   end
 
+  # pin documentation
+  def pins
+  end
+
 end

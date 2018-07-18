@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   resource :docs do
     member do
       get 'installation'
+      get 'pins'
     end
   end
 
