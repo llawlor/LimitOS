@@ -41,6 +41,12 @@ Rails.application.routes.draw do
     resources :synchronizations
   end
 
+  resource :docs do
+    member do
+      get 'installation'
+    end
+  end
+
   namespace :api do
     namespace :v1 do
       resources :devices do
