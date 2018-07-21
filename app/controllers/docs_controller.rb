@@ -1,5 +1,9 @@
 class DocsController < ApplicationController
 
+  # main documentation page
+  def index
+  end
+
   # installation page
   def installation
   end

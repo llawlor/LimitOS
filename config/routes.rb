@@ -41,7 +41,7 @@ Rails.application.routes.draw do
     resources :synchronizations
   end
 
-  resource :docs do
+  resources :docs do
     member do
       get 'installation'
       get 'pins'
