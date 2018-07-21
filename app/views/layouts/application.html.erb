@@ -75,18 +75,24 @@
       </div>
     </div>
 
-    <div class="container">
-      <div style="min-height: 525px;">
-        <div id="flash-message">
-          <%= bootstrap_flash %>
-        </div>
-        <%= yield %>
-      </div><!--/row-->
+    <% if @raw_body == true %>
 
-    </div> <!-- /container -->
+      <%= yield %>
+
+    <% else %>
+
+      <div class="container">
+        <div style="min-height: 525px;">
+          <div id="flash-message">
+            <%= bootstrap_flash %>
+          </div>
+          <%= yield %>
+        </div>
+      </div>
+
+    <% end %>
 
     <footer>
-      <hr>
       <div class="container">
         <div class="row">
           <div class="col-xs-12 col-md-6">
