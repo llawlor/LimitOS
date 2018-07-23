@@ -80,11 +80,13 @@
       </div>
     </div>
 
-    <div class="container" style="margin-bottom: 20px;">
-      <div style="min-height: 525px;">
-        <div id="flash-message">
-          <%= bootstrap_flash %>
-        </div>
+    <style>
+      .navbar { margin-bottom: 0; }
+    </style>
+
+    <div class="row">
+      <%= render 'sidebar' %>
+      <div class="col-sm-9 col-lg-10">
         <%= yield %>
       </div>
     </div>
