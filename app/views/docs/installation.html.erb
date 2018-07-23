@@ -1,1 +1,33 @@
-installation
+<h1>Installation</h1>
+
+LimitOS is designed to be installed on a Raspberry Pi.
+
+<br><br>
+
+<h4>Quick start on a Raspberry Pi:</h4>
+<%= render 'shared/install_command' %>
+
+<br><br>
+
+What installation does:
+<ol>
+  <li>Downloads nodejs</li>
+  <li>Adds the LimitOS script</li>
+  <li>Registers a new device</li>
+</ol>
+
+What you'll need:
+<ul>
+  <li>A Raspberry Pi with an internet connection</li>
+</ul>
+
+Installation steps:
+<ol>
+  <li>Log in as a root user on your Raspberry Pi (default username is "pi", default password is "raspberry")</li>
+  <li>Type (or copy/paste) the following command: curl -sS <%= full_url %>/install | bash</li>
+  <li>When you see a registration code appear, go to https://limitos.com/register (on any device) and type in your registration code</li>
+</ol>
+
+Learn how to use LimitOS:
+
+It can also be installed on an Arduino that is connected to a Raspberry Pi via i2c.
