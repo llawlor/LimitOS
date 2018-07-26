@@ -9,25 +9,36 @@ LimitOS is designed to be installed on a Raspberry Pi.
 
 <br><br>
 
-What installation does:
+<h4>What the installation script does:</h4>
 <ol>
-  <li>Downloads nodejs</li>
+  <li>Downloads Node.js</li>
   <li>Adds the LimitOS script</li>
   <li>Registers a new device</li>
 </ol>
 
-What you'll need:
+<br><br>
+
+<h4>What you'll need:</h4>
 <ul>
   <li>A Raspberry Pi with an internet connection</li>
 </ul>
 
-Installation steps:
+<br><br>
+
+<h4>Installation steps:</h4>
 <ol>
   <li>Log in as a root user on your Raspberry Pi (default username is "pi", default password is "raspberry")</li>
   <li>Type (or copy/paste) the following command: curl -sS <%= full_url %>/install | bash</li>
   <li>When you see a registration code appear, go to https://limitos.com/register (on any device) and type in your registration code</li>
 </ol>
 
-Learn how to use LimitOS:
+<br><br>
 
-It can also be installed on an Arduino that is connected to a Raspberry Pi via i2c.
+<h4>Arduino setup:</h4>
+LimitOs also be installed on an Arduino that is connected to a Raspberry Pi via i2c:
+<ol>
+  <li>Connect the Arduino to a Raspberry Pi using I2C by connecting the ground, SDA, and SCL pins on the Arduino to the same pins on the Raspberry Pi.</li>
+  <li>Copy and paste the customized Arduino script from your device page into the Arduino IDE and upload to the device.</li>
+</ol>
+
+<br><br>
