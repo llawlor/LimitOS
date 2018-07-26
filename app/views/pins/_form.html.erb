@@ -20,7 +20,7 @@
   <div class="form-group">
     <%= f.label :name, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
-      <%= f.text_field :name, class: 'form-control', autofocus: !@pin.persisted? %>
+      <%= f.text_field :name, class: 'form-control', autofocus: !@pin.persisted?, placeholder: 'Name for this device' %>
     </div>
     <%=f.error_span(:name) %>
   </div>
@@ -34,7 +34,7 @@
   <div class="form-group">
     <%= f.label :pin_number, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
-      <%= f.text_field :pin_number, :class => 'form-control' %>
+      <%= f.text_field :pin_number, class: 'form-control', placeholder: 'Physical pin number on the microcontroller' %>
     </div>
     <%=f.error_span(:pin_number) %>
 
@@ -54,28 +54,28 @@
   <div class="form-group">
     <%= f.label :min, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
-      <%= f.text_field :min, :class => 'form-control' %>
+      <%= f.text_field :min, class: 'form-control', placeholder: 'Minimum allowed value' %>
     </div>
     <%=f.error_span(:min) %>
   </div>
   <div class="form-group">
     <%= f.label :max, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
-      <%= f.text_field :max, :class => 'form-control' %>
+      <%= f.text_field :max, class: 'form-control', placeholder: 'Maximum allowed value' %>
     </div>
     <%=f.error_span(:max) %>
   </div>
   <div class="form-group">
     <%= f.label :output_pin_number, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
-      <%= f.text_field :output_pin_number, :class => 'form-control' %>
+      <%= f.text_field :output_pin_number, class: 'form-control', placeholder: 'Redirects the input values to another (output) pin' %>
     </div>
     <%=f.error_span(:output_pin_number) %>
   </div>
   <div class="form-group">
     <%= f.label :transform, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
-      <%= f.text_field :transform, :class => 'form-control' %>
+      <%= f.text_field :transform, class: 'form-control', placeholder: "Logic to modify the input values before they're sent to an output pin" %>
 
       <div class="pull-right" style="padding-top: 5px;">
         <a id="common-transforms-link">common transforms</a>
