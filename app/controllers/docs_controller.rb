@@ -12,4 +12,8 @@ class DocsController < ApplicationController
   def pins
   end
 
+  # I2C documentation
+  def i2c
+  end
+
 end

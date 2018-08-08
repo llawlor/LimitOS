@@ -45,6 +45,7 @@ Rails.application.routes.draw do
     collection do
       get 'installation'
       get 'pins'
+      get 'i2c'
     end
   end
 
