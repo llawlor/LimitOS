@@ -16,4 +16,8 @@ class DocsController < ApplicationController
   def i2c
   end
 
+  # security information
+  def security
+  end
+
 end
