@@ -104,6 +104,6 @@ pre                             { border-radius: 0; }
 
 /* larger screens */
 @media (min-width: 768px) {
-  #copyright                    { float: right; }
+  #footer-right                 { float: right; }
   .navbar-nav > li > a          { padding: 2px 5px; }
 }

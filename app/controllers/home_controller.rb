@@ -6,6 +6,10 @@ class HomeController < ApplicationController
     associate_devices_with_user if current_user.present? && cookies.encrypted[:device_ids].present?
   end
 
+  # frequently asked questions
+  def faq
+  end
+
   # for status requests
   def status
     render plain: 'ok'

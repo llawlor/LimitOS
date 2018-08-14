@@ -16,6 +16,9 @@ Rails.application.routes.draw do
   # for the status page
   get '/status' => 'home#status'
 
+  # frequently asked questions
+  get '/faq' => 'home#faq'
+
   get '/account' => 'users#account'
   resources :users
 
