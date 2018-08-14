@@ -13,10 +13,12 @@
 
     <%= render 'layouts/navbar' %>
 
-    <div class="row">
-      <%= render 'sidebar' %>
-      <div class="col-sm-8 col-lg-7" style="border-left: 1px solid #00dde3; padding-bottom: 30px;">
-        <%= yield %>
+    <div class="container" style="margin-bottom: 20px;">
+      <div class="row">
+        <%= render 'sidebar' %>
+        <div class="col-xs-12 col-sm-8 col-lg-7 maincontent-right">
+          <%= yield %>
+        </div>
       </div>
     </div>
 
