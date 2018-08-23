@@ -75,6 +75,7 @@ pre                             { border-radius: 0; }
 .table-bordered > thead > tr > td,
 .table-bordered > tbody > tr > td,
 .table-bordered > tfoot > tr > td { border: 1px solid rgba(0, 221, 227, 0.5); }
+.tooltip                        { width: 180px; }
 .well                           { background-color: transparent; border-color: #00dde3; border-radius: 0; }
 
 /* custom CSS declarations */
