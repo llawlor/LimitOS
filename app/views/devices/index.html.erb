@@ -5,32 +5,55 @@
   </div>
 <% end %>
 
-<%- model_class = Device -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
-</div>
+<% if @devices.count == 0 %>
 
-<br><br>
+  <h1>Welcome to LimitOS!</h1>
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:device_type) %></th>
-      <th>Created</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @devices.each do |device| %>
+  <br><br>
+
+  <h3>To get started, you'll need to add a new device.</h3>
+
+  <br><br>
+
+  You can add a new device by running the following command on your Raspberry Pi:
+
+  <br><br>
+
+  <%= render 'shared/install_command' %>
+
+  <br><br><br>
+
+  You can also read more about <a href="/docs/installation">installing LimitOS</a> or about <a href="/docs/security">our security</a>.
+
+<% else %>
+
+  <br><br>
+
+  <%- model_class = Device -%>
+  <div class="page-header">
+    <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
       <tr>
-        <td><%= link_to device.display_name, device_path(device) %></td>
-        <td><%= device.device_type.try(:titleize) %></td>
-        <td><%= device.created_at.strftime("%Y-%m-%d") %></td>
+        <th><%= model_class.human_attribute_name(:name) %></th>
+        <th><%= model_class.human_attribute_name(:device_type) %></th>
+        <th>Created</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @devices.each do |device| %>
+        <tr>
+          <td><%= link_to device.display_name, device_path(device) %></td>
+          <td><%= device.device_type.try(:titleize) %></td>
+          <td><%= device.created_at.strftime("%Y-%m-%d") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_device_path,
-            :class => 'btn btn-primary' %>
+
+  <%= link_to 'New Device', new_device_path, class: 'btn btn-primary' %>
+
+<% end %>

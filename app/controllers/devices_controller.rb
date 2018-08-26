@@ -116,6 +116,8 @@ class DevicesController < ApplicationController
 
   # new device
   def new
+    # get the parent device
+    @parent_device = @devices.find(params[:device_id]) if params[:device_id].present?
     # default new device
     @device = Device.new
     # set to arduino if necessary

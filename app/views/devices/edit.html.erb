@@ -21,5 +21,11 @@
         <%= render :partial => 'form' %>
       </div>
     </div>
+
+    <br><br>
+
+    <% if @device.parent_device.blank? %>
+      You can also  <%= link_to 'add a connected I<sup>2</sup>C device'.html_safe, new_device_path(device_id: @device, device_type: 'arduino') %> from here.
+    <% end %>
   </div>
 </div>

@@ -8,12 +8,18 @@
   <%= render 'shared/install_command' %>
 
   <br><br>
-  However, if you want to add a device manually, use the following form:
+  If you're adding an Arduino connected via I<sup>2</sup>C, use the following form:
   <br><br>
 <% end %>
 
 <div class="row">
   <div class="col-xs-12 col-md-6">
+    <% if @parent_device.present? %>
+      This device will be added as a connected device to <%= @parent_device.display_name %>.
+    <% end %>
+
+    <br><br>
+
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4>New Device</h4>

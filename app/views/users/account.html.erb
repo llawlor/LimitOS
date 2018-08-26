@@ -1,2 +1,8 @@
 Email: <%= @user.email %><br>
 <%= link_to 'Edit Account', edit_user_registration_path %>
+
+<br><br><br>
+
+<%= link_to destroy_user_session_path, class: 'btn btn-lg', method: :delete do %>
+  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Sign Out
+<% end %>

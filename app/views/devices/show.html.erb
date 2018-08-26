@@ -1,8 +1,16 @@
 <div class="page-header">
   <h1>
-    <%= @device.display_name %>
-    <div class="pull-right">
-      <%= link_to 'Edit Device', edit_device_path(@device), :class => 'btn btn-default btn-sm' %>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <%= @device.display_name %>
+      </div>
+
+      <div class="col-xs-12 col-sm-6">
+        <div class="header-right">
+          <%= link_to 'Edit Device', edit_device_path(@device), :class => 'btn btn-default btn-sm' %>
+          <%= link_to 'View setup information', setup_device_path(@device), :class => 'btn btn-default btn-sm' %>
+        </div>
+      </div>
     </div>
   </h1>
 </div>
@@ -42,14 +50,6 @@
   <% end %>
 
 </dl>
-
-<%= link_to 'View setup information', setup_device_path(@device) %>
-
-<br><br>
-
-<% if @device.parent_device.blank? %>
-  <%= link_to 'Add Connected I2C Device', new_device_path(device_id: @device, device_type: 'arduino'), class: 'btn btn-default btn-sm' %>
-<% end %>
 
 <br><br>
 
