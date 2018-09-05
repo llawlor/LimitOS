@@ -90,6 +90,7 @@ pre                             { border-radius: 0; }
 .limitos-yellow                 { color: #ffd829; }
 .maincontent-right              { border-left: 1px solid #00dde3; padding-bottom: 30px; }
 .navbar-left                    { border: none; background-image: none; padding-left: 10px; margin-top: 10px; line-height: 30px; }
+.navbar-left a                  { width: 127px; display: table-cell; line-height: 21px; }
 .skew                           { transform: skew(-12deg); }
 .slider .slider-handle          { background-color: #00dde3; background-image: linear-gradient(to bottom,#00dde3 0,#00dde3 100%); }
 .slider .slider-selection       { background: #ffd829; }
