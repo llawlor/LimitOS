@@ -29,6 +29,9 @@ class DevicesController < ApplicationController
     # add a flash notice
     flash[:notice] = 'Your device has been registered.'
 
+    # update the device to be a raspberry pi
+    registration.device.update_attributes(device_type: 'raspberry_pi')
+
     # if the user is logged in
     if current_user.present?
       # assign ownership of the device

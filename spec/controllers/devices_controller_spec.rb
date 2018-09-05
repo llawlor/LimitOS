@@ -17,6 +17,7 @@ RSpec.describe DevicesController, type: :controller do
         post :submit_registration, params: { registration: { auth_token: @registration.auth_token } }
       }.to change{ Registration.count }.by(-1)
       expect(device_without_user.reload.user_id).to eq(user.id)
+      expect(device_without_user.device_type).to eq('raspberry_pi')
     end
 
     it 'registers a device for an anonymous user' do
