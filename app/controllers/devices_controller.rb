@@ -16,7 +16,7 @@ class DevicesController < ApplicationController
 
     # error if the registration does not exist
     if registration.blank?
-      flash[:error] = 'Invalid or expired registration code.'
+      flash[:error] = 'Invalid or expired registration code. Please reinstall LimitOS on your Raspberry Pi.'
       redirect_to register_path and return
     end
 
