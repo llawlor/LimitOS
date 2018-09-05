@@ -48,16 +48,18 @@
     </div>
   <% end %>
 
-  <div class="form-group">
-    <label for="device_broadcast_to_device" class="control-label col-lg-4">
-      Broadcast to device
-      <span class="glyphicon glyphicon-question-sign tooltip-trigger" aria-hidden="true" ata-toggle="tooltip" data-placement="top" title="Send this device's input data to another device."></span>
-    </label>
-    <div class="col-lg-8">
-      <%= f.select :broadcast_to_device_id, @devices.select{ |device| device.id != @device.id }.map{ |device| [device.display_name, device.id] }, { include_blank: true }, { class: 'form-control' } %>
+  <% if @devices.present? && @devices.count > 1 %>
+    <div class="form-group">
+      <label for="device_broadcast_to_device" class="control-label col-lg-4">
+        Broadcast to device
+        <span class="glyphicon glyphicon-question-sign tooltip-trigger" aria-hidden="true" ata-toggle="tooltip" data-placement="top" title="Send this device's input data to another device."></span>
+      </label>
+      <div class="col-lg-8">
+        <%= f.select :broadcast_to_device_id, @devices.select{ |device| device.id != @device.id }.map{ |device| [device.display_name, device.id] }, { include_blank: true }, { class: 'form-control' } %>
+      </div>
+      <%= f.error_span(:broadcast_to_device) %>
     </div>
-    <%= f.error_span(:broadcast_to_device) %>
-  </div>
+  <% end %>
 
   <div class="form-group">
     <div class="col-lg-offset-4 col-lg-8">
