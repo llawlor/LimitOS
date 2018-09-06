@@ -35,6 +35,9 @@ class Pin < ApplicationRecord
 
   # display the pin type
   def display_pin_type
+    # empty string if no pin type
+    return '' if self.pin_type.blank?
+    
     # get the display value from the hash key
     PIN_TYPES[self.pin_type.to_sym]
   end

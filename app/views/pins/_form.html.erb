@@ -34,6 +34,7 @@
     </div>
     <%=f.error_span(:pin_type) %>
   </div>
+
   <div class="form-group">
     <%= f.label :pin_number, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
@@ -72,42 +73,48 @@
     </div>
   </div>
 
-  <div class="form-group">
-    <%= f.label :output_pin_number, :class => 'control-label col-lg-4' %>
-    <div class="col-lg-8">
-      <%= f.text_field :output_pin_number, class: 'form-control', placeholder: 'Redirects the input values to another (output) pin' %>
-    </div>
-    <%=f.error_span(:output_pin_number) %>
+  <div id="advanced-options-trigger-div" class="form-group">
+    <a id="advanced-options-trigger-link" class="pull-right" style="margin-right: 15px;">more options</a>
   </div>
-  <div class="form-group">
-    <%= f.label :transform, :class => 'control-label col-lg-4' %>
-    <div class="col-lg-8">
-      <%= f.text_field :transform, class: 'form-control', placeholder: "Logic to modify the input values before they're sent to an output pin" %>
 
-      <div class="pull-right" style="padding-top: 5px;">
-        <a id="common-transforms-link">common transforms</a>
+  <div id="advanced-options" class="hidden">
+    <div class="form-group">
+      <%= f.label :output_pin_number, :class => 'control-label col-lg-4' %>
+      <div class="col-lg-8">
+        <%= f.text_field :output_pin_number, class: 'form-control', placeholder: 'Redirects the input values to another (output) pin' %>
       </div>
+      <%=f.error_span(:output_pin_number) %>
+    </div>
+    <div class="form-group">
+      <%= f.label :transform, :class => 'control-label col-lg-4' %>
+      <div class="col-lg-8">
+        <%= f.text_field :transform, class: 'form-control', placeholder: "Logic to modify the input values before they're sent to an output pin" %>
 
-      <div id="common-transforms-div" class="hide">
-        <div class="radio">
-          <label><input type="radio" name="common-transforms-radio" id="absolute-value-transform">absolute value</label>
+        <div class="pull-right" style="padding-top: 5px;">
+          <a id="common-transforms-link">common transforms</a>
         </div>
-        <div class="radio">
-          <label><input type="radio" name="common-transforms-radio" id="map-transform">map input range to output range</label>
-          <div id="map-tranform-form" style="padding-left: 20px;" class="hide">
-            Input range start: <input type="text" class="map-input" id="map-from-low" value="0"><br>
-            Input range end: <input type="text" class="map-input" id="map-from-high" value="1023"><br>
-            Output range start: <input type="text" class="map-input" id="map-to-low" value="0"><br>
-            Output range end: <input type="text" class="map-input" id="map-to-high" value="100"><br>
+
+        <div id="common-transforms-div" class="hide">
+          <div class="radio">
+            <label><input type="radio" name="common-transforms-radio" id="absolute-value-transform">absolute value</label>
+          </div>
+          <div class="radio">
+            <label><input type="radio" name="common-transforms-radio" id="map-transform">map input range to output range</label>
+            <div id="map-tranform-form" style="padding-left: 20px;" class="hide">
+              Input range start: <input type="text" class="map-input" id="map-from-low" value="0"><br>
+              Input range end: <input type="text" class="map-input" id="map-from-high" value="1023"><br>
+              Output range start: <input type="text" class="map-input" id="map-to-low" value="0"><br>
+              Output range end: <input type="text" class="map-input" id="map-to-high" value="100"><br>
+            </div>
+          </div>
+          <div class="radio">
+            <label><input type="radio" name="common-transforms-radio" id="round-transform">round</label>
           </div>
         </div>
-        <div class="radio">
-          <label><input type="radio" name="common-transforms-radio" id="round-transform">round</label>
-        </div>
-      </div>
 
+      </div>
+      <%=f.error_span(:transform) %>
     </div>
-    <%=f.error_span(:transform) %>
   </div>
 
   <div class="form-group">
@@ -128,6 +135,18 @@
     // initialize tooltips
     $('.tooltip-trigger').tooltip();
 
+    // if there is an output pin value
+    if ($('#pin_output_pin_number').val().length > 0) {
+      // show the advanced options
+      showAdvancedOptions();
+    }
+
+    // if there is a transform value
+    if ($('#pin_transform').val().length > 0) {
+      // show the advanced options
+      showAdvancedOptions();
+    }
+
     // show or hide the min/max fields on page load
     handleMinMaxFields();
 
@@ -135,6 +154,12 @@
     $('#pin_pin_type').on('input', function() {
       // show or hide the min/max fields
       handleMinMaxFields();
+    });
+
+    // when the advanced options link is clicked
+    $('#advanced-options-trigger-link').on('click', function() {
+      // show the advanced options
+      showAdvancedOptions();
     });
 
     // when the 'common transforms' link is clicked
@@ -195,6 +220,14 @@
     } else {
       $('#min-max-fields').addClass('hidden');
     }
+  }
+
+  // show the advanced options
+  function showAdvancedOptions() {
+    // hide the trigger div
+    $('#advanced-options-trigger-div').addClass('hidden');
+    // show the advanced options
+    $('#advanced-options').removeClass('hidden');
   }
 
 </script>
