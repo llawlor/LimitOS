@@ -54,20 +54,24 @@
     <% end %>
 
   </div>
-  <div class="form-group">
-    <%= f.label :min, :class => 'control-label col-lg-4' %>
-    <div class="col-lg-8">
-      <%= f.text_field :min, class: 'form-control', placeholder: 'Minimum allowed value' %>
+
+  <div id="min-max-fields" class="hidden">
+    <div class="form-group">
+      <%= f.label :min, :class => 'control-label col-lg-4' %>
+      <div class="col-lg-8">
+        <%= f.text_field :min, class: 'form-control', placeholder: 'Minimum allowed value' %>
+      </div>
+      <%=f.error_span(:min) %>
     </div>
-    <%=f.error_span(:min) %>
-  </div>
-  <div class="form-group">
-    <%= f.label :max, :class => 'control-label col-lg-4' %>
-    <div class="col-lg-8">
-      <%= f.text_field :max, class: 'form-control', placeholder: 'Maximum allowed value' %>
+    <div class="form-group">
+      <%= f.label :max, :class => 'control-label col-lg-4' %>
+      <div class="col-lg-8">
+        <%= f.text_field :max, class: 'form-control', placeholder: 'Maximum allowed value' %>
+      </div>
+      <%=f.error_span(:max) %>
     </div>
-    <%=f.error_span(:max) %>
   </div>
+
   <div class="form-group">
     <%= f.label :output_pin_number, :class => 'control-label col-lg-4' %>
     <div class="col-lg-8">
@@ -124,6 +128,15 @@
     // initialize tooltips
     $('.tooltip-trigger').tooltip();
 
+    // show or hide the min/max fields on page load
+    handleMinMaxFields();
+
+    // when the pin type is changed
+    $('#pin_pin_type').on('input', function() {
+      // show or hide the min/max fields
+      handleMinMaxFields();
+    });
+
     // when the 'common transforms' link is clicked
     $('#common-transforms-link').on('click', function() {
       // hide the link
@@ -171,5 +184,17 @@
     }
 
   });
+
+  // show or hide the min/max fields
+  function handleMinMaxFields() {
+    // if this is an input or servo
+    if ($('#pin_pin_type').val() === 'input' || $('#pin_pin_type').val() === 'servo') {
+      // show the min/max fields
+      $('#min-max-fields').removeClass('hidden');
+    // else the fields shouldn't be shown
+    } else {
+      $('#min-max-fields').addClass('hidden');
+    }
+  }
 
 </script>
