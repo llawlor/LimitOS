@@ -30,7 +30,7 @@
       <span class="glyphicon glyphicon-question-sign tooltip-trigger" aria-hidden="true" ata-toggle="tooltip" data-placement="top" title="See the documentation for more info about pin types."></span>
     </label>
     <div class="col-lg-8">
-      <%= f.select :pin_type, Pin::PIN_TYPES, { include_blank: true }, { class: 'form-control' } %>
+      <%= f.select :pin_type, options_for_select(Pin::PIN_TYPES.invert, @pin.pin_type), { include_blank: true }, { class: 'form-control' } %>
     </div>
     <%=f.error_span(:pin_type) %>
   </div>

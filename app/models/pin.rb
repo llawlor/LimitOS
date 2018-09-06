@@ -25,9 +25,19 @@ class Pin < ApplicationRecord
 
   # remove leading and trailing whitespaces
   strip_attributes
-  
+
   # options for pin type
-  PIN_TYPES = ['input', 'servo', 'digital']
+  PIN_TYPES = {
+    input: 'input - digital or analog',
+    digital: 'output - digital',
+    servo: 'output - servo or motor'
+  }
+
+  # display the pin type
+  def display_pin_type
+    # get the display value from the hash key
+    PIN_TYPES[self.pin_type.to_sym]
+  end
 
   private
 
