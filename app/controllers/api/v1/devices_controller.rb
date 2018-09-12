@@ -19,10 +19,10 @@ class Api::V1::DevicesController < ApplicationController
     message = { "pin" => params[:pin] }
 
     # add a servo message
-    message.merge({ "servo" => params[:servo] }) if params[:servo].present?
+    message.merge!({ "servo" => params[:servo] }) if params[:servo].present?
 
     # add a digital on/off message
-    message.merge({ "digital" => params[:digital] }) if params[:digital].present?
+    message.merge!({ "digital" => params[:digital] }) if params[:digital].present?
 
     # broadcast the command to the device
     device.broadcast_message(message)
