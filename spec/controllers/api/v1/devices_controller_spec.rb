@@ -6,6 +6,32 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
 
+  describe '#control' do
+    render_views
+
+    it 'sends a digital command' do
+      expect_any_instance_of(Device).to receive(:broadcast_message).with({ 'pin' => '3', 'digital' => 'on' })
+      post :control, params: { id: device.id, auth_token: device.auth_token, pin: 3, digital: 'on' }
+      expect(response.status).to eq(200)
+    end
+
+    it 'sends a servo command' do
+      expect_any_instance_of(Device).to receive(:broadcast_message).with({ 'pin' => '3', 'servo' => 60 })
+      post :control, params: { id: device.id, auth_token: device.auth_token, pin: 3, servo: 60 }
+      expect(response.status).to eq(200)
+    end
+
+    it 'returns an error if no device' do
+      post :control, params: { id: 0, auth_token: device.auth_token }
+      expect(response.body).to match('Invalid device credentials.')
+    end
+
+    it 'returns an error if invalid auth token' do
+      post :control, params: { id: device.id, auth_token: 'INVALID' }
+      expect(response.body).to match('Invalid device credentials.')
+    end
+  end
+
   describe '#nodejs_script' do
     render_views
 
