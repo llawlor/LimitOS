@@ -1,1 +1,28 @@
 <h1>API</h1>
+
+<h2>Control a Device</h2>
+To control a device, send an HTTP POST request to https://limitos.com/api/v1/devices/<b>DEVICE_ID</b>/control ,
+replacing <b>DEVICE_ID</b> with the ID of your device.
+
+<br><br>
+Parameters:
+<br>
+<ul>
+  <li><b>auth_token</b> (string): the authentication token for the device (required)</li>
+  <li><b>pin</b> (integer): the pin number to target (required)</li>
+  <li><b>digital</b> (string): "on" or "off", the digital command to send to the device</li>
+  <li><b>servo</b> (integer): the servo posiiton to send to the device</li>
+</ul>
+
+<br>
+
+Example POST request:
+<br><br>
+<pre>
+POST https://limitos.com/api/v1/devices/<b>1</b>/control
+     auth_token=<b>XXXXXXXXXXXXXXXXXX</b>
+     pin=<b>4</b>
+     digital=<b>off</b>
+</pre>
+
+If the request is successful a blank HTTP 200 response will be returned.
