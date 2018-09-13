@@ -8,6 +8,10 @@ class DocsController < ApplicationController
   def installation
   end
 
+  # api documentation
+  def api
+  end
+
   # pin documentation
   def pins
   end

@@ -50,6 +50,7 @@ Rails.application.routes.draw do
       get 'pins'
       get 'i2c'
       get 'security'
+      get 'api'
     end
   end
 
