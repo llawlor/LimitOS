@@ -9,16 +9,29 @@
 
 <div class="row">
   <div class="col-xs-12 col-md-10">
-    <% if @device == @master_device %>
-      The authentication token for this device is:
-      <br>
-      <pre class="limitos-command"><%= @master_device.auth_token %></pre>
-    <% end %>
+    <h2>API Information</h2>
+    <ul>
+      <li>Device ID: <b><%= @device.id %></b></li>
+      <li>Authentication token: <b><%= @device.auth_token %></b></li>
+    </ul>
 
-    <br><br>
+<br>
+
+    <h4>Device Control Example</h4>
+    <pre>
+HTTP POST https://limitos.com/api/v1/devices/<%= @device.id %>/control
+          auth_token=<%= @device.auth_token %>
+          pin=<%= @device.pins.try(:first).try(:pin_number) || 4 %>
+          digital=on</pre>
+
+    <br>
+
+    <a href="/docs/api">Full API documentation</a>
+
+    <br><br><br>
 
     <% if @device.device_type == 'raspberry_pi' %>
-
+      <h3>Raspberry Pi Setup</h3>
       You can view the <%= link_to 'Raspberry Pi nodejs script', nodejs_script_device_path(@master_device) %> associated with this device.
       <br><br>
       You can also reinstall LimitOS on this device by entering the following command on your Raspberry Pi:
@@ -27,13 +40,11 @@
 
     <% elsif @device.device_type == 'arduino' %>
 
-      <div>
-        <h4>Arduino Setup</h4>
-        <ol>
-          <li>Connect the Arduino to a Raspberry Pi using I<sup>2</sup>C by connecting the ground, SDA, and SCL pins on the Arduino to the same pins on the Raspberry Pi.</li>
-          <li>Copy and paste the <%= link_to 'Arduino script', arduino_script_device_path(@device) %> into the Arduino IDE and upload to the device.</li>
-        </ol>
-      </div>
+      <h3>Arduino Setup</h3>
+      <ol>
+        <li>Connect the Arduino to a Raspberry Pi using I<sup>2</sup>C by connecting the ground, SDA, and SCL pins on the Arduino to the same pins on the Raspberry Pi.</li>
+        <li>Copy and paste the <%= link_to 'Arduino script', arduino_script_device_path(@device) %> into the Arduino IDE and upload to the device.</li>
+      </ol>
 
     <% end %>
   </div>
