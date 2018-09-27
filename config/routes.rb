@@ -54,6 +54,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :tutorials do
+    member do
+      get 'led'
+    end
+  end
+
   namespace :api do
     namespace :v1 do
       resources :devices do
