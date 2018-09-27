@@ -55,7 +55,7 @@ Rails.application.routes.draw do
   end
 
   resources :tutorials do
-    member do
+    collection do
       get 'led'
     end
   end
