@@ -1,4 +1,4 @@
-<h1>Installation</h1>
+<h1>Installing LimitOS</h1>
 
 LimitOS is designed to be installed on a Raspberry Pi.
 
@@ -43,3 +43,20 @@ LimitOS also be installed on an Arduino that is connected to a Raspberry Pi via 
 Please see the <a href="/docs/i2c">I<sup>2</sup>C page</a> for more information.
 
 <br><br>
+
+<h2>Uninstalling LimitOS</h2>
+
+To pause LimitOS on your device:
+<br>
+<pre class="limitos-command">
+sudo pm2 stop limitos
+sudo pm2 unstartup
+</pre>
+
+<br><br>
+
+To completely remove LimitOS from your device:
+<br>
+<pre class="limitos-command">
+rm limitos*
+</pre>
