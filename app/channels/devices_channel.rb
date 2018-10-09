@@ -18,8 +18,8 @@ class DevicesChannel < ApplicationCable::Channel
     stream_from "devices:#{device.id}"
   end
 
-  # get i2c addresses and pin numbers for slave devices
-  def request_slave_devices
+  # get i2c addresses and pin numbers for device
+  def request_device_information
     # get the device
     device = Device.find_by(id: params[:id])
 
