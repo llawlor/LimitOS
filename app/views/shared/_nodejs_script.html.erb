@@ -47,6 +47,11 @@ ws.on('open', function() {
 
   // send the subscription command
   ws.send(JSON.stringify(device_subscription));
+
+  // initialize pin 4 as an input
+  rpio.open(4, rpio.INPUT);
+  // poll the pin and add a callback
+  rpio.poll(4, poll_callback);
 });
 
 // when the websocket receives a message
@@ -64,6 +69,7 @@ ws.on('message', function(data, flags) {
   } else if (json_data.type === 'confirm_subscription') {
 
     console.log('subscribed to: ' + json_data.identifier);
+    // todo: after subscription confirmation, send request for input pins
     // after subscription confirmation, send request for i2c addresses
     requestI2CAddresses();
 
@@ -80,6 +86,13 @@ ws.on('message', function(data, flags) {
   }
 
 });
+
+// callback for the polled pin
+function poll_callback(pin) {
+  // log the state
+  console.log(rpio.read(pin));
+  // todo: send the command via websockets
+}
 
 // send a request to get the i2c slave addresses
 function requestI2CAddresses() {
