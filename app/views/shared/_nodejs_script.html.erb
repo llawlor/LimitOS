@@ -82,10 +82,9 @@ ws.on('message', function(data, flags) {
 });
 
 // callback for the polled pin
-function poll_callback(pin) {
-  // log the state
-  console.log(rpio.read(pin));
-  // todo: send the command via websockets
+function poll_callback(pin_number) {
+  // send the command via websockets
+  sendWebsocketCommand(null, pin_number, 'digital', rpio.read(pin_number));
 }
 
 // send a request to get the device information
@@ -254,14 +253,13 @@ function requestI2CPinValue(i2c_address, pin_number) {
 
   }
 
-
   // if the last value for this pin is different than the current value
   if (last_values[i2c_address + '_' + pin_number] !== message) {
     //console.log(message);
     // remember this value
     last_values[i2c_address + '_' + pin_number] = message;
     // send the websocket command
-    sendWebsocketCommand(i2c_address, pin_number, message);
+    sendWebsocketCommand(i2c_address, pin_number, 'servo', message);
   }
 
 }
@@ -275,8 +273,8 @@ function requestI2CData(slave_device) {
   });
 }
 
-// send websocket command with the correct position
-function sendWebsocketCommand(i2c_address, pin_number, position) {
+// send websocket command with the correct value
+function sendWebsocketCommand(i2c_address, pin_number, message_type, message_value) {
   // exit if websocket isn't ready
   if (ws.readyState !== WebSocket.OPEN) { return }
 
@@ -287,7 +285,7 @@ function sendWebsocketCommand(i2c_address, pin_number, position) {
     data: JSON.stringify({
       i2c_address: i2c_address,
       pin: pin_number,
-      servo: position
+      [message_type]: message_value
     })
   }
 
