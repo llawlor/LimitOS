@@ -47,11 +47,6 @@ ws.on('open', function() {
 
   // send the subscription command
   ws.send(JSON.stringify(device_subscription));
-
-  // initialize pin 4 as an input
-  rpio.open(4, rpio.INPUT);
-  // poll the pin and add a callback
-  rpio.poll(4, poll_callback);
 });
 
 // when the websocket receives a message
@@ -69,7 +64,6 @@ ws.on('message', function(data, flags) {
   } else if (json_data.type === 'confirm_subscription') {
 
     console.log('subscribed to: ' + json_data.identifier);
-    // todo: after subscription confirmation, send request for input pins
     // after subscription confirmation, send request for i2c addresses
     requestI2CAddresses();
 
@@ -106,6 +100,16 @@ function requestI2CAddresses() {
   ws.send(JSON.stringify(input));
 }
 
+// initialize the input pins
+function initializeInputPins(pin_numbers) {
+  // for each pin number
+  pin_numbers.forEach(function(pin_number) {
+    // initialize the pin as an input
+    rpio.open(pin_number, rpio.INPUT);
+    // poll the pin and add a callback
+    rpio.poll(pin_number, poll_callback);
+  });
+}
 
 // handle a device message
 function handleDeviceMessage(message) {
@@ -115,10 +119,14 @@ function handleDeviceMessage(message) {
     // send the command
     sendI2cCommand(message);
 
-  // else if this is a message with the slave i2c addresses
-  } else if (message.slave_devices) {
+  // else if this is a message with the device information
+  } else if (message.input_pins) {
 
-    // set the device information
+    // set the input pins
+    console.log("input pins: " + message.input_pins);
+    initializeInputPins(message.input_pins);
+
+    // set the slave device information
     slave_devices = message.slave_devices;
 
     // for each address
