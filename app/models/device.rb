@@ -26,8 +26,8 @@ class Device < ApplicationRecord
   has_many :synchronizations, dependent: :destroy
   has_many :registrations, dependent: :destroy
 
-  after_save :broadcast_slave_device_information
-  after_destroy :broadcast_slave_device_information
+  after_save :broadcast_device_information
+  after_destroy :broadcast_device_information
 
   # remove leading and trailing whitespaces
   strip_attributes
@@ -76,7 +76,7 @@ class Device < ApplicationRecord
   end
 
   # send slave device information
-  def broadcast_slave_device_information
+  def broadcast_device_information
     # broadcast the message to the master device
     self.master_device.broadcast_raw_message({ input_pins: self.input_pins.collect(&:pin_number), slave_devices: self.master_device.slave_device_information })
   end

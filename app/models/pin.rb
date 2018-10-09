@@ -47,7 +47,7 @@ class Pin < ApplicationRecord
     # send slave device information via the master device
     def send_slave_device_information
       # broadcast the slave device information
-      self.device.broadcast_slave_device_information
+      self.device.broadcast_device_information
     end
 
 end
