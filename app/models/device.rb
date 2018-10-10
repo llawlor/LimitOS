@@ -55,6 +55,30 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
+  # digital pins
+  def digital_pins
+    # if this is a raspberry pi
+    if self.device_type == 'raspberry_pi'
+      # get input or digital pins
+      self.pins.where("pin_type = 'digital' or pin_type = 'input'")
+    # else just get the digital pins
+    else
+      self.pins.where("pin_type = 'digital'")
+    end
+  end
+
+  # analog pins
+  def analog_pins
+    # if this is an arduino
+    if self.device_type == 'arduino'
+      # get servo or input pins
+      self.pins.where("pin_type = 'servo' or pin_type = 'input'")
+    # else just get the servo pins
+    else
+      self.pins.where("pin_type = 'servo'")
+    end
+  end
+
   # get the slave devices as an array, for example: [{ i2c_address: '0x04', input_pins: [3, 4, 5]}]
   def slave_device_information
     # output array
