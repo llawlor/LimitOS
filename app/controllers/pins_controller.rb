@@ -4,7 +4,7 @@ class PinsController < ApplicationController
 
   # new pin
   def new
-    @pin = Pin.new
+    @pin = @device.pins.new
   end
 
   # edit a pin

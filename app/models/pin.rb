@@ -29,8 +29,7 @@ class Pin < ApplicationRecord
   # options for digital pin type
   DIGITAL_PIN_TYPES = {
     input: 'input - digital',
-    digital: 'output - digital',
-    servo: 'output - servo or motor'
+    digital: 'output - digital'
   }
 
   # options for analog pin type
