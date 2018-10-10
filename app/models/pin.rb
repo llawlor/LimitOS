@@ -26,20 +26,35 @@ class Pin < ApplicationRecord
   # remove leading and trailing whitespaces
   strip_attributes
 
-  # options for pin type
-  PIN_TYPES = {
+  # options for digital pin type
+  DIGITAL_PIN_TYPES = {
+    input: 'input - digital',
+    digital: 'output - digital',
+    servo: 'output - servo or motor'
+  }
+
+  # options for analog pin type
+  ANALOG_PIN_TYPES = {
     input: 'input - digital or analog',
     digital: 'output - digital',
     servo: 'output - servo or motor'
   }
 
+  # get the appropriate pin type has based on the device type
+  def pin_types
+    # return the digital pin types if this is a raspberry pi
+    return DIGITAL_PIN_TYPES if self.device.device_type == 'raspberry_pi'
+    # else return the analog pin types
+    return ANALOG_PIN_TYPES
+  end
+
   # display the pin type
   def display_pin_type
     # empty string if no pin type
     return '' if self.pin_type.blank?
-    
+
     # get the display value from the hash key
-    PIN_TYPES[self.pin_type.to_sym]
+    return self.pin_types[self.pin_type.to_sym]
   end
 
   private
