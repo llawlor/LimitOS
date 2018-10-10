@@ -27,11 +27,11 @@ RSpec.describe DevicesChannel, type: :channel do
     end
   end
 
-  describe '#request_slave_devices' do
+  describe '#request_device_information' do
     it 'broadcasts successfully' do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       expect {
-        subscription.request_slave_devices
+        subscription.request_device_information
       }.to have_broadcasted_to(device.id).with(hash_including({ slave_devices: [] }))
     end
 
@@ -41,7 +41,7 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription.instance_variable_set(:@params, { })
       broadcasted_message = nil
       expect {
-        broadcasted_message = subscription.request_slave_devices
+        broadcasted_message = subscription.request_device_information
       }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
@@ -52,7 +52,7 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription.instance_variable_set(:@params, { id: 0 })
       broadcasted_message = nil
       expect {
-        broadcasted_message = subscription.request_slave_devices
+        broadcasted_message = subscription.request_device_information
       }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
@@ -63,7 +63,7 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription.instance_variable_set(:@params, { id: device.id, auth_token: 'INVALID_AUTH_TOKEN' })
       broadcasted_message = nil
       expect {
-        broadcasted_message = subscription.request_slave_devices
+        broadcasted_message = subscription.request_device_information
       }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end

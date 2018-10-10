@@ -26,8 +26,8 @@ class Device < ApplicationRecord
   has_many :synchronizations, dependent: :destroy
   has_many :registrations, dependent: :destroy
 
-  after_save :broadcast_slave_device_information
-  after_destroy :broadcast_slave_device_information
+  after_save :broadcast_device_information
+  after_destroy :broadcast_device_information
 
   # remove leading and trailing whitespaces
   strip_attributes
@@ -55,6 +55,30 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
+  # digital pins
+  def digital_pins
+    # if this is a raspberry pi
+    if self.device_type == 'raspberry_pi'
+      # get input or digital pins
+      self.pins.where("pin_type = 'digital' or pin_type = 'input'")
+    # else just get the digital pins
+    else
+      self.pins.where("pin_type = 'digital'")
+    end
+  end
+
+  # analog pins
+  def analog_pins
+    # if this is an arduino
+    if self.device_type == 'arduino'
+      # get servo or input pins
+      self.pins.where("pin_type = 'servo' or pin_type = 'input'")
+    # else just get the servo pins
+    else
+      self.pins.where("pin_type = 'servo'")
+    end
+  end
+
   # get the slave devices as an array, for example: [{ i2c_address: '0x04', input_pins: [3, 4, 5]}]
   def slave_device_information
     # output array
@@ -75,10 +99,10 @@ class Device < ApplicationRecord
     self.pins.where(pin_type: 'input')
   end
 
-  # send slave device information
-  def broadcast_slave_device_information
+  # send device information
+  def broadcast_device_information
     # broadcast the message to the master device
-    self.master_device.broadcast_raw_message({ slave_devices: self.master_device.slave_device_information })
+    self.master_device.broadcast_raw_message({ input_pins: self.input_pins.collect(&:pin_number), slave_devices: self.master_device.slave_device_information })
   end
 
   # send a raw message to the device, without any additional message manipulation
