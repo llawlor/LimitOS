@@ -1,6 +1,6 @@
 <script>
 
-  <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
+  <% @device.analog_pins.each do |pin| %>
     // initialize this slider
     var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {
       tooltip: 'hide'
@@ -13,7 +13,7 @@
   // when the document is ready
   $(document).ready(function() {
 
-    <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
+    <% @device.analog_pins.each do |pin| %>
       // when the slider is moved
       slider_<%= pin.pin_number %>.on('change', function() {
         // get the slider value
