@@ -20,8 +20,8 @@ class Pin < ApplicationRecord
 
   validates_presence_of :device_id
 
-  after_save :send_slave_device_information
-  after_destroy :send_slave_device_information
+  after_save :send_device_information
+  after_destroy :send_device_information
 
   # remove leading and trailing whitespaces
   strip_attributes
@@ -58,9 +58,9 @@ class Pin < ApplicationRecord
 
   private
 
-    # send slave device information via the master device
-    def send_slave_device_information
-      # broadcast the slave device information
+    # send device information via the master device
+    def send_device_information
+      # broadcast the device information
       self.device.broadcast_device_information
     end
 

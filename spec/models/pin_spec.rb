@@ -44,7 +44,7 @@ RSpec.describe Pin, type: :model do
     end
   end
 
-  describe '#send_slave_device_information' do
+  describe '#send_device_information' do
     it 'sends on create' do
       device.save
       expect_any_instance_of(Device).to receive(:broadcast_device_information).once
