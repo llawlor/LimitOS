@@ -18,7 +18,7 @@ require 'rails_helper'
 
 RSpec.describe Device, type: :model do
   before :each do
-    allow_any_instance_of(Device).to receive(:broadcast_slave_device_information).and_return(nil)
+    allow_any_instance_of(Device).to receive(:broadcast_device_information).and_return(nil)
   end
 
   # lazy loaded variables
@@ -44,34 +44,34 @@ RSpec.describe Device, type: :model do
     end
   end
 
-  describe '#broadcast_slave_device_information on create/update/destroy' do
+  describe '#broadcast_device_information on create/update/destroy' do
     it 'sends on create' do
-      expect_any_instance_of(Device).to receive(:broadcast_slave_device_information).once
+      expect_any_instance_of(Device).to receive(:broadcast_device_information).once
       device.save
     end
 
     it 'sends on update' do
       device.save
-      expect_any_instance_of(Device).to receive(:broadcast_slave_device_information).once
+      expect_any_instance_of(Device).to receive(:broadcast_device_information).once
       device.update_attributes(name: 'newname')
     end
 
     it 'sends on destroy' do
       device.save
-      expect_any_instance_of(Device).to receive(:broadcast_slave_device_information).once
+      expect_any_instance_of(Device).to receive(:broadcast_device_information).once
       device.destroy
     end
   end
 
-  describe '#broadcast_slave_device_information' do
+  describe '#broadcast_device_information' do
     before :each do
       device.save
-      allow_any_instance_of(Device).to receive(:broadcast_slave_device_information).and_call_original
+      allow_any_instance_of(Device).to receive(:broadcast_device_information).and_call_original
     end
 
     it 'broadcasts the message' do
       expect {
-        device.broadcast_slave_device_information
+        device.broadcast_device_information
       }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ slave_devices: [] }))
     end
 
@@ -79,7 +79,7 @@ RSpec.describe Device, type: :model do
       slave_device = FactoryBot.create(:device, device_id: device.id, i2c_address: '0x04')
       expect(slave_device.master_device).to eq(device)
       expect {
-        slave_device.broadcast_slave_device_information
+        slave_device.broadcast_device_information
       }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ slave_devices: [{"i2c_address": '0x04',"input_pins": []}] }))
     end
   end
@@ -87,7 +87,7 @@ RSpec.describe Device, type: :model do
   describe '#broadcast_raw_message' do
     before :each do
       device.save
-      allow_any_instance_of(Device).to receive(:broadcast_slave_device_information).and_call_original
+      allow_any_instance_of(Device).to receive(:broadcast_device_information).and_call_original
     end
 
     it 'broadcasts the message' do

@@ -1,6 +1,6 @@
 <script>
 
-  <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
+  <% @device.analog_pins.each do |pin| %>
     // initialize this slider
     var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {
       tooltip: 'hide'
@@ -13,7 +13,7 @@
   // when the document is ready
   $(document).ready(function() {
 
-    <% @device.pins.where("pin_type = 'servo' or pin_type = 'input'").each do |pin| %>
+    <% @device.analog_pins.each do |pin| %>
       // when the slider is moved
       slider_<%= pin.pin_number %>.on('change', function() {
         // get the slider value
@@ -38,7 +38,11 @@
     <% end %>
 
     // when the digital on/off button is clicked
-    $('.digital_submit').click(function() {
+    $('.digital_submit').on('click', function() {
+      // remove active class
+      $('.pin_' + $(this).data('pin') + '_buttons').removeClass('active');
+      // blur the button to make it unfocused
+      $('.pin_' + $(this).data('pin') + '_buttons').blur();
       // create the message
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') };
       // send the message
@@ -73,6 +77,23 @@
             $('#device_logs').removeClass('hide');
             // log the data
             $('#device_logs').text(data_string + "\n" + $('#device_logs').text());
+          }
+
+          // if this is a digital command
+          if (data.digital) {
+            // remove the active class
+            $('.pin_' + data.pin + '_buttons').removeClass('active');
+            // blur the buttons in case they're focused
+            $('.pin_' + data.pin + '_buttons').blur();
+            // make the appropriate button active
+            $('#pin_' + data.pin + '_' + data.digital).addClass('active');
+          // else if this is a servo command
+          } else if (data.servo) {
+            console.log(data);
+            // update the slider value
+            window['slider_' + data.pin].setValue(data.servo);
+            // update the text input
+            $('#servo_input_' + data.pin).val(data.servo);
           }
 
         },

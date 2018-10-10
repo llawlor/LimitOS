@@ -18,8 +18,8 @@ class DevicesChannel < ApplicationCable::Channel
     stream_from "devices:#{device.id}"
   end
 
-  # get i2c addresses and pin numbers for slave devices
-  def request_slave_devices
+  # get i2c addresses and pin numbers for device
+  def request_device_information
     # get the device
     device = Device.find_by(id: params[:id])
 
@@ -30,7 +30,7 @@ class DevicesChannel < ApplicationCable::Channel
     return false if !Devise.secure_compare(device.auth_token, params[:auth_token])
 
     # transmit the slave_devices only to this device
-    device.broadcast_slave_device_information
+    device.broadcast_device_information
   end
 
   # receive input

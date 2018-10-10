@@ -64,8 +64,8 @@ ws.on('message', function(data, flags) {
   } else if (json_data.type === 'confirm_subscription') {
 
     console.log('subscribed to: ' + json_data.identifier);
-    // after subscription confirmation, send request for i2c addresses
-    requestI2CAddresses();
+    // after subscription confirmation, send request for device information
+    requestDeviceInformation();
 
   // else if this is a device message, handle it
   } else if (json_data.identifier === channel_json) {
@@ -81,18 +81,34 @@ ws.on('message', function(data, flags) {
 
 });
 
-// send a request to get the i2c slave addresses
-function requestI2CAddresses() {
+// callback for the polled pin
+function poll_callback(pin_number) {
+  // send the command via websockets
+  sendWebsocketCommand(null, pin_number, 'digital', rpio.read(pin_number));
+}
+
+// send a request to get the device information
+function requestDeviceInformation() {
   // create the command to send
   var input = {
     command: 'message',
     identifier: channel_json,
-    data: JSON.stringify({ action: 'request_slave_devices' })
+    data: JSON.stringify({ action: 'request_device_information' })
   }
   // send the message
   ws.send(JSON.stringify(input));
 }
 
+// initialize the input pins
+function initializeInputPins(pin_numbers) {
+  // for each pin number
+  pin_numbers.forEach(function(pin_number) {
+    // initialize the pin as an input
+    rpio.open(pin_number, rpio.INPUT);
+    // poll the pin and add a callback
+    rpio.poll(pin_number, poll_callback);
+  });
+}
 
 // handle a device message
 function handleDeviceMessage(message) {
@@ -102,10 +118,14 @@ function handleDeviceMessage(message) {
     // send the command
     sendI2cCommand(message);
 
-  // else if this is a message with the slave i2c addresses
-  } else if (message.slave_devices) {
+  // else if this is a message with the device information
+  } else if (message.input_pins) {
 
-    // set the device information
+    // set the input pins
+    console.log("input pins: " + message.input_pins);
+    initializeInputPins(message.input_pins);
+
+    // set the slave device information
     slave_devices = message.slave_devices;
 
     // for each address
@@ -233,14 +253,13 @@ function requestI2CPinValue(i2c_address, pin_number) {
 
   }
 
-
   // if the last value for this pin is different than the current value
   if (last_values[i2c_address + '_' + pin_number] !== message) {
     //console.log(message);
     // remember this value
     last_values[i2c_address + '_' + pin_number] = message;
     // send the websocket command
-    sendWebsocketCommand(i2c_address, pin_number, message);
+    sendWebsocketCommand(i2c_address, pin_number, 'servo', message);
   }
 
 }
@@ -254,8 +273,8 @@ function requestI2CData(slave_device) {
   });
 }
 
-// send websocket command with the correct position
-function sendWebsocketCommand(i2c_address, pin_number, position) {
+// send websocket command with the correct value
+function sendWebsocketCommand(i2c_address, pin_number, message_type, message_value) {
   // exit if websocket isn't ready
   if (ws.readyState !== WebSocket.OPEN) { return }
 
@@ -266,7 +285,7 @@ function sendWebsocketCommand(i2c_address, pin_number, position) {
     data: JSON.stringify({
       i2c_address: i2c_address,
       pin: pin_number,
-      servo: position
+      [message_type]: message_value
     })
   }
 
