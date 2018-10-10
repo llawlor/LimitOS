@@ -38,7 +38,9 @@
     <% end %>
 
     // when the digital on/off button is clicked
-    $('.digital_submit').click(function() {
+    $('.digital_submit').on('click', function() {
+      // remove active class
+      $('.pin_' + $(this).data('pin') + '_buttons').removeClass('active');
       // create the message
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') };
       // send the message
@@ -73,6 +75,16 @@
             $('#device_logs').removeClass('hide');
             // log the data
             $('#device_logs').text(data_string + "\n" + $('#device_logs').text());
+          }
+
+          // if this is a digital command
+          if (data.digital) {
+            // remove the active class
+            $('.pin_' + data.pin + '_buttons').removeClass('active');
+            // blur the buttons in case they're focused
+            $('.pin_' + data.pin + '_buttons').blur();
+            // make the appropriate button active
+            $('#pin_' + data.pin + '_' + data.digital).addClass('active');
           }
 
         },
