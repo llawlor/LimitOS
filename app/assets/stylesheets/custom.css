@@ -27,7 +27,7 @@ pre                             { border-radius: 0; }
 .btn-primary:active,
 .btn-primary:focus,
 .btn-primary:hover,
-.btn-primary.active             { background-color: #ffd829; color: #01232b; border-color: #efc819; }
+.btn-primary.active             { background-color: #ffd829; color: #01232b; border-color: #efc819; outline: none !important; box-shadow: none !important; }
 .close                          { color: #00dde3; opacity: 0.8; text-shadow: none; }
 .dl-horizontal dd               { margin-bottom: 5px; }
 .form-control                   { border-radius: 0; }

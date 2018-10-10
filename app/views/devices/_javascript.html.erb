@@ -41,6 +41,8 @@
     $('.digital_submit').on('click', function() {
       // remove active class
       $('.pin_' + $(this).data('pin') + '_buttons').removeClass('active');
+      // blur the button to make it unfocused
+      $('.pin_' + $(this).data('pin') + '_buttons').blur();
       // create the message
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') };
       // send the message
