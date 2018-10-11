@@ -1,36 +1,44 @@
-<h1>LED Tutorial</h1>
+<div class="row">
+  <div class="col-xs-12 col-md-offset-2 col-md-8">
 
-<br><br>
+    <h1>LED Tutorial</h1>
 
-<h3>Requirements</h3>
-<ul>
-  <li>Raspberry Pi connected to the internet</li>
-  <li>Circuit materials: LED, breadboard, wires, 330 Ohm resistor</li>
-</ul>
+    <br><br>
 
-<br><br><br>
+    <h3>Requirements</h3>
+    <ul>
+      <li>Raspberry Pi connected to the internet</li>
+      <li>Circuit materials: LED, breadboard, wires, 330 Ohm resistor</li>
+    </ul>
 
-<h4>1. Set up the circuit</h4>
-Connect the LED to GPIO pin 4, and add a 330 ohm resistor in series.
-<br>
-<%= image_tag('tutorials/led_circuit.png') %>
-<br><br>
-<%= image_tag('tutorials/led_off.jpg') %>
+    <br><br><br>
 
-<br><br><br>
+    <h4>1. Set up the circuit</h4>
+    Connect the LED to GPIO pin 4, and add a 330 ohm resistor in series.
+    <br><br>
+    <%= image_tag('tutorials/led_circuit.png') %>
+    <br><br>
+    <%= image_tag('tutorials/led_off.jpg') %>
 
-<h4>2. Install LimitOS on the Raspberry Pi</h4>
-Installation is a single command:
-<br>
-<%= render 'shared/install_command' %>
-<br>
-Follow the on-screen instructions to register the device afterwards.
-<br>
-<%= image_tag('tutorials/limitos_install.gif') %>
+    <br><br><br>
 
-<br><br><br>
+    <h4>2. Install LimitOS on the Raspberry Pi</h4>
+    Installation is a single command:
+    <br>
+    <%= render 'shared/install_command' %>
+    <br>
+    Follow the on-screen instructions to register the device afterwards.
+    <br><br>
+    <%= image_tag('tutorials/limitos_install.gif') %>
 
-<h4>3. Set up the device on the LimitOS website</h4>
-Add pin 4 as a digital output, and you can then click the "on" or "off" buttons to turn the LED on or off.
-<br>
-<%= image_tag('tutorials/led_on.jpg') %>
+    <br><br><br>
+
+    <h4>3. Set up the device on the LimitOS website</h4>
+    Add pin 4 as a digital output, and you can then click the "on" or "off" buttons on the website to turn the LED on or off.
+    <br><br>
+    <%= image_tag('tutorials/led_on.jpg') %>
+
+    <br><br><br><br>
+
+  </div>
+</div>
