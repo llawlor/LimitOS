@@ -7,6 +7,8 @@ var device_id = '<%= @device.id %>';
 var auth_token = '<%= @device.auth_token %>';
 // variable for the slave device information
 var slave_devices = [];
+// variable for the input pins
+var input_pins = [];
 // variable to keep track of whether slaves have been set up
 var slave_devices_ready = false;
 // time of last successful request for i2c data
@@ -83,8 +85,10 @@ ws.on('message', function(data, flags) {
 
 // callback for the polled pin
 function poll_callback(pin_number) {
+  // read the message value
+  var message_value = (rpio.read(pin_number) === 1) ? 'on' : 'off';
   // send the command via websockets
-  sendWebsocketCommand(null, pin_number, 'digital', rpio.read(pin_number));
+  sendWebsocketCommand('', pin_number, 'digital', message_value);
 }
 
 // send a request to get the device information
@@ -101,6 +105,9 @@ function requestDeviceInformation() {
 
 // initialize the input pins
 function initializeInputPins(pin_numbers) {
+  // save the input pins to the proper variable
+  input_pins = pin_numbers;
+
   // for each pin number
   pin_numbers.forEach(function(pin_number) {
     // initialize the pin as an input
@@ -151,6 +158,12 @@ function handleDirectMessage(message) {
   // initialize variables
   var pin_state;
   var pin_number = parseInt(message.pin);
+
+  // if the direct message is for an input pin
+  if (input_pins.indexOf(pin_number) >= 0) {
+    // exit so that the input pin isn't changed to an output pin
+    return true;
+  }
 
   // if this is an on message
   if (message.digital === 'on') {
