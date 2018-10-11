@@ -83,8 +83,10 @@ ws.on('message', function(data, flags) {
 
 // callback for the polled pin
 function poll_callback(pin_number) {
+  // read the message value
+  var message_value = (rpio.read(pin_number) === 1) ? 'on' : 'off';
   // send the command via websockets
-  sendWebsocketCommand(null, pin_number, 'digital', rpio.read(pin_number));
+  sendWebsocketCommand('', pin_number, 'digital', message_value);
 }
 
 // send a request to get the device information
