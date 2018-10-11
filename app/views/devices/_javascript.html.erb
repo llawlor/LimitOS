@@ -89,7 +89,6 @@
             $('#pin_' + data.pin + '_' + data.digital).addClass('active');
           // else if this is a servo command
           } else if (data.servo) {
-            console.log(data);
             // update the slider value
             window['slider_' + data.pin].setValue(data.servo);
             // update the text input
