@@ -102,7 +102,7 @@ class Device < ApplicationRecord
   # send device information
   def broadcast_device_information
     # broadcast the message to the master device
-    self.master_device.broadcast_raw_message({ input_pins: self.input_pins.collect(&:pin_number), slave_devices: self.master_device.slave_device_information })
+    self.master_device.broadcast_raw_message({ input_pins: self.master_device.input_pins.collect(&:pin_number), slave_devices: self.master_device.slave_device_information })
   end
 
   # send a raw message to the device, without any additional message manipulation
