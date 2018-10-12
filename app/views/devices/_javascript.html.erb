@@ -75,8 +75,12 @@
           if ($('#log_commands_checkbox').is(':checked')) {
             // show the logs
             $('#device_logs').removeClass('hide');
+            // prepend the data to the existing text
+            var log_string = data_string + "\n" + $('#device_logs').text();
+            // limit the string to 100 lines of data
+            log_string = log_string.split("\n").slice(0, 100).join("\n");
             // log the data
-            $('#device_logs').text(data_string + "\n" + $('#device_logs').text());
+            $('#device_logs').text(log_string);
           }
 
           // if this is a digital command
