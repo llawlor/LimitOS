@@ -78,14 +78,14 @@
   </div>
 
   <div id="advanced-options" class="hidden">
-    <div class="form-group">
+    <div id="output-pin-div" class="form-group">
       <%= f.label :output_pin_number, :class => 'control-label col-lg-4' %>
       <div class="col-lg-8">
         <%= f.text_field :output_pin_number, class: 'form-control', placeholder: 'Redirects the input values to another (output) pin' %>
       </div>
       <%=f.error_span(:output_pin_number) %>
     </div>
-    <div class="form-group">
+    <div id="transform-div" class="form-group">
       <%= f.label :transform, :class => 'control-label col-lg-4' %>
       <div class="col-lg-8">
         <%= f.text_field :transform, class: 'form-control', placeholder: "Logic to modify the input values before they're sent to an output pin" %>
@@ -147,13 +147,13 @@
       showAdvancedOptions();
     }
 
-    // show or hide the min/max fields on page load
-    handleMinMaxFields();
+    // show or hide the proper fields on page load
+    handleDisplayedFields();
 
     // when the pin type is changed
     $('#pin_pin_type').on('input', function() {
       // show or hide the min/max fields
-      handleMinMaxFields();
+      handleDisplayedFields();
     });
 
     // when the advanced options link is clicked
@@ -210,15 +210,37 @@
 
   });
 
-  // show or hide the min/max fields
-  function handleMinMaxFields() {
-    // if this is an input or servo
-    if ($('#pin_pin_type').val() === 'input' || $('#pin_pin_type').val() === 'servo') {
+  // show or hide the proper fields
+  function handleDisplayedFields() {
+    // if this is a digital input
+    if ($('#pin_pin_type').val() === 'input') {
+      // hide the min/max fields
+      $('#min-max-fields').addClass('hidden');
+      <% if @device.device_type == 'raspberry_pi' %>
+        // hide the transform field
+        $('#transform-div').addClass('hidden');
+      <% elsif @device.device_type == 'arduino' %>
+        // show the transform field
+        $('#transform-div').removeClass('hidden');
+      <% end %>
+      // show the output pin field
+      $('#output-pin-div').removeClass('hidden');
+    // else if this is a digital output
+    } else if ($('#pin_pin_type').val() === 'digital') {
+      // hide the min/max fields
+      $('#min-max-fields').addClass('hidden');
+      // hide the transform field
+      $('#transform-div').addClass('hidden');
+      // hide the output pin field
+      $('#output-pin-div').addClass('hidden');
+    // else if this is a servo
+    } else if ($('#pin_pin_type').val() === 'servo') {
       // show the min/max fields
       $('#min-max-fields').removeClass('hidden');
-    // else the fields shouldn't be shown
-    } else {
-      $('#min-max-fields').addClass('hidden');
+      // hide the transform field
+      $('#transform-div').addClass('hidden');
+      // hide the output pin field
+      $('#output-pin-div').addClass('hidden');
     }
   }
 
