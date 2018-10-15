@@ -99,7 +99,7 @@ GEM
     factory_bot_rails (4.8.2)
       factory_bot (~> 4.8.2)
       railties (>= 3.0.0)
-    ffi (1.9.18)
+    ffi (1.9.25)
     formatador (0.2.5)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
@@ -312,7 +312,6 @@ DEPENDENCIES
   devise-bootstrap-views
   exception_notification
   factory_bot_rails
-  ffi (= 1.9.18)
   guard-rspec
   jbuilder (~> 2.5)
   jquery-rails
