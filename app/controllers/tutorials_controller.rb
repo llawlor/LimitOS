@@ -8,4 +8,8 @@ class TutorialsController < ApplicationController
   def led
   end
 
+  # button tutorial
+  def button
+  end
+
 end

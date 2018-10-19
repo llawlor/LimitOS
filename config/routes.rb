@@ -57,6 +57,7 @@ Rails.application.routes.draw do
   resources :tutorials do
     collection do
       get 'led'
+      get 'button'
     end
   end
 
