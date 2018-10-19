@@ -68,6 +68,7 @@ pre                             { border-radius: 0; }
 .panel-primary > .panel-heading { color: #00dde3; background-color: rgba(0, 221, 227, 0.13); border-color: rgba(0, 221, 227, 0.5); font-size: 14px; font-weight: 600; padding: 4px 5px; }
 .panel-primary .form-control    { background: transparent; color: #ffd829; border: none; border-bottom: 1px solid rgba(0, 221, 227, 0.7); box-shadow: none; padding-left: 0; }
 .panel-primary .form-control::placeholder { color: rgba(0, 221, 227, 0.35); }
+.spaced-list li                 { line-height: 25px; }
 .table-bordered                 { border: 1px solid rgba(0, 221, 227, 0.5); }
 .table-bordered > thead         { background-color: rgba(0, 221, 227, 0.13); }
 .table-bordered > thead > tr > th,
@@ -77,6 +78,9 @@ pre                             { border-radius: 0; }
 .table-bordered > tbody > tr > td,
 .table-bordered > tfoot > tr > td { border: 1px solid rgba(0, 221, 227, 0.5); }
 .tooltip                        { width: 180px; }
+.tutorial-image,
+.tutorial-image:hover           { background: none; }
+.tutorial-image img             { max-width: 300px; }
 .well                           { background-color: transparent; border-color: #00dde3; border-radius: 0; }
 
 /* custom CSS declarations */
