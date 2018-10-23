@@ -12,4 +12,8 @@ class TutorialsController < ApplicationController
   def button
   end
 
+  # active buzzer tutorial
+  def active_buzzer
+  end
+
 end
