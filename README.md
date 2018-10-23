@@ -1,10 +1,7 @@
 # LimitOS
 Websocket control for IoT devices: https://limitos.com .
 
-## Installation
-
-Installation steps:
-TODO
+## Installation Notes
 
 After the LimitOS application has been installed, run the following command so that automated tasks are run correctly:
 bundle exec whenever --update-crontab limitos --set environment=production --roles=app,web,db
