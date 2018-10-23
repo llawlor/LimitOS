@@ -1,22 +1,22 @@
 <div class="row">
   <div class="col-xs-12 col-md-offset-2 col-md-8">
 
-    <h1>Push Button Tutorial</h1>
+    <h1>Active Buzzer Tutorial</h1>
 
     <br><br>
 
     <h3>Requirements</h3>
     <ul>
       <li>Raspberry Pi connected to the internet</li>
-      <li>Circuit materials: push button, breadboard, wires, 10k ohm resistor</li>
+      <li>Circuit materials: active buzzer, breadboard, wires</li>
     </ul>
 
     <br><br><br>
 
     <h4>1. Set up the circuit</h4>
-    Connect the button to GPIO pin 17, and ground it using a 10k ohm resistor.
+    Connect the active buzzer to GPIO pin 4.
     <br><br>
-    <%= tutorial_image('tutorials/button_circuit.png') %>
+    <%= tutorial_image('tutorials/active_buzzer_circuit.png') %>
 
     <br><br><br>
 
@@ -32,9 +32,9 @@
     <br><br><br>
 
     <h4>3. Set up the device on the LimitOS website</h4>
-    Add pin 17 as a digital input, and you can then push the button and see the on/off state on the LimitOS webpage.
+    Add pin 4 as a digital output, and you can then click the "on" or "off" buttons on the website to turn the buzzer on or off.
     <br><br>
-    <%= tutorial_image('tutorials/button.jpg') %>
+    <%= tutorial_image('tutorials/active_buzzer.jpg') %>
 
     <br><br><br><br>
 
