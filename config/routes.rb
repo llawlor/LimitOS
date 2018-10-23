@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     collection do
       get 'led'
       get 'button'
+      get 'active_buzzer'
     end
   end
 
