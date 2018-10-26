@@ -53,6 +53,16 @@
 
 <br><br>
 
+<script type="text/javascript" src="https://rawgit.com/131/h264-live-player/master/vendor/dist/http-live-player.js"></script>
+<script>
+    var canvas = document.createElement("canvas");
+    document.body.appendChild(canvas);
+
+    var wsavc = new WSAvcPlayer(canvas, "webgl");
+
+    wsavc.connect('ws://192.168.1.101:3000'));
+</script>
+
 <h3>Pin Information</h3>
 <% if @device.pins.blank? %>
   You haven't added any pins to this device yet.
