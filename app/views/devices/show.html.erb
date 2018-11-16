@@ -53,14 +53,12 @@
 
 <br><br>
 
-<script type="text/javascript" src="https://rawgit.com/131/h264-live-player/master/vendor/dist/http-live-player.js"></script>
-<script>
-    var canvas = document.createElement("canvas");
-    document.body.appendChild(canvas);
-
-    var wsavc = new WSAvcPlayer(canvas, "webgl");
-
-    wsavc.connect('ws://192.168.1.101:3000'));
+<canvas id="video-canvas"></canvas>
+<script type="text/javascript" src="jsmpeg.min.js"></script>
+<script type="text/javascript">
+  var canvas = document.getElementById('video-canvas');
+  var url = 'ws://192.168.1.2:8082/';
+  var player = new JSMpeg.Player(url, {canvas: canvas});
 </script>
 
 <h3>Pin Information</h3>
