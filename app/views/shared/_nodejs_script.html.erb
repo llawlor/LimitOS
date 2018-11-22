@@ -19,6 +19,47 @@ const WebSocket = require('ws');
 // set up the rpio object
 var rpio = require('rpio');
 
+// set up an object to execute commands
+const spawn = require('child_process').spawn;
+
+// set up the http object
+var http = require('http');
+
+// remote websocket relay
+var remote_ws = new WebSocket('http://192.168.1.101:8081');
+
+// HTTP Server to accept incomming MPEG-TS Stream from ffmpeg
+var streamServer = http.createServer( function(request, response) {
+
+  response.connection.setTimeout(0);
+  console.log(
+    'Stream Connected: ' +
+    request.socket.remoteAddress + ':' +
+    request.socket.remotePort
+  );
+  request.on('data', function(data){
+    // if the remote connection is available
+    if (remote_ws.readyState === WebSocket.OPEN) {
+      // send data to the remote websocket server
+      remote_ws.send(data);
+    }
+  });
+  request.on('end',function(){
+    console.log('close');
+  });
+
+// listen on localhost only
+}).listen(8081, 'localhost');
+
+// start ffmpeg video streaming
+function startFFMPEG() {
+  // enable the camera
+  spawn('sudo', ['modprobe', 'bcm2835-v4l2']);
+  // start ffmpeg
+  spawn('ffmpeg', ['-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'http://localhost:8081/']);
+}
+startFFMPEG();
+
 // keep track of the last value; key is (i2c_address + '_' + pin_number)
 // for example to access the value for i2c_address '0x04' and pin #8: last_values['0x04_8']
 var last_values = [];
