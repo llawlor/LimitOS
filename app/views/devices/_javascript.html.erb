@@ -49,6 +49,16 @@
       App.messaging.send_message(message);
     });
 
+    // when the video button is clicked
+    $('#video_start').on('click', function() {
+      // show the canvas
+      $('#video_canvas').removeClass('hidden');
+      // set the video url
+      var video_server_url = 'ws://192.168.1.101:8082/<%= @device.auth_token %>';
+      // load the video
+      var video_player = null;new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
+    });
+
     // create the subscription
     App.messaging = App.cable.subscriptions.create(
       {

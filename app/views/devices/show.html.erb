@@ -1,3 +1,5 @@
+<script type="text/javascript" src="jsmpeg.min.js"></script>
+
 <div class="page-header">
   <h1>
     <div class="row">
@@ -53,13 +55,8 @@
 
 <br><br>
 
-<canvas id="video-canvas"></canvas>
-<script type="text/javascript" src="jsmpeg.min.js"></script>
-<script type="text/javascript">
-  var canvas = document.getElementById('video-canvas');
-  var url = 'ws://192.168.1.101:8082/<%= @device.auth_token %>';
-  var player = new JSMpeg.Player(url, {canvas: canvas});
-</script>
+<canvas id="video_canvas" class="hidden"></canvas>
+<button class="btn btn-primary" id="video_start">Start Video</button>
 
 <h3>Pin Information</h3>
 <% if @device.pins.blank? %>
