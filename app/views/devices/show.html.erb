@@ -57,7 +57,7 @@
 <script type="text/javascript" src="jsmpeg.min.js"></script>
 <script type="text/javascript">
   var canvas = document.getElementById('video-canvas');
-  var url = 'ws://192.168.1.101:8082/';
+  var url = 'ws://192.168.1.101:8082/<%= @device.auth_token %>';
   var player = new JSMpeg.Player(url, {canvas: canvas});
 </script>
 
