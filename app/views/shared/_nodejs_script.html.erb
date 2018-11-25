@@ -26,7 +26,7 @@ const spawn = require('child_process').spawn;
 var http = require('http');
 
 // remote websocket relay
-var remote_ws = new WebSocket('http://192.168.1.101:8081/' + auth_token);
+var remote_ws = new WebSocket('http://192.168.1.101:8081/video_streams/' + auth_token);
 
 // HTTP Server to accept incomming MPEG-TS Stream from ffmpeg
 var streamServer = http.createServer( function(request, response) {
