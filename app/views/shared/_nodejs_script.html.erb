@@ -13,6 +13,8 @@ var input_pins = [];
 var slave_devices_ready = false;
 // time of last successful request for i2c data
 var last_i2c_data_received = (new Date).getTime();
+// variable for the state of the video camera
+var video_active = false;
 
 // set up the websocket object
 const WebSocket = require('ws');
@@ -61,7 +63,6 @@ function startFFMPEG() {
   // start ffmpeg
   spawn('ffmpeg', ['-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'http://localhost:8081/']);
 }
-startFFMPEG();
 
 // keep track of the last value; key is (i2c_address + '_' + pin_number)
 // for example to access the value for i2c_address '0x04' and pin #8: last_values['0x04_8']
@@ -173,8 +174,10 @@ function handleDeviceMessage(message) {
   } else if (message.command) {
 
     // if this is a command to start the video
-    if (message.command === 'start_video') {
+    if ((message.command === 'start_video') && (video_active === false)) {
       console.log('starting video');
+      // mark the video camera as active
+      video_active = true;
       // start the video server
       startVideoServer();
       // start ffmpeg
