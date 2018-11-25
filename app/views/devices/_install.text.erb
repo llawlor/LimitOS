@@ -53,10 +53,10 @@ function install_nodejs()
       echo 'node.js not found, installing...'
 
       # install version 6 of nodejs, and log output
-      sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo bash - &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+      sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo bash - &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
       # install nodejs, and log output
-      sudo apt-get install -y nodejs &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+      sudo apt-get install -y nodejs &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
@@ -78,7 +78,7 @@ function install_npm()
       echo 'npm not found, installing...'
 
       # install npm, and log output
-      sudo apt-get install npm -y &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+      sudo apt-get install npm -y &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
@@ -101,7 +101,7 @@ function install_ws()
       echo 'ws not found, installing...'
 
       # install ws, and log output
-      sudo npm install ws &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+      sudo npm install ws &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
@@ -124,7 +124,7 @@ function install_rpio()
       echo 'rpio not found, installing...'
 
       # install rpio, and log output
-      sudo npm install rpio &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+      sudo npm install rpio &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
@@ -146,7 +146,7 @@ function install_pm2()
       echo 'pm2 not found, installing...'
 
       # install pm2
-      sudo npm install pm2@2.9.3 -g &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+      sudo npm install pm2@2.9.3 -g &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
@@ -191,7 +191,7 @@ function start_limitos_js()
   echo 'starting limitos<%= '_dev' if !Rails.env.production? %>.js process...'
 
   # stop any previously running limitos<%= '_dev' if !Rails.env.production? %>.js processes
-  sudo pm2 stop limitos<%= '_dev' if !Rails.env.production? %>.js &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+  sudo pm2 stop limitos<%= '_dev' if !Rails.env.production? %>.js &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # start the limitos<%= '_dev' if !Rails.env.production? %>.js node script, -s: silent mode
   sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
@@ -200,7 +200,7 @@ function start_limitos_js()
   sudo pm2 -s save
 
   # start pm2 when server is started, and log output
-  sudo pm2 startup &> 'limitos<%= 'dev' if !Rails.env.production? %>_install.log'
+  sudo pm2 startup &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 }
 
 # run the main function
