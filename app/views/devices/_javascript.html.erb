@@ -51,8 +51,14 @@
 
     // when the video button is clicked
     $('#video_start').on('click', function() {
+      // hide the button
+      $(this).addClass('hidden');
       // show the canvas
       $('#video_canvas').removeClass('hidden');
+      // create the message
+      var message = { command: 'start_video' };
+      // send the message to start the video
+      App.messaging.send_message(message);
       // set the video url
       var video_server_url = 'ws://192.168.1.101:8082/video_streams/<%= @device.auth_token %>';
       // load the video

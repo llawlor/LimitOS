@@ -28,28 +28,31 @@ var http = require('http');
 // remote websocket relay
 var remote_ws = new WebSocket('http://192.168.1.101:8081/video_streams/' + auth_token);
 
-// HTTP Server to accept incomming MPEG-TS Stream from ffmpeg
-var streamServer = http.createServer( function(request, response) {
+// function to start the ffmpeg server
+function startVideoServer() {
+  // HTTP Server to accept incomming MPEG-TS Stream from ffmpeg
+  var streamServer = http.createServer( function(request, response) {
 
-  response.connection.setTimeout(0);
-  console.log(
-    'Stream Connected: ' +
-    request.socket.remoteAddress + ':' +
-    request.socket.remotePort
-  );
-  request.on('data', function(data){
-    // if the remote connection is available
-    if (remote_ws.readyState === WebSocket.OPEN) {
-      // send data to the remote websocket server
-      remote_ws.send(data);
-    }
-  });
-  request.on('end',function(){
-    console.log('close');
-  });
+    response.connection.setTimeout(0);
+    console.log(
+      'Stream Connected: ' +
+      request.socket.remoteAddress + ':' +
+      request.socket.remotePort
+    );
+    request.on('data', function(data){
+      // if the remote connection is available
+      if (remote_ws.readyState === WebSocket.OPEN) {
+        // send data to the remote websocket server
+        remote_ws.send(data);
+      }
+    });
+    request.on('end',function(){
+      console.log('close');
+    });
 
-// listen on localhost only
-}).listen(8081, 'localhost');
+  // listen on localhost only
+  }).listen(8081, 'localhost');
+}
 
 // start ffmpeg video streaming
 function startFFMPEG() {
@@ -165,6 +168,18 @@ function handleDeviceMessage(message) {
 
     // send the command
     sendI2cCommand(message);
+
+  // else if this is a device command
+  } else if (message.command) {
+
+    // if this is a command to start the video
+    if (message.command === 'start_video') {
+      console.log('starting video');
+      // start the video server
+      startVideoServer();
+      // start ffmpeg
+      startFFMPEG();
+    }
 
   // else if this is a message with the device information
   } else if (message.input_pins) {
