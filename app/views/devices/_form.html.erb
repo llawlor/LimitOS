@@ -61,11 +61,21 @@
     </div>
   <% end %>
 
+  <% if @device.device_type == 'raspberry_pi' %>
+    <div class="form-group">
+      <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
+        <label>
+          <%= f.check_box :video_invert_vertical %>
+          Invert video vertical axis
+        </label>
+      </div>
+    </div>
+  <% end %>
+
   <div class="form-group">
     <div class="col-lg-offset-4 col-lg-8">
       <%= f.submit nil, class: 'btn btn-primary', style: 'margin-right: 20px;' %>
-      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                devices_path, :class => 'btn btn-default' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")), devices_path, :class => 'btn btn-default' %>
     </div>
   </div>
 
