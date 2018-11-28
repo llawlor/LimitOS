@@ -61,7 +61,7 @@ function startFFMPEG() {
   // enable the pi camera module
   spawn('sudo', ['modprobe', 'bcm2835-v4l2']);
   // start ffmpeg
-  spawn('ffmpeg', ['-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'http://localhost:8081/']);
+  spawn('ffmpeg', ['-loglevel', 'panic', '-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'http://localhost:8081/']);
 }
 
 // keep track of the last value; key is (i2c_address + '_' + pin_number)
