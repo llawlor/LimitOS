@@ -9,6 +9,8 @@
 
   // keep track of the start transmission time
   var start_transmission_time = 0;
+  // keep track of the video player
+  var video_player = null;
 
   // when the document is ready
   $(document).ready(function() {
@@ -49,7 +51,7 @@
       App.messaging.send_message(message);
     });
 
-    // when the video button is clicked
+    // when the start video button is clicked
     $('#video_start').on('click', function() {
       // hide the button
       $(this).addClass('hidden');
@@ -62,7 +64,21 @@
       // set the video url
       var video_server_url = 'ws://192.168.1.101:8082/video_streams/<%= @device.auth_token %>';
       // load the video
-      var video_player = new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
+      video_player = new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
+      // show the stop button
+      $('#video_stop').removeClass('hidden');
+    });
+
+    // when the stop video button is clicked
+    $('#video_stop').on('click', function() {
+      // hide the button
+      $(this).addClass('hidden');
+      // hide the canvas
+      $('#video_canvas').addClass('hidden');
+      // disconnect the video
+      video_player.destroy();
+      // show the start button
+      $('#video_start').removeClass('hidden');
     });
 
     // create the subscription
