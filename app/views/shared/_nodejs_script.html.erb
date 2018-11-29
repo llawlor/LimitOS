@@ -17,6 +17,8 @@ var last_i2c_data_received = (new Date).getTime();
 var video_active = false;
 // variable for the streaming server
 var streamServer = null;
+// variable for the ffmpeg process
+var ffmpeg_process = null;
 
 // set up the websocket object
 const WebSocket = require('ws');
@@ -43,6 +45,7 @@ remote_ws.on('message', function(data) {
     if (json_data.stop_video == auth_token) {
       console.log('stopping video');
       // stop ffmpeg
+      ffmpeg_process.kill();
       // stop the stream server
     }
   }
@@ -79,7 +82,7 @@ function startFFMPEG() {
   // enable the pi camera module
   spawn('sudo', ['modprobe', 'bcm2835-v4l2']);
   // start ffmpeg
-  spawn('ffmpeg', ['-loglevel', 'panic', '-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'http://localhost:8081/']);
+  ffmpeg_process = spawn('ffmpeg', ['-loglevel', 'panic', '-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'http://localhost:8081/']);
 }
 
 // keep track of the last value; key is (i2c_address + '_' + pin_number)
