@@ -41,20 +41,41 @@ remote_ws.on('message', function(data) {
 
   // if there's a stop video command
   if (json_data.stop_video) {
-    // if the auth tokens match
-    if (json_data.stop_video == auth_token) {
-      console.log('stopping video');
-      // stop ffmpeg
-      ffmpeg_process.kill();
-      // stop the stream server
+    // if the auth tokens match and video is active
+    if ((json_data.stop_video == auth_token) && (video_active === true)) {
+      // stop the video
+      stopVideo();
     }
   }
 });
 
+// function to start ffmpeg and video servers
+function startVideo() {
+  console.log('starting video');
+  // mark the video camera as active
+  video_active = true;
+  // start the video server
+  startVideoServer();
+  // start ffmpeg
+  startFFMPEG();
+}
+
+// function to stop ffmpeg and video servers
+function stopVideo() {
+  console.log('stopping video');
+  // mark the video as inactive
+  video_active = false;
+  // stop ffmpeg
+  ffmpeg_process.kill();
+  // stop the stream server
+  streamServer.close();
+  streamServer = null;
+}
+
 // function to start the ffmpeg server
 function startVideoServer() {
   // HTTP Server to accept incomming MPEG-TS Stream from ffmpeg
-  var streamServer = http.createServer( function(request, response) {
+  streamServer = http.createServer( function(request, response) {
 
     response.connection.setTimeout(0);
     console.log(
@@ -196,13 +217,8 @@ function handleDeviceMessage(message) {
 
     // if this is a command to start the video
     if ((message.command === 'start_video') && (video_active === false)) {
-      console.log('starting video');
-      // mark the video camera as active
-      video_active = true;
-      // start the video server
-      startVideoServer();
-      // start ffmpeg
-      startFFMPEG();
+      // start the video
+      startVideo();
     }
 
   // else if this is a message with the device information
