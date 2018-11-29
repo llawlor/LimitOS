@@ -75,7 +75,8 @@ function stopVideo() {
   ffmpeg_process.kill();
   // stop the stream server
   streamServer.close();
-  streamServer = null;
+  // stop the remote relay websocket
+  remote_video_websocket.terminate();
 }
 
 // function to start the ffmpeg server
