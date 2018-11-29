@@ -19,6 +19,8 @@ var video_active = false;
 var streamServer = null;
 // variable for the ffmpeg process
 var ffmpeg_process = null;
+// variable for the remote relay server
+var remote_video_websocket = null;
 
 // set up the websocket object
 const WebSocket = require('ws');
@@ -31,29 +33,33 @@ const spawn = require('child_process').spawn;
 // set up the http object
 var http = require('http');
 
-// remote websocket relay
-var remote_ws = new WebSocket('http://192.168.1.101:8081/video_streams/' + auth_token);
+// connect to the remote video relay server
+function connectRemoteVideoRelay() {
+  // remote websocket relay
+  remote_video_websocket = new WebSocket('http://192.168.1.101:8081/video_streams/' + auth_token);
 
-// when data is received from the relay server
-remote_ws.on('message', function(data) {
-  // parse the message
-  var json_data = JSON.parse(data);
+  // when data is received from the relay server
+  remote_video_websocket.on('message', function(data) {
+    // parse the message
+    var json_data = JSON.parse(data);
 
-  // if there's a stop video command
-  if (json_data.stop_video) {
-    // if the auth tokens match and video is active
-    if ((json_data.stop_video == auth_token) && (video_active === true)) {
-      // stop the video
-      stopVideo();
+    // if there's a stop video command
+    if (json_data.stop_video) {
+      // if the auth tokens match and video is active
+      if ((json_data.stop_video == auth_token) && (video_active === true)) {
+        // stop the video
+        stopVideo();
+      }
     }
-  }
-});
-
+  });
+}
 // function to start ffmpeg and video servers
 function startVideo() {
   console.log('starting video');
   // mark the video camera as active
   video_active = true;
+  // connect to the remote relay server
+  connectRemoteVideoRelay();
   // start the video server
   startVideoServer();
   // start ffmpeg
@@ -85,9 +91,9 @@ function startVideoServer() {
     );
     request.on('data', function(data){
       // if the remote connection is available
-      if (remote_ws.readyState === WebSocket.OPEN) {
+      if (remote_video_websocket.readyState === WebSocket.OPEN) {
         // send data to the remote websocket server
-        remote_ws.send(data);
+        remote_video_websocket.send(data);
       }
     });
     request.on('end',function(){
