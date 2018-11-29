@@ -15,6 +15,8 @@ var slave_devices_ready = false;
 var last_i2c_data_received = (new Date).getTime();
 // variable for the state of the video camera
 var video_active = false;
+// variable for the streaming server
+var streamServer = null;
 
 // set up the websocket object
 const WebSocket = require('ws');
@@ -29,6 +31,22 @@ var http = require('http');
 
 // remote websocket relay
 var remote_ws = new WebSocket('http://192.168.1.101:8081/video_streams/' + auth_token);
+
+// when data is received from the relay server
+remote_ws.on('message', function(data) {
+  // parse the message
+  var json_data = JSON.parse(data);
+
+  // if there's a stop video command
+  if (json_data.stop_video) {
+    // if the auth tokens match
+    if (json_data.stop_video == auth_token) {
+      console.log('stopping video');
+      // stop ffmpeg
+      // stop the stream server
+    }
+  }
+});
 
 // function to start the ffmpeg server
 function startVideoServer() {
