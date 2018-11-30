@@ -36,7 +36,7 @@ var http = require('http');
 // connect to the remote video relay server
 function connectRemoteVideoRelay() {
   // remote websocket relay
-  remote_video_websocket = new WebSocket('http://192.168.1.101:8081/video_from_device/' + auth_token);
+  remote_video_websocket = new WebSocket('<%= video_from_devices_url %>/video_from_devices/' + auth_token);
 
   // if there is an error, stop the video
   remote_video_websocket.addEventListener('error', (err) => stopVideo());
