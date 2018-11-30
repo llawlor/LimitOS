@@ -83,7 +83,6 @@ class DevicesController < ApplicationController
 
   # create the dynamic nodejs script
   def nodejs_script
-    @websocket_server_url = Rails.env.production? ? 'wss://limitos.com/cable' : "ws://#{request.host}:#{request.port}/cable"
     # don't use a layout
     render layout: false
   end

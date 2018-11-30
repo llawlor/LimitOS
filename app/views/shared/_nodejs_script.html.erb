@@ -118,7 +118,7 @@ function startFFMPEG() {
 var last_values = [];
 
 // variable for the websocket, with the websocket server URL
-const ws = new WebSocket('<%= @websocket_server_url %>');
+const ws = new WebSocket('<%= websocket_server_url %>');
 
 // enable i2c
 rpio.init({gpiomem: false});
