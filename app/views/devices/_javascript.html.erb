@@ -62,7 +62,7 @@
       // send the message to start the video
       App.messaging.send_message(message);
       // set the video url
-      var video_server_url = 'ws://192.168.1.101:8082/video_streams/<%= @device.auth_token %>';
+      var video_server_url = 'ws://192.168.1.101:8082/video_to_clients/<%= @device.auth_token %>';
       // load the video
       video_player = new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
       // show the stop button

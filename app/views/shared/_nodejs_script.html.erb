@@ -36,11 +36,11 @@ var http = require('http');
 // connect to the remote video relay server
 function connectRemoteVideoRelay() {
   // remote websocket relay
-  remote_video_websocket = new WebSocket('http://192.168.1.101:8081/video_streams/' + auth_token);
+  remote_video_websocket = new WebSocket('http://192.168.1.101:8081/video_from_device/' + auth_token);
 
   // if there is an error, stop the video
   remote_video_websocket.addEventListener('error', (err) => stopVideo());
-  
+
   // when data is received from the relay server
   remote_video_websocket.on('message', function(data) {
     // parse the message
