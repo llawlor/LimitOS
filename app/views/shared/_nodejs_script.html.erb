@@ -55,6 +55,13 @@ function connectRemoteVideoRelay() {
       }
     }
   });
+
+  // when the remote video websocket is closed
+  remote_video_websocket.on('close', function() {
+    // stop the video
+    stopVideo();
+  });
+
 }
 // function to start ffmpeg and video servers
 function startVideo() {
