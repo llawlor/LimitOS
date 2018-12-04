@@ -54,7 +54,7 @@
 <br><br>
 
 <% if current_user.present? && current_user.admin? %>
-  <canvas id="video_canvas" class="hidden" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.video_invert_vertical? %>></canvas>
+  <canvas id="video_canvas" class="hidden" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
   <br>
   <button class="btn btn-primary" id="video_start">Start Video</button>
   <button class="btn btn-primary hidden" id="video_stop">Stop Video</button>

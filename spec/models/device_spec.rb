@@ -12,7 +12,7 @@
 #  auth_token             :string(24)
 #  i2c_address            :string(10)
 #  broadcast_to_device_id :integer
-#  video_invert_vertical  :boolean          default(FALSE)
+#  invert_video           :boolean          default(FALSE)
 #
 
 require 'rails_helper'
