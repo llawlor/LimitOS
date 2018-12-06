@@ -15,8 +15,6 @@ var slave_devices_ready = false;
 var last_i2c_data_received = (new Date).getTime();
 // variable for the state of the video camera
 var video_active = false;
-// variable for the streaming server
-var streamServer = null;
 // variable for the ffmpeg process
 var ffmpeg_process = null;
 // variable for the remote relay server
@@ -70,8 +68,6 @@ function startVideo() {
   video_active = true;
   // connect to the remote relay server
   connectRemoteVideoRelay();
-  // start the video server
-  startVideoServer();
   // start ffmpeg
   startFFMPEG();
 }
@@ -83,41 +79,25 @@ function stopVideo() {
   video_active = false;
   // stop ffmpeg
   ffmpeg_process.kill();
-  // stop the stream server
-  streamServer.close();
   // stop the remote relay websocket
   remote_video_websocket.terminate();
-}
-
-// function to start the ffmpeg server
-function startVideoServer() {
-  // HTTP Server to accept incomming MPEG-TS Stream from ffmpeg
-  streamServer = http.createServer( function(request, response) {
-
-    response.connection.setTimeout(0);
-    console.log(
-      'Stream Connected: ' +
-      request.socket.remoteAddress + ':' +
-      request.socket.remotePort
-    );
-    request.on('data', function(data){
-      // if the remote connection is available
-      if (remote_video_websocket.readyState === WebSocket.OPEN) {
-        // send data to the remote websocket server
-        remote_video_websocket.send(data);
-      }
-    });
-
-  // listen on localhost only
-  }).listen(8081, 'localhost');
 }
 
 // start ffmpeg video streaming
 function startFFMPEG() {
   // enable the pi camera module
   spawn('sudo', ['modprobe', 'bcm2835-v4l2']);
-  // start ffmpeg
-  ffmpeg_process = spawn('ffmpeg', ['-loglevel', 'panic', '-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'http://localhost:8081/']);
+  // start ffmpeg, and pipe to stdout
+  ffmpeg_process = spawn('ffmpeg', ['-loglevel', 'panic', '-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'pipe:1']);
+
+  // when ffmpeg data is received
+  ffmpeg_process.stdout.on('data', function(chunk) {
+    // if the remote connection is available
+    if (remote_video_websocket.readyState === WebSocket.OPEN) {
+      // send data to the remote websocket server
+      remote_video_websocket.send(chunk);
+    }
+  });
 }
 
 // keep track of the last value; key is (i2c_address + '_' + pin_number)
