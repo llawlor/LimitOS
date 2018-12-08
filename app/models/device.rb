@@ -56,6 +56,15 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
+  # full url for video going to clients
+  # in the future, this method can return dynamic values based on additional servers
+  def video_to_clients_url
+    # get the host based on the environment
+    host = Rails.env.production? ? 'wss://limitos.com' : 'ws://192.168.1.101:8082'
+    # return the full url
+    return "#{host}/video_to_clients/#{ self.auth_token }"
+  end
+
   # digital pins
   def digital_pins
     # if this is a raspberry pi
