@@ -109,6 +109,12 @@ RSpec.describe Device, type: :model do
       }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
     end
 
+    it 'adds the video url to a start_video command' do
+      expect {
+        device.broadcast_message({ 'command' => 'start_video' })
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ video_url: device.video_from_devices_url }))
+    end
+
     it 'broadcasts to another device' do
       device_2 = FactoryBot.create(:device)
       device.update_attributes(broadcast_to_device_id: device_2.id)
