@@ -199,6 +199,12 @@ class Device < ApplicationRecord
     # change the i2c_address to the target_device's i2c_address
     message["i2c_address"] = target_device.i2c_address if target_device.i2c_address.present?
 
+    # if this is a start video command
+    if message['command'].present? && message['command'] == 'start_video'
+      # add the video url
+      message['video_url'] = self.video_from_devices_url
+    end
+
     # broadcast to the target device's master (since we can't broadcast directly to a slave)
     DevicesChannel.broadcast_to(
       target_device.master_device.id,
