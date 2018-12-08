@@ -32,9 +32,11 @@ const spawn = require('child_process').spawn;
 var http = require('http');
 
 // connect to the remote video relay server
-function connectRemoteVideoRelay() {
+function connectRemoteVideoRelay(video_url) {
+  console.log('sending video to ' + video_url);
+
   // remote websocket relay
-  remote_video_websocket = new WebSocket('<%= @device.video_from_devices_url %>');
+  remote_video_websocket = new WebSocket(video_url);
 
   // if there is an error, stop the video
   remote_video_websocket.addEventListener('error', (err) => stopVideo());
@@ -62,12 +64,12 @@ function connectRemoteVideoRelay() {
 
 }
 // function to start ffmpeg and video servers
-function startVideo() {
+function startVideo(video_url) {
   console.log('starting video');
   // mark the video camera as active
   video_active = true;
   // connect to the remote relay server
-  connectRemoteVideoRelay();
+  connectRemoteVideoRelay(video_url);
   // start ffmpeg
   startFFMPEG();
 }
@@ -212,7 +214,7 @@ function handleDeviceMessage(message) {
     // if this is a command to start the video
     if ((message.command === 'start_video') && (video_active === false)) {
       // start the video
-      startVideo();
+      startVideo(message.video_url);
     }
 
   // else if this is a message with the device information
