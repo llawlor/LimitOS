@@ -28,9 +28,6 @@ var rpio = require('rpio');
 // set up an object to execute commands
 const spawn = require('child_process').spawn;
 
-// set up the http object
-var http = require('http');
-
 // connect to the remote video relay server
 function connectRemoteVideoRelay(video_url) {
   console.log('sending video to ' + video_url);
