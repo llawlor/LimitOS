@@ -13,6 +13,7 @@
 #  i2c_address            :string(10)
 #  broadcast_to_device_id :integer
 #  invert_video           :boolean          default(FALSE)
+#  video_enabled          :boolean          default(FALSE)
 #
 
 require 'rails_helper'
