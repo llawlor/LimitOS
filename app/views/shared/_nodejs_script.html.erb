@@ -84,8 +84,11 @@ function stopVideo() {
 
 // start ffmpeg video streaming
 function startFFMPEG() {
-  // enable the pi camera module
+  // enable the pi camera module (legacy method)
   spawn('sudo', ['modprobe', 'bcm2835-v4l2']);
+  // enable the pi camera module (new method)
+  spawn('sudo', ['modprobe', 'v4l2_common']);
+
   // start ffmpeg, and pipe to stdout
   // full command: ffmpeg -loglevel panic -f v4l2 -framerate 25 -video_size 640x480 -i /dev/video0 -f mpegts -codec:v mpeg1video -s 640x480 -b:v 1000k -bf 0 pipe:1
   ffmpeg_process = spawn('ffmpeg', ['-loglevel', 'panic', '-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'pipe:1']);
