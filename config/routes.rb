@@ -51,6 +51,7 @@ Rails.application.routes.draw do
       get 'i2c'
       get 'security'
       get 'api'
+      get 'live_video'
     end
   end
 
