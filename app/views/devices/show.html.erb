@@ -1,3 +1,9 @@
+<% if @device.video_enabled? %>
+  <% content_for :custom_head do %>
+    <%= javascript_include_tag 'jsmpeg.min' %>
+  <% end %>
+<% end %>
+
 <div class="page-header">
   <h1>
     <div class="row">
