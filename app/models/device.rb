@@ -12,7 +12,8 @@
 #  auth_token             :string(24)
 #  i2c_address            :string(10)
 #  broadcast_to_device_id :integer
-#  video_invert_vertical  :boolean          default(FALSE)
+#  invert_video           :boolean          default(FALSE)
+#  video_enabled          :boolean          default(FALSE)
 #
 
 # device_type can be 'raspberry_pi' or 'arduino'
@@ -54,6 +55,24 @@ class Device < ApplicationRecord
   # slave device or self
   def slave_device
     self.devices.present? ? self.devices.first : self
+  end
+
+  # full url for video coming from devices
+  # in the future, this method can return dynamic values based on additional servers
+  def video_from_devices_url
+    # get the host based on the environment
+    host = Rails.env.production? ? 'wss://limitos.com' : 'ws://192.168.1.101:8081'
+    # return the full url
+    return "#{host}/video_from_devices/#{self.auth_token}"
+  end
+
+  # full url for video going to clients
+  # in the future, this method can return dynamic values based on additional servers
+  def video_to_clients_url
+    # get the host based on the environment
+    host = Rails.env.production? ? 'wss://limitos.com' : 'ws://192.168.1.101:8082'
+    # return the full url
+    return "#{host}/video_to_clients/#{self.auth_token}"
   end
 
   # digital pins
@@ -180,6 +199,12 @@ class Device < ApplicationRecord
 
     # change the i2c_address to the target_device's i2c_address
     message["i2c_address"] = target_device.i2c_address if target_device.i2c_address.present?
+
+    # if this is a start video command
+    if message['command'].present? && message['command'] == 'start_video'
+      # add the video url
+      message['video_url'] = self.video_from_devices_url
+    end
 
     # broadcast to the target device's master (since we can't broadcast directly to a slave)
     DevicesChannel.broadcast_to(

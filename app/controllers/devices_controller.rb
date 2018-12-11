@@ -83,7 +83,6 @@ class DevicesController < ApplicationController
 
   # create the dynamic nodejs script
   def nodejs_script
-    @websocket_server_url = Rails.env.production? ? 'wss://limitos.com/cable' : "ws://#{request.host}:#{request.port}/cable"
     # don't use a layout
     render layout: false
   end
@@ -226,7 +225,7 @@ class DevicesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def device_params
-      params.fetch(:device, {}).permit(:name, :device_type, :i2c_address, :broadcast_to_device_id)
+      params.fetch(:device, {}).permit(:name, :device_type, :i2c_address, :broadcast_to_device_id, :video_enabled, :invert_video)
     end
 
     # save this device to the logged out user

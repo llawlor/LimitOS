@@ -1,3 +1,9 @@
+<% if @device.video_enabled? %>
+  <% content_for :custom_head do %>
+    <%= javascript_include_tag 'jsmpeg.min' %>
+  <% end %>
+<% end %>
+
 <div class="page-header">
   <h1>
     <div class="row">
@@ -122,6 +128,21 @@
 </div>
 
 <br><br>
+
+<% if @device.video_enabled? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <h3>Live Video Feed</h3>
+      <canvas id="video_canvas" class="hidden" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
+      <br>
+      <button class="btn btn-primary" id="video_start">Start Video</button>
+      <button class="btn btn-primary hidden" id="video_stop">Stop Video</button>
+    </div>
+  </div>
+
+  <br><br>
+
+<% end %>
 
 <% if @device.pins.present? %>
   <div class="row">
