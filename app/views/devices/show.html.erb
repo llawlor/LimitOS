@@ -53,13 +53,6 @@
 
 <br><br>
 
-<% if current_user.present? && current_user.admin? %>
-  <canvas id="video_canvas" class="hidden" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
-  <br>
-  <button class="btn btn-primary" id="video_start">Start Video</button>
-  <button class="btn btn-primary hidden" id="video_stop">Stop Video</button>
-<% end %>
-
 <h3>Pin Information</h3>
 <% if @device.pins.blank? %>
   You haven't added any pins to this device yet.
@@ -129,6 +122,21 @@
 </div>
 
 <br><br>
+
+<% if @device.video_enabled? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <h3>Live Video Feed</h3>
+      <canvas id="video_canvas" class="hidden" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
+      <br>
+      <button class="btn btn-primary" id="video_start">Start Video</button>
+      <button class="btn btn-primary hidden" id="video_stop">Stop Video</button>
+    </div>
+  </div>
+
+  <br><br>
+
+<% end %>
 
 <% if @device.pins.present? %>
   <div class="row">
