@@ -72,7 +72,7 @@
     </div>
   </div>
 
-    <div class="form-group <%= 'hidden' if !@device.video_enabled? %>">
+    <div id="invert-video-div" class="form-group <%= 'hidden' if !@device.video_enabled? %>">
       <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
         <label>
           <%= f.check_box :invert_video %>
@@ -96,5 +96,19 @@
   $(document).ready(function () {
     // initialize tooltips
     $('.tooltip-trigger').tooltip();
+
+    // when the 'video enabled' checkbox is changed
+    $('#device_video_enabled').on('change', function() {
+      // if the checkbox is checked
+      if ($(this).is(':checked')) {
+        // show the invert video option
+        $('#invert-video-div').removeClass('hidden');
+      // else the checkbox is not checked
+      } else {
+        // hide the invert video option
+        $('#invert-video-div').addClass('hidden');
+      }
+    });
+
   });
 </script>
