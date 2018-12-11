@@ -90,7 +90,8 @@ function install_ws()
 {
   # check if ws is installed
   # npm list --depth=0: show top-level node.js modules
-  ws_installed=$(npm list --depth=0 | grep " ws@" | wc -l)
+  # 2> /dev/null: ignore npm list error output
+  ws_installed=$(npm list --depth=0 2> /dev/null | grep " ws@" | wc -l)
 
   # if ws is not installed
   if [ $ws_installed -eq 0 ]
@@ -113,7 +114,8 @@ function install_rpio()
 {
   # check if rpio is installed
   # npm list --depth=0: show top-level node.js modules
-  rpio_installed=$(npm list --depth=0 | grep " rpio@" | wc -l)
+  # 2> /dev/null: ignore npm list error output
+  rpio_installed=$(npm list --depth=0 2> /dev/null | grep " rpio@" | wc -l)
 
   # if rpio is not installed
   if [ $rpio_installed -eq 0 ]
