@@ -60,6 +60,7 @@ Rails.application.routes.draw do
       get 'led'
       get 'button'
       get 'active_buzzer'
+      get 'live_video'
     end
   end
 
