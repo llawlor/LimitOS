@@ -6,15 +6,35 @@
     <br><br>
 
     <h3>Requirements</h3>
-    <ul>
+    <ul class="spaced-list">
       <li>Raspberry Pi connected to the internet</li>
-      <li></li>
+      <li><a href="https://www.raspberrypi.org/products/camera-module-v2/">Raspberry Pi camera</a></li>
+      <li><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspian Stretch</a> (or ffmpeg manually installed)</a></li>
     </ul>
 
     <br><br><br>
 
-    <h4>1.</h4>
-    
+    <h4>1. Enable the camera</h4>
+    The camera must be enabled first using the command:
+    <br>
+    <pre class="limitos-command" style="margin-top: 10px;">sudo raspi-config</pre>
+    <br>
+    Visit the <a href="https://www.raspberrypi.org/documentation/usage/camera/">official documentation</a> for more info.
+
+    <br><br><br>
+
+    <h4>2. Install LimitOS on the Raspberry Pi</h4>
+    Installation is a single command:
+    <br>
+    <%= render 'shared/install_command' %>
+    <br>
+    Follow the on-screen instructions to register the device afterwards.
+    <br><br>
+    <%= tutorial_image('tutorials/limitos_install.gif') %>
+
+    <br><br><br>
+
+    <h4>2. Enable LimitOS video</h4>
 
     <br><br><br><br>
 
