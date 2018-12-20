@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-xs-12 col-md-offset-2 col-md-8">
+
+    <h1>Live Video Tutorial</h1>
+
+    <br><br>
+
+    <h3>Requirements</h3>
+    <ul class="spaced-list">
+      <li>Raspberry Pi connected to the internet</li>
+      <li><a href="https://www.raspberrypi.org/products/camera-module-v2/">Raspberry Pi camera</a></li>
+      <li><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspian Stretch</a> (or ffmpeg manually installed)</a></li>
+    </ul>
+
+    <br><br><br>
+
+    <h4>1. Enable the camera</h4>
+    The camera must be enabled first using the command:
+    <br>
+    <pre class="limitos-command" style="margin-top: 10px;">sudo raspi-config</pre>
+    <br>
+    Visit the <a href="https://www.raspberrypi.org/documentation/usage/camera/">official documentation</a> for more info.
+    <br><br>
+    <%= tutorial_image('tutorials/pi_camera.jpg') %>
+
+    <br><br><br>
+
+    <h4>2. Install LimitOS on the Raspberry Pi</h4>
+    Installation is a single command:
+    <br>
+    <%= render 'shared/install_command' %>
+    <br>
+    Follow the on-screen instructions to register the device afterwards.
+    <br><br>
+    <%= tutorial_image('tutorials/limitos_install.gif') %>
+
+    <br><br><br>
+
+    <h4>3. Enable LimitOS video</h4>
+    Edit your device by selecting "My Devices" above, clicking on the device, and then clicking "Edit Device".
+    <br>
+    Make sure to check the "Enable live video" checkbox.
+    <br>
+    If your video appears upside down, you can also come back here later to invert the video.
+    <br><br>
+    <%= tutorial_image('tutorials/enable_video.gif') %>
+
+    <br><br><br>
+
+    <h4>4. View your live video feed</h4>
+    Navigate back to your device, and click the "Start Video" button.  Your live video feed should now appear!
+    <br><br>
+    <%= tutorial_image('tutorials/video_screenshot.gif', 'display: inline-block; border: 1px solid #00dde3;') %>
+
+    <br><br><br><br>
+
+  </div>
+</div>
