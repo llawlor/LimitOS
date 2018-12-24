@@ -103,6 +103,8 @@ pre                             { border-radius: 0; }
 
 /* extra small screens */
 @media screen and (max-width: 767px) {
+  #video_canvas                 { width: 100%; }
+  
   .header-right                 { float: none; margin-top: 20px; }
   .limitos-command              { display: inherit; }
   .limitos-logo                 { margin-top: 140px; font-size: 72px; }
