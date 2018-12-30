@@ -1,6 +1,12 @@
 class Api::V1::DevicesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  # get data for the install script
+  def install_script_info
+    # return the last commit date of the install script
+    render json: { commit_date: Device.install_script_committed_at }
+  end
+
   # control a device
   def control
     # get the device

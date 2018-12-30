@@ -57,6 +57,18 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
+  # get last commit date of node.js install script
+  def self.install_script_committed_at
+    # get the git log results
+    git_output = `git log -n1 app/views/shared/_nodejs_script.html.erb`
+    # get the date portion of the results
+    date_line = git_output.split("\n")[2]
+    # get the date string
+    date_string = date_line.split("Date:")[1].strip
+    # output the parsed time
+    return Time.parse(date_string)
+  end
+
   # full url for video coming from devices
   # in the future, this method can return dynamic values based on additional servers
   def video_from_devices_url
