@@ -42,7 +42,7 @@ class Api::V1::DevicesController < ApplicationController
     # create the anonymous device
     device = Device.create
     # output the auth_token
-    render plain: device.to_json
+    render json: device.to_json
   end
 
   # create the dynamic nodejs script
@@ -51,13 +51,13 @@ class Api::V1::DevicesController < ApplicationController
     @device = Device.find_by(id: params[:id])
 
     # error if invalid
-    render plain: { error: 'Invalid device credentials.' } and return if @device.blank?
+    render json: { error: 'Invalid device credentials.' } and return if @device.blank?
 
     # check the authentication
     valid = true if Devise.secure_compare(@device.auth_token, params[:auth_token])
 
     # error if invalid
-    render plain: { error: 'Invalid device credentials.' } and return if valid != true
+    render json: { error: 'Invalid device credentials.' } and return if valid != true
 
     # don't use a layout
     render partial: 'shared/nodejs_script', layout: false, content_type: 'text/plain'
