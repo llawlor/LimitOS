@@ -71,6 +71,9 @@ Rails.application.routes.draw do
           post :nodejs_script
           post :control
         end
+        collection do
+          get :install_script_info
+        end
         resources :registrations
       end
     end
