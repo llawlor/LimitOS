@@ -96,6 +96,18 @@ ws.on('message', function(data, flags) {
 
 });
 
+// check to see if an update is available
+function checkForUpdates() {
+  // create the command to send
+  var input = {
+    command: 'message',
+    identifier: channel_json,
+    data: JSON.stringify({ action: 'request_limitos_client_information' })
+  }
+  // send the message
+  ws.send(JSON.stringify(input));
+}
+
 // connect to the remote video relay server
 function connectRemoteVideoRelay(video_url) {
   console.log('sending video to ' + video_url);
