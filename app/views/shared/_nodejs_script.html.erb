@@ -102,7 +102,7 @@ ws.on('message', function(data, flags) {
 // check to see if an update is available
 function checkForUpdates() {
   // perform the request
-  http_web_request.get('<%= full_url %>/api/v1/devices/install_script_info', (response) => {
+  http_web_request.get('<%= full_server_url %>/api/v1/devices/install_script_info', (response) => {
 
     // when the data is received
     response.on('data', (data) => {

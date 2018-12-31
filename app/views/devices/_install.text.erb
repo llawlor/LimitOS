@@ -32,7 +32,7 @@ perform_install()
   echo "LimitOS script installed successfully"
   <% else %>
   # output the registration information
-  echo "Register this device within 5 minutes at <%= full_url %>/register"
+  echo "Register this device within 5 minutes at <%= full_server_url %>/register"
   echo "Registration code: $registration_auth_token"
   <% end %>
 }
@@ -160,11 +160,11 @@ function download_limitos_js()
 {
   <% if @device.present? %>
   # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
-  curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_url %>/api/v1/devices/<%= @device.id %>/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
+  curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_server_url %>/api/v1/devices/<%= @device.id %>/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
   <% else %>
   # create a new device and save the auth_token as device_json
   # curl: request a remote url, -s: silent, -S: show errors, -L: follow redirects, -X POST: use a HTTP POST request
-  device_json=$(curl -sSL -X POST <%= full_url %>/api/v1/devices)
+  device_json=$(curl -sSL -X POST <%= full_server_url %>/api/v1/devices)
 
   # get the device id from the JSON
   # grep: search, -P: use Perl regular expressions, -o: only output the match, '"id":(\d*)': look for "id":(digits)
@@ -176,13 +176,13 @@ function download_limitos_js()
   device_auth_token=$(echo $device_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
 
   # get a new registration code (using the device auth_token)
-  registration_json=$(curl -sSL --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/registrations)
+  registration_json=$(curl -sSL --data "auth_token=$device_auth_token" <%= full_server_url %>/api/v1/devices/$device_id/registrations)
 
   # get the auth token from the JSON
   registration_auth_token=$(echo $registration_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
 
   # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
-  curl -sS --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
+  curl -sS --data "auth_token=$device_auth_token" <%= full_server_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
   <% end %>
 
   # if the file is valid
