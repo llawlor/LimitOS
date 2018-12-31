@@ -32,6 +32,9 @@ const ws = new WebSocket('<%= websocket_server_url %>');
 // set up an object to execute commands
 const spawn = require('child_process').spawn;
 
+// http object
+const http_web_request = require('<%= Rails.env.production? ? 'https' : 'http' %>');
+
 // keep track of the last value; key is (i2c_address + '_' + pin_number)
 // for example to access the value for i2c_address '0x04' and pin #8: last_values['0x04_8']
 var last_values = [];
@@ -98,15 +101,32 @@ ws.on('message', function(data, flags) {
 
 // check to see if an update is available
 function checkForUpdates() {
-  // create the command to send
-  var input = {
-    command: 'message',
-    identifier: channel_json,
-    data: JSON.stringify({ action: 'request_limitos_client_information' })
-  }
-  // send the message
-  ws.send(JSON.stringify(input));
+  // perform the request
+  http_web_request.get('<%= full_url %>/api/v1/devices/install_script_info', (response) => {
+
+    // when the data is received
+    response.on('data', (data) => {
+      // parse the data
+      var json_data = JSON.parse(data);
+      // get the version
+      var remote_limitos_client_version = json_data['version'];
+
+      // log the remote version
+      console.log("remote version: " + remote_limitos_client_version);
+
+      // if the versions are different
+      if (remote_limitos_client_version !== limitos_client_version) {
+        // start the update
+        console.log('starting update process...');
+      }
+
+    });
+
+  }).on('error', (e) => {
+    console.error(e);
+  });
 }
+checkForUpdates();
 
 // connect to the remote video relay server
 function connectRemoteVideoRelay(video_url) {
