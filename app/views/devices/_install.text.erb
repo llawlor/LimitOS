@@ -160,7 +160,7 @@ function download_limitos_js()
 {
   <% if @device.present? %>
   # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
-  curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_url %>/api/v1/devices/<%= @device.id %>/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>.js
+  curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_url %>/api/v1/devices/<%= @device.id %>/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
   <% else %>
   # create a new device and save the auth_token as device_json
   # curl: request a remote url, -s: silent, -S: show errors, -L: follow redirects, -X POST: use a HTTP POST request
@@ -182,8 +182,19 @@ function download_limitos_js()
   registration_auth_token=$(echo $registration_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
 
   # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
-  curl -sS --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>.js
+  curl -sS --data "auth_token=$device_auth_token" <%= full_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
   <% end %>
+
+  # if the file is valid
+  if node --check limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
+    # then execute the commands below
+    then
+
+      # move the file
+      mv limitos<%= '_dev' if !Rails.env.production? %>_unverified.js limitos<%= '_dev' if !Rails.env.production? %>.js
+
+  # end the if statement
+  fi
 }
 
 # function to start the limitos<%= '_dev' if !Rails.env.production? %>.js process
