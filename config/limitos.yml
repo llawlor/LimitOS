@@ -1,11 +1,14 @@
 defaults: &defaults
   limitos_client_version: '2018-12-30'  # version of the nodejs install script, updating this will cause connected clients to update their scripts
+  websocket_server_url: 'ws://localhost:3000' # url of the websocket server
 
 development:
   <<: *defaults
+  websocket_server_url: 'ws://192.168.1.101:3000'
 
 test:
   <<: *defaults
 
 production:
   <<: *defaults
+  websocket_server_url: 'wss://limitos.com'

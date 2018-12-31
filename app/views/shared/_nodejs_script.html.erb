@@ -27,7 +27,7 @@ var remote_video_websocket = null;
 const WebSocket = require('ws');
 
 // variable for the websocket, with the websocket server URL
-const ws = new WebSocket('<%= websocket_server_url %>');
+const ws = new WebSocket('<%= Rails.application.config_for(:limitos)["websocket_server_url"] %>/cable');
 
 // set up an object to execute commands
 const spawn = require('child_process').spawn;
