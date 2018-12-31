@@ -1,7 +1,7 @@
 <h1>API</h1>
 
 <h2>Control a Device</h2>
-To control a device, send an HTTP POST request to https://limitos.com/api/v1/devices/<b>DEVICE_ID</b>/control ,
+To control a device, send an HTTP POST request to https://<%= Rails.application.config_for(:limitos)['domain'] %>/api/v1/devices/<b>DEVICE_ID</b>/control ,
 replacing <b>DEVICE_ID</b> with the ID of your device.
 
 <br><br>
@@ -19,7 +19,7 @@ Parameters:
 Example POST request:
 <br><br>
 <pre>
-POST https://limitos.com/api/v1/devices/<b>1</b>/control
+POST https://<%= Rails.application.config_for(:limitos)['domain'] %>/api/v1/devices/<b>1</b>/control
      auth_token=<b>XXXXXXXXXXXXXXXXXX</b>
      pin=<b>4</b>
      digital=<b>on</b>

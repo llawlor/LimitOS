@@ -1,4 +1,4 @@
-<div class="page-header">
+<%= Rails.application.config_for(:limitos)['domain'] %><div class="page-header">
   <h1>
     <%= @device.display_name %>
     <div class="pull-right">
@@ -19,7 +19,7 @@
 
     <h4>Device Control Example</h4>
     <pre>
-HTTP POST https://limitos.com/api/v1/devices/<%= @device.id %>/control
+HTTP POST https://<%= Rails.application.config_for(:limitos)['domain'] %>/api/v1/devices/<%= @device.id %>/control
           auth_token=<%= @device.auth_token %>
           pin=<%= @device.pins.try(:first).try(:pin_number) || 4 %>
           digital=on</pre>
