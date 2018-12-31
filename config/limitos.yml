@@ -1,0 +1,11 @@
+defaults: &defaults
+  limitos_client_version: '2018-12-30'  # version of the nodejs install script, updating this will cause connected clients to update their scripts
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
