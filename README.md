@@ -8,6 +8,7 @@ To use LimitOS with your Raspberry Pi, please see the installation documentation
 If you're running your own server, you can modify some configuration settings at config/limitos.yml .  Please note the commercial limitations when running your own server, which can be found at https://limitos.com/ .
 
 After the LimitOS application has been installed, run the following command so that automated tasks are run correctly:
+
 `bundle exec whenever --update-crontab limitos --set environment=production --roles=app,web,db`
 
 
