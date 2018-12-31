@@ -6,6 +6,15 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
 
+  describe '#install_script_info' do
+    it 'returns the proper version' do
+      get :install_script_info
+      expect(response.status).to eq(200)
+      json_response = JSON.parse(response.body)
+      expect(json_response['version']).to eq(Rails.application.config_for(:limitos)["limitos_client_version"])
+    end
+  end
+
   describe '#control' do
     render_views
 
