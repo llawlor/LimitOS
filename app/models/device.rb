@@ -57,16 +57,27 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
-  # get last commit date of node.js install script
-  def self.install_script_committed_at
-    # get the git log results
-    git_output = `git log -n1 app/views/shared/_nodejs_script.html.erb`
-    # get the date portion of the results
-    date_line = git_output.split("\n")[2]
-    # get the date string
-    date_string = date_line.split("Date:")[1].strip
-    # output the parsed time
-    return Time.parse(date_string)
+  # get version of node.js install script
+  def self.install_script_version
+    # initialize the version variable
+    version = nil
+
+    # read the install script
+    install_script = File.read("app/views/devices/_install.text.erb")
+
+    # for each line
+    install_script.split("\n").each do |line|
+      # if the line starts with the version information
+      if line.starts_with?("# version:")
+        # set the version variable
+        version = line.split("# version:")[1].strip
+        # exit the loop
+        break
+      end
+    end
+
+    # return the version
+    return version
   end
 
   # full url for video coming from devices

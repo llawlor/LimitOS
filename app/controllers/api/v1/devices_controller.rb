@@ -4,7 +4,7 @@ class Api::V1::DevicesController < ApplicationController
   # get data for the install script
   def install_script_info
     # return the last commit date of the install script
-    render json: { commit_date: Device.install_script_committed_at }
+    render json: { version: Device.install_script_version }
   end
 
   # control a device
