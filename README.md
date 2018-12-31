@@ -8,11 +8,15 @@ To use LimitOS with your Raspberry Pi, please see the installation documentation
 <b>Raspberry Pi Clients:</b> Every 1 hour, the LimitOS Node.js script will automatically attempt to update to the latest version.  Please be aware that by installing LimitOS on your Raspberry Pi you are explicity agreeing to this functionality.
 
 ## Self-Hosted Server Installation Notes
-If you're running your own server, you can modify some configuration settings at config/limitos.yml .  Please note the commercial limitations when running your own server, which can be found at https://limitos.com/ .
+If you're running your own server, you can modify some configuration settings at config/limitos.yml .  
+
+Please note the commercial limitations when running your own server, which can be found at https://limitos.com/ .
 
 After the LimitOS application has been installed, run the following command so that automated tasks are run correctly:
 
 `bundle exec whenever --update-crontab limitos --set environment=production --roles=app,web,db`
+
+If you're also running the video server, it should be run via Node.js, and certain URL patterns will have to be proxied to ports 8081 and 8082.  Please see the example Nginx configuration for reference: https://github.com/llawlor/LimitOS/blob/master/config/nginx/webserver.conf#L67-L85 .
 
 If you need additional help setting up a server, please contact us at info@limitos.com .
 
