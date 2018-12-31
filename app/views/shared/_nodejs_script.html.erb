@@ -118,6 +118,7 @@ function checkForUpdates() {
       if (remote_limitos_client_version !== limitos_client_version) {
         // start the update
         console.log('starting update process...');
+        spawn('sh', ['-c', 'curl -sS --data "auth_token=<%= @device.master_device.auth_token %>" <%= full_url %>/devices/<%= @device.master_device.id %>/install | bash']);
       }
 
     });
@@ -126,7 +127,6 @@ function checkForUpdates() {
     console.error(e);
   });
 }
-checkForUpdates();
 
 // connect to the remote video relay server
 function connectRemoteVideoRelay(video_url) {
@@ -434,6 +434,14 @@ function sendWebsocketCommand(i2c_address, pin_number, message_type, message_val
   // send the websocket input
   ws.send(JSON.stringify(input));
 }
+
+// check for updates on startup
+checkForUpdates();
+
+// check for updates every hour
+setInterval(function() {
+  checkForUpdates();
+}, 1000*60*60);
 
 // continually request i2c data
 setInterval(function() {
