@@ -118,7 +118,7 @@ function checkForUpdates() {
       if (remote_limitos_client_version !== limitos_client_version) {
         // start the update
         console.log('starting update process...');
-        spawn('sh', ['-c', '<%= reinstall_script_command(@device) %>']);
+        spawn('sh', ['-c', '<%= reinstall_script_command(@device).html_safe %>']);
       }
 
     });
