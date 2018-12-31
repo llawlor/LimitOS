@@ -59,25 +59,8 @@ class Device < ApplicationRecord
 
   # get version of node.js install script
   def self.install_script_version
-    # initialize the version variable
-    version = nil
-
-    # read the install script
-    install_script = File.read("app/views/devices/_install.text.erb")
-
-    # for each line
-    install_script.split("\n").each do |line|
-      # if the line starts with the version information
-      if line.starts_with?("# version:")
-        # set the version variable
-        version = line.split("# version:")[1].strip
-        # exit the loop
-        break
-      end
-    end
-
-    # return the version
-    return version
+    # return the version, stored in config/limitos.yml
+    return Rails.application.config_for(:limitos)["limitos_client_version"]
   end
 
   # full url for video coming from devices

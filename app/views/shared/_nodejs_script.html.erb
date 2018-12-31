@@ -1,6 +1,9 @@
 // this script must be run via sudo for the i2c communication to work
 // example: sudo nodejs limitos.js
 
+// set the version information; updating this version on the server will cause all connected clients to update to the newest version
+var limitos_client_version = '<%= Rails.application.config_for(:limitos)["limitos_client_version"] %>'; 
+
 // variable for the device ID
 var device_id = '<%= @device.id %>';
 // variable for the auth_token
