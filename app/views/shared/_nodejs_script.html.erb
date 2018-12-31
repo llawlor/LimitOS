@@ -118,7 +118,7 @@ function checkForUpdates() {
       if (remote_limitos_client_version !== limitos_client_version) {
         // start the update
         console.log('starting update process...');
-        spawn('sh', ['-c', 'curl -sS --data "auth_token=<%= @device.master_device.auth_token %>" <%= full_url %>/devices/<%= @device.master_device.id %>/install | bash']);
+        spawn('sh', ['-c', '<%= reinstall_script_command(@device) %>']);
       }
 
     });
