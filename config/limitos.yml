@@ -1,4 +1,5 @@
 defaults: &defaults
+  application_name: 'LimitOS'
   limitos_client_version: '2018-12-30'  # version of the nodejs install script, updating this will cause connected clients to update their scripts
   video_from_devices_host: 'ws://localhost:8081' # host for video requests originating from devices (cameras)
   video_to_clients_host: 'ws://localhost:8082' # host for video requests going to clients (browsers)

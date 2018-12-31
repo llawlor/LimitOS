@@ -29,7 +29,7 @@ perform_install()
   start_limitos_js
 
   <% if @device.present? %>
-  echo "LimitOS script installed successfully"
+  echo "<%= Rails.application.config_for(:limitos)['application_name'] %> script installed successfully"
   <% else %>
   # output the registration information
   echo "Register this device within 5 minutes at <%= full_server_url %>/register"

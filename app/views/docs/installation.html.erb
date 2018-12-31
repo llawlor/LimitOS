@@ -1,6 +1,6 @@
-<h1>Installing LimitOS</h1>
+<h1>Installing <%= Rails.application.config_for(:limitos)['application_name'] %></h1>
 
-LimitOS is designed to be installed on a Raspberry Pi.
+<%= Rails.application.config_for(:limitos)['application_name'] %> is designed to be installed on a Raspberry Pi.
 
 <br><br>
 
@@ -12,7 +12,7 @@ LimitOS is designed to be installed on a Raspberry Pi.
 <h4>What the installation script does:</h4>
 <ol>
   <li>Downloads Node.js</li>
-  <li>Adds the LimitOS script</li>
+  <li>Adds the <%= Rails.application.config_for(:limitos)['application_name'] %> script</li>
   <li>Registers a new device</li>
 </ol>
 
@@ -35,7 +35,7 @@ LimitOS is designed to be installed on a Raspberry Pi.
 <br>
 
 <h4>Arduino setup:</h4>
-LimitOS also be installed on an Arduino that is connected to a Raspberry Pi via I<sup>2</sup>C:
+<%= Rails.application.config_for(:limitos)['application_name'] %> also be installed on an Arduino that is connected to a Raspberry Pi via I<sup>2</sup>C:
 <ol>
   <li>Connect the Arduino to a Raspberry Pi using I<sup>2</sup>C by connecting the ground, SDA, and SCL pins on the Arduino to the same pins on the Raspberry Pi.</li>
   <li>Copy and paste the customized Arduino script from your device page into the Arduino IDE and upload to the device.</li>
@@ -44,9 +44,9 @@ Please see the <a href="/docs/i2c">I<sup>2</sup>C page</a> for more information.
 
 <br><br>
 
-<h2>Uninstalling LimitOS</h2>
+<h2>Uninstalling <%= Rails.application.config_for(:limitos)['application_name'] %></h2>
 
-To pause LimitOS on your device:
+To pause <%= Rails.application.config_for(:limitos)['application_name'] %> on your device:
 <br>
 <pre class="limitos-command">
 sudo pm2 stop limitos
@@ -55,7 +55,7 @@ sudo pm2 unstartup
 
 <br><br>
 
-To completely remove LimitOS from your device:
+To completely remove <%= Rails.application.config_for(:limitos)['application_name'] %> from your device:
 <br>
 <pre class="limitos-command">
 rm limitos*

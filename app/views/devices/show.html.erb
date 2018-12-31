@@ -62,7 +62,7 @@
 <h3>Pin Information</h3>
 <% if @device.pins.blank? %>
   You haven't added any pins to this device yet.
-  <br>Pins are necessary so that LimitOS knows how to receive inputs from or send commands to your device.
+  <br>Pins are necessary so that <%= Rails.application.config_for(:limitos)['application_name'] %> knows how to receive inputs from or send commands to your device.
   <br><br>
   <%= link_to 'Add a pin now!', new_device_pin_path(@device), class: 'btn btn-primary btn-lg' %>
 <% else %>

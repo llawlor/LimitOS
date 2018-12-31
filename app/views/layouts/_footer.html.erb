@@ -8,7 +8,7 @@
         <div id="footer-right">
           <a href="/faq">Frequently Asked Questions</a>
           &nbsp; &nbsp;
-          &copy; LimitOS <%= Date.today.year %>
+          &copy; <%= Rails.application.config_for(:limitos)['application_name'] %> <%= Date.today.year %>
         </div>
       </div>
     </div>

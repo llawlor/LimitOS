@@ -3,17 +3,17 @@
 <br>
 
 <h4>Device Communication</h4>
-LimitOS communication occurs via secure websockets from the LimitOS servers to and from the devices.
+<%= Rails.application.config_for(:limitos)['application_name'] %> communication occurs via secure websockets from the <%= Rails.application.config_for(:limitos)['application_name'] %> servers to and from the devices.
 
 <br><br>
 
 <h4 id="install_script">Security Note Regarding Install Scripts</h4>
-Please be careful about installing untrusted scripts directly from the internet using a command that executes automatically like the LimitOS script does.
+Please be careful about installing untrusted scripts directly from the internet using a command that executes automatically like the <%= Rails.application.config_for(:limitos)['application_name'] %> script does.
 You should always audit the code to understand what it's doing first, which you can do by
 <a href="/install">viewing the code directly</a>.
 <br>
 A <a href="/devices/pretty_print_install">nicer version</a> of the code is also available to view via your web browser.
 <br><br>
-The LimitOS code is also publicly <a href="https://github.com/llawlor/LimitOS">available on GitHub</a> for viewing.
+The <%= Rails.application.config_for(:limitos)['application_name'] %> code is also publicly <a href="https://github.com/llawlor/LimitOS">available on GitHub</a> for viewing.
 
 <br><br>

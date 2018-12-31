@@ -20,7 +20,7 @@
 
     <br><br><br>
 
-    <h4>2. Install LimitOS on the Raspberry Pi</h4>
+    <h4>2. Install <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h4>
     Installation is a single command:
     <br>
     <%= render 'shared/install_command' %>
@@ -31,8 +31,8 @@
 
     <br><br><br>
 
-    <h4>3. Set up the device on the LimitOS website</h4>
-    Add pin 17 as a digital input, and you can then push the button and see the on/off state on the LimitOS webpage.
+    <h4>3. Set up the device on the <%= Rails.application.config_for(:limitos)['application_name'] %> website</h4>
+    Add pin 17 as a digital input, and you can then push the button and see the on/off state on the <%= Rails.application.config_for(:limitos)['application_name'] %> webpage.
     <br><br>
     <%= tutorial_image('tutorials/button.jpg') %>
 

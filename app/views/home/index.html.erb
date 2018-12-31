@@ -16,8 +16,8 @@
 <div class="row">
   <div class="col-sm-offset-3 col-sm-6 col-xs-12 text-center">
     <div class="well" style="font-size: 16px;">
-      <h3 style="margin-top: 5px;">What is LimitOS?</h3>
-      LimitOS is a real-time operating system for the Internet of Things
+      <h3 style="margin-top: 5px;">What is <%= Rails.application.config_for(:limitos)['application_name'] %>?</h3>
+      <%= Rails.application.config_for(:limitos)['application_name'] %> is a real-time operating system for the Internet of Things
       that allows you to send commands to and receive data from your Raspberry Pi and connected Arduinos.
       <br><br>
       No programming required, and setup takes less than 5 minutes.
@@ -39,11 +39,11 @@
 
 <div class="row">
   <div class="col-xs-12 col-md-offset-4 col-md-4" style="border: 1px solid; ">
-    <h3>Why Use LimitOS?</h3>
+    <h3>Why Use <%= Rails.application.config_for(:limitos)['application_name'] %>?</h3>
     <ul style="font-size: 18px;">
       <li>Control your IoT devices in real-time</li>
       <li>View a live video feed from your Raspberry Pi</li>
-      <li>Secure communication between devices and LimitOS</li>
+      <li>Secure communication between devices and <%= Rails.application.config_for(:limitos)['application_name'] %></li>
       <li>No programming required</li>
       <li>No signup required</li>
       <li>Source code <a href="https://github.com/llawlor/LimitOS" target="_blank">available on GitHub</a></li>
@@ -62,15 +62,15 @@
   <div class="col-xs-12 col-md-offset-2 col-md-4" style="border-right: 1px solid;">
     <h3>Personal Use</h3>
     <ul>
-      <li>LimitOS is free for personal use</li>
-      <li>You can also set up your own server and host an installation of LimitOS yourself for personal use</li>
+      <li><%= Rails.application.config_for(:limitos)['application_name'] %> is free for personal use</li>
+      <li>You can also set up your own server and host an installation of <%= Rails.application.config_for(:limitos)['application_name'] %> yourself for personal use</li>
     </ul>
   </div>
 
   <div class="col-xs-12 col-md-4">
     <h3>Commercial Use</h3>
     <ul>
-      <li>$4,995/month per managed LimitOS instance</li>
+      <li>$4,995/month per managed <%= Rails.application.config_for(:limitos)['application_name'] %> instance</li>
       <li>Contact us at <a href="mailto:sales@limitos.com">sales@limitos.com</a> for further information</li>
     </ul>
   </div>

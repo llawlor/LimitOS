@@ -1,12 +1,12 @@
 <h1>I<sup>2</sup>C</h1>
 
-LimitOS can also be installed on an Arduino that is connected to a Raspberry Pi via I<sup>2</sup>C:
+<%= Rails.application.config_for(:limitos)['application_name'] %> can also be installed on an Arduino that is connected to a Raspberry Pi via I<sup>2</sup>C:
 <ol>
   <li>Connect the Arduino to a Raspberry Pi by connecting the ground, SDA, and SCL pins on the Arduino to the same pins on the Raspberry Pi.</li>
   <li>Copy and paste the customized Arduino script from your device page into the Arduino IDE and upload to the device.</li>
 </ol>
 
-The Raspberry Pi acts as the communication layer between the Arduino and the LimitOS servers.
+The Raspberry Pi acts as the communication layer between the Arduino and the <%= Rails.application.config_for(:limitos)['application_name'] %> servers.
 When using an Arduino as an input, you can set the "Broadcast to device" to send the input data to another device.
 
 <br><br><br><br><br><br>

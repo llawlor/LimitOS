@@ -20,7 +20,7 @@
 
     <br><br><br>
 
-    <h4>2. Install LimitOS on the Raspberry Pi</h4>
+    <h4>2. Install <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h4>
     Installation is a single command:
     <br>
     <%= render 'shared/install_command' %>
@@ -31,7 +31,7 @@
 
     <br><br><br>
 
-    <h4>3. Set up the device on the LimitOS website</h4>
+    <h4>3. Set up the device on the <%= Rails.application.config_for(:limitos)['application_name'] %> website</h4>
     Add pin 4 as a digital output, and you can then click the "on" or "off" buttons on the website to turn the buzzer on or off.
     <br><br>
     <%= tutorial_image('tutorials/active_buzzer.jpg') %>

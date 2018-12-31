@@ -4,22 +4,22 @@
 
     <br><br>
 
-    <h3>How much does LimitOS cost?</h3>
-    LimitOS is free for personal use.  You can either use the publicly available service at https://limitos.com/ or set up your own personal server.
+    <h3>How much does <%= Rails.application.config_for(:limitos)['application_name'] %> cost?</h3>
+    <%= Rails.application.config_for(:limitos)['application_name'] %> is free for personal use.  You can either use the publicly available service at https://limitos.com/ or set up your own personal server.
     Please contact us at <a href="mailto:info@limitos.com">info@limitos.com</a> if you need assistance setting up a personal server.
     <br><br>
-    For commercial use, LimitOS is $4,995 per month per managed instance.
+    For commercial use, <%= Rails.application.config_for(:limitos)['application_name'] %> is $4,995 per month per managed instance.
     Contact us at <a href="mailto:sales@limitos.com">sales@limitos.com</a> for more info.
 
     <br><br><br>
 
-    <h3>Do I have to sign up to use LimitOS?</h3>
+    <h3>Do I have to sign up to use <%= Rails.application.config_for(:limitos)['application_name'] %>?</h3>
     No, signing up is completely optional.  You can still register and control your devices without signing up.
 
     <br><br><br>
 
-    <h3>Is LimitOS secure?</h3>
-    Yes, all communication to and from the LimitOS webservers, as well as to and from your devices, is encrypted.
+    <h3>Is <%= Rails.application.config_for(:limitos)['application_name'] %> secure?</h3>
+    Yes, all communication to and from the <%= Rails.application.config_for(:limitos)['application_name'] %> webservers, as well as to and from your devices, is encrypted.
     On the web application we always utilize HTTPS (secure HTTP), and when communicating with devices we always utilize WSS (secure websockets).
 
 

@@ -25,7 +25,7 @@
 
     <br><br><br>
 
-    <h4>2. Install LimitOS on the Raspberry Pi</h4>
+    <h4>2. Install <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h4>
     Installation is a single command:
     <br>
     <%= render 'shared/install_command' %>
@@ -36,7 +36,7 @@
 
     <br><br><br>
 
-    <h4>3. Enable LimitOS video</h4>
+    <h4>3. Enable <%= Rails.application.config_for(:limitos)['application_name'] %> video</h4>
     Edit your device by selecting "My Devices" above, clicking on the device, and then clicking "Edit Device".
     <br>
     Make sure to check the "Enable live video" checkbox.
