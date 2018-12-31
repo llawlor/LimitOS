@@ -2,7 +2,7 @@
 // example: sudo nodejs limitos.js
 
 // set the version information; updating this version on the server will cause all connected clients to update to the newest version
-var limitos_client_version = '<%= Rails.application.config_for(:limitos)["limitos_client_version"] %>'; 
+var limitos_client_version = '<%= Rails.application.config_for(:limitos)["limitos_client_version"] %>';
 
 // variable for the device ID
 var device_id = '<%= @device.id %>';
@@ -25,11 +25,76 @@ var remote_video_websocket = null;
 
 // set up the websocket object
 const WebSocket = require('ws');
-// set up the rpio object
-var rpio = require('rpio');
+
+// variable for the websocket, with the websocket server URL
+const ws = new WebSocket('<%= websocket_server_url %>');
 
 // set up an object to execute commands
 const spawn = require('child_process').spawn;
+
+// keep track of the last value; key is (i2c_address + '_' + pin_number)
+// for example to access the value for i2c_address '0x04' and pin #8: last_values['0x04_8']
+var last_values = [];
+
+// set up the rpio object
+var rpio = require('rpio');
+
+// enable i2c
+rpio.init({gpiomem: false});
+
+// use Broadcom GPIO pin naming
+rpio.init({mapping: 'gpio'});
+
+// create the channel JSON
+var channel_json = JSON.stringify({
+  channel: 'DevicesChannel',
+  id: device_id,
+  auth_token: auth_token
+});
+
+// when the websocket client connects to the server
+ws.on('open', function() {
+  // create the device subscription
+  var device_subscription = {
+    command: 'subscribe',
+    identifier: channel_json
+  };
+
+  // send the subscription command
+  ws.send(JSON.stringify(device_subscription));
+});
+
+// when the websocket receives a message
+ws.on('message', function(data, flags) {
+  // get the JSON data
+  var json_data = JSON.parse(data);
+
+  // if this is a ping command
+  if (json_data.type === 'ping') {
+
+    // log the ping message
+    //console.log('ping: ' + json_data.message);
+
+  // else if this is a subscription confirmation
+  } else if (json_data.type === 'confirm_subscription') {
+
+    console.log('subscribed to: ' + json_data.identifier);
+    // after subscription confirmation, send request for device information
+    requestDeviceInformation();
+
+  // else if this is a device message, handle it
+  } else if (json_data.identifier === channel_json) {
+
+    handleDeviceMessage(json_data.message);
+
+  // else log the full message
+  } else {
+
+    console.log('message received: ' + data);
+
+  }
+
+});
 
 // connect to the remote video relay server
 function connectRemoteVideoRelay(video_url) {
@@ -105,70 +170,6 @@ function startFFMPEG() {
     }
   });
 }
-
-// keep track of the last value; key is (i2c_address + '_' + pin_number)
-// for example to access the value for i2c_address '0x04' and pin #8: last_values['0x04_8']
-var last_values = [];
-
-// variable for the websocket, with the websocket server URL
-const ws = new WebSocket('<%= websocket_server_url %>');
-
-// enable i2c
-rpio.init({gpiomem: false});
-
-// use Broadcom GPIO pin naming
-rpio.init({mapping: 'gpio'});
-
-// create the channel JSON
-var channel_json = JSON.stringify({
-  channel: 'DevicesChannel',
-  id: device_id,
-  auth_token: auth_token
-});
-
-// when the websocket client connects to the server
-ws.on('open', function() {
-  // create the device subscription
-  var device_subscription = {
-    command: 'subscribe',
-    identifier: channel_json
-  };
-
-  // send the subscription command
-  ws.send(JSON.stringify(device_subscription));
-});
-
-// when the websocket receives a message
-ws.on('message', function(data, flags) {
-  // get the JSON data
-  var json_data = JSON.parse(data);
-
-  // if this is a ping command
-  if (json_data.type === 'ping') {
-
-    // log the ping message
-    //console.log('ping: ' + json_data.message);
-
-  // else if this is a subscription confirmation
-  } else if (json_data.type === 'confirm_subscription') {
-
-    console.log('subscribed to: ' + json_data.identifier);
-    // after subscription confirmation, send request for device information
-    requestDeviceInformation();
-
-  // else if this is a device message, handle it
-  } else if (json_data.identifier === channel_json) {
-
-    handleDeviceMessage(json_data.message);
-
-  // else log the full message
-  } else {
-
-    console.log('message received: ' + data);
-
-  }
-
-});
 
 // callback for the polled pin
 function poll_callback(pin_number) {
