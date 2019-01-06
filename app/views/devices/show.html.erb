@@ -147,7 +147,15 @@
 <% if @device.pins.present? %>
   <div class="row">
     <div class="col-xs-12 col-md-6">
-      <h3>Device Controls</h3>
+
+      <h3 class="pull-left">Device Controls</h3>
+      <div class="pull-left" style="margin-top: 23px; margin-left: 10px;">
+        <a href="/control/<%= @device.id %>" target="_blank">
+          <span class="glyphicon glyphicon-new-window" style="font-size: 14px; padding: 2px 0;"></span>
+        </a>
+      </div>
+
+      <div class="clearfix"></div>
 
       <br>
 
