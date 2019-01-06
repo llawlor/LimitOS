@@ -29,6 +29,9 @@ Rails.application.routes.draw do
   get '/register' => 'devices#register'
   post '/submit_registration' => 'devices#submit_registration', as: :submit_registration
 
+  # control a device
+  get '/control/:slug' => 'control#show'
+
   resources :devices do
     member do
       post :send_message

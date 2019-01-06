@@ -17,7 +17,9 @@
 #  control_template       :string(255)
 #
 
-# device_type can be 'raspberry_pi' or 'arduino'
+# device_type can be: 'raspberry_pi', 'arduino'
+
+# control_template can be: 'default', 'drive'
 class Device < ApplicationRecord
   has_secure_token :auth_token
 
