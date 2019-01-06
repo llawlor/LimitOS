@@ -62,21 +62,30 @@
   <% end %>
 
   <% if @device.device_type == 'raspberry_pi' %>
-  <div class="form-group">
-    <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
-      <label>
-        <%= f.check_box :video_enabled %>
-        Enable live video?
-        <a href="/docs/live_video" class="small" style="margin-left: 5px;">more info</a>
-      </label>
+    <div class="form-group">
+      <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
+        <label>
+          <%= f.check_box :video_enabled %>
+          Enable live video?
+          <a href="/docs/live_video" class="small" style="margin-left: 5px;">more info</a>
+        </label>
+      </div>
     </div>
-  </div>
 
     <div id="invert-video-div" class="form-group <%= 'hidden' if !@device.video_enabled? %>">
       <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
         <label>
           <%= f.check_box :invert_video %>
           Invert video?
+        </label>
+      </div>
+    </div>
+
+    <div id="control-template-div" class="form-group <%= 'hidden' if !@device.video_enabled? %>">
+      <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
+        <label>
+          <input type="checkbox" id="control_template_checkbox">
+          Enable driving interface?
         </label>
       </div>
     </div>
@@ -103,10 +112,14 @@
       if ($(this).is(':checked')) {
         // show the invert video option
         $('#invert-video-div').removeClass('hidden');
+        // show the control template option
+        $('#control-template-div').removeClass('hidden');
       // else the checkbox is not checked
       } else {
         // hide the invert video option
         $('#invert-video-div').addClass('hidden');
+        // hide the control template option
+        $('#control-template-div').addClass('hidden');
       }
     });
 
