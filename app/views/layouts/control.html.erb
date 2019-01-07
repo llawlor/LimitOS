@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%= render 'layouts/head' %>
+    <%= yield(:custom_head) %>
+  </head>
+
+  <body>
+
+    <div class="container-fluid" style="margin-bottom: 20px;">
+      <div style="min-height: 525px;">
+        <%= yield %>
+      </div>
+    </div>
+
+  </body>
+</html>

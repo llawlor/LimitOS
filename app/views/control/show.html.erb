@@ -1,1 +1,5 @@
-control page for: <%= @device.name %>
+<% if @device.control_template.blank? || @device.control_template == 'default' %>
+  <h1><%= @device.name %> controls</h1>
+  <br>
+  <%= render 'devices/controls' %>
+<% end %>

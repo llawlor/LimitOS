@@ -3,7 +3,7 @@ class ControlController < ApplicationController
 
   # show the controls page
   def show
-
+    render layout: 'control'
   end
 
 
