@@ -6,6 +6,10 @@ class ControlController < ApplicationController
     render layout: 'control'
   end
 
+  # edit the control page
+  def edit
+    render layout: 'control'
+  end
 
   private
 

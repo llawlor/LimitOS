@@ -32,6 +32,9 @@ Rails.application.routes.draw do
   # control a device
   get '/control/:slug' => 'control#show'
 
+  # edit the control page
+  get '/control/:slug/edit' => 'control#edit'
+
   resources :devices do
     member do
       post :send_message
