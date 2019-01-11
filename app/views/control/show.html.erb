@@ -12,19 +12,66 @@
     <tr>
       <td></td>
       <td>
-        <span class="glyphicon glyphicon-arrow-up control-button"></span>
+        <span id="drive-forward" class="glyphicon glyphicon-arrow-up control-button"></span>
       </td>
     </tr>
     <tr>
-      <td><span class="glyphicon glyphicon-arrow-left control-button"></span></td>
+      <td><span id="drive-left" class="glyphicon glyphicon-arrow-left control-button"></span></td>
       <td></td>
-      <td><span class="glyphicon glyphicon-arrow-right control-button"></span></td>
+      <td><span id="drive-right" class="glyphicon glyphicon-arrow-right control-button"></span></td>
     </tr>
     <tr>
       <td></td>
-      <td><span class="glyphicon glyphicon-arrow-down control-button"></span></td>
+      <td><span id="drive-reverse" class="glyphicon glyphicon-arrow-down control-button"></span></td>
       <td></td>
     </tr>
   </table>
 
 <% end %>
+
+<script>
+
+  // keep track of the start transmission time
+  var start_transmission_time = 0;
+
+  // when the document is ready
+  $(document).ready(function() {
+
+    // when the drive-forward button is clicked
+    $('#drive-forward').on('click', function() {
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'on' };
+      // send the message
+      App.messaging.send_message(message);
+    });
+
+
+    // create the subscription
+    App.messaging = App.cable.subscriptions.create(
+      {
+        channel: 'DevicesChannel',
+        id: <%= @master_device.id %>,
+        auth_token: '<%= @master_device.auth_token %>'
+      },
+      {
+
+        // when data is received
+        received: function(data) {
+
+        },
+
+        // function to send a message
+        send_message: function(message) {
+          // mark the start time
+          start_transmission_time = (new Date).getTime();
+
+          // perform the "receive" action in app/channels/devices_channel.rb
+          this.perform('receive', message);
+        }
+
+      }
+    );
+
+  });
+
+</script>

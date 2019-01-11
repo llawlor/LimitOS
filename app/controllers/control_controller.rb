@@ -3,6 +3,8 @@ class ControlController < ApplicationController
 
   # show the controls page
   def show
+    @master_device = @device.master_device
+
     render layout: 'control'
   end
 
