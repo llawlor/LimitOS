@@ -38,13 +38,104 @@
   $(document).ready(function() {
 
     // when the drive-forward button is clicked
-    $('#drive-forward').on('click', function() {
+    $('#drive-forward').on('mousedown', function() {
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'on' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'on' };
+      // send the message
+      App.messaging.send_message(message);
+    });
+
+    // when the drive-reverse button is clicked
+    $('#drive-reverse').on('mousedown', function() {
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'on' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'on' };
+      // send the message
+      App.messaging.send_message(message);
+    });
+
+    // when the drive-left button is clicked
+    $('#drive-left').on('mousedown', function() {
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
       // create the message
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'on' };
       // send the message
       App.messaging.send_message(message);
     });
 
+    // when the drive-right button is clicked
+    $('#drive-right').on('mousedown', function() {
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'on' };
+      // send the message
+      App.messaging.send_message(message);
+    });
+
+    // when the mouse is released
+    $('#drive-right, #drive-left, #drive-forward, #drive-reverse').on('mouseup', function() {
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+      // create the message
+      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
+      // send the message
+      App.messaging.send_message(message);
+    });
 
     // create the subscription
     App.messaging = App.cable.subscriptions.create(
