@@ -4,25 +4,37 @@
   <% end %>
 <% end %>
 
-<% if @device.video_enabled? %>
-  <div class="row">
-    <div class="col-xs-12">
-      <canvas id="video_canvas" class="hidden" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
+<% if @device.control_template.blank? || @device.control_template == 'default' %>
+
+  <div class="container-fluid" style="margin-bottom: 20px;">
+    <div style="min-height: 525px;">
+
+      <% if @device.video_enabled? %>
+        <div class="row">
+          <div class="col-xs-12" style="padding-top: 15px;">
+            <canvas id="video_canvas" class="hidden" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
+          </div>
+        </div>
+      <% end %>
+
+      <a href="/control/<%= @device.id %>/edit" class="pull-right" id="control-settings" style="font-size: 20px; width: 25px; height: 25px; padding: 0;">
+        <span class="glyphicon glyphicon-cog" style="padding: 0 0 0 3px;"></span>
+      </a>
+
+      <h1><%= @device.name %> controls</h1>
+      <br>
+      <%= render 'devices/controls' %>
+
     </div>
   </div>
-<% end %>
 
-<% if @device.control_template.blank? || @device.control_template == 'default' %>
-  <a href="/control/<%= @device.id %>/edit" class="pull-right" id="control-settings" style="font-size: 20px; width: 25px; height: 25px; padding: 0;">
-    <span class="glyphicon glyphicon-cog" style="padding: 0 0 0 3px;"></span>
-  </a>
-
-  <h1><%= @device.name %> controls</h1>
-  <br>
-  <%= render 'devices/controls' %>
 <% elsif @device.control_template == 'drive' %>
 
-  <table style="border-spacing: 5px; border-collapse: separate;">
+  <% if @device.video_enabled? %>
+    <canvas id="video_canvas" class="hidden pull-left" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
+  <% end %>
+
+  <table id="drive-controls" class="pull-left" style="border-spacing: 5px; border-collapse: separate;">
     <tr>
       <td></td>
       <td>

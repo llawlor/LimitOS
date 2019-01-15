@@ -84,6 +84,7 @@ pre                             { border-radius: 0; }
 .well                           { background-color: transparent; border-color: #00dde3; border-radius: 0; }
 
 /* custom CSS declarations */
+#drive-controls                 { padding-top: 100px; padding-left: 15px; }
 #particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
 #security_note                  { font-size: 12px; }
 
@@ -104,6 +105,7 @@ pre                             { border-radius: 0; }
 
 /* extra small screens */
 @media screen and (max-width: 767px) {
+  #drive-controls               { padding-top: 15px; }
   #video_canvas                 { width: 100%; }
 
   .header-right                 { float: none; margin-top: 20px; }
@@ -114,6 +116,12 @@ pre                             { border-radius: 0; }
   .navbar-default .navbar-toggle { margin-right: 0; }
   .navbar-left                  { padding-left: 0; padding-bottom: 20px; border-bottom: 1px solid rgba(0, 221, 227, 0.5); }
   .table-responsive             { border: 1px solid rgba(0, 221, 227, 0.5); }
+}
+
+/* extra small screens in landscape mode */
+@media screen and (max-width: 767px) and (orientation: landscape) {
+  #drive-controls               { padding-top: 100px; }
+  #video_canvas                 { width: 75%; }
 }
 
 /* larger screens */
