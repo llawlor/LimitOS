@@ -1,6 +1,18 @@
 class ControlController < ApplicationController
   before_action :get_device
 
+
+  # update the controls
+  def update
+    # if the device was updated successfully
+    if @device.update(device_params)
+      redirect_to "/control/#{@device.id}", notice: 'Device was successfully updated.'
+    # else the device was not updated
+    else
+      :edit
+    end
+  end
+
   # show the controls page
   def show
     @master_device = @device.master_device
@@ -14,6 +26,11 @@ class ControlController < ApplicationController
   end
 
   private
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def device_params
+    params.fetch(:device, {}).permit(:control_template, :public)
+  end
 
     # get the device for users that are logged in or out
     def get_device

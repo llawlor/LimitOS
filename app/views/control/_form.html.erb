@@ -1,4 +1,4 @@
-<%= form_for @device, :html => { :class => "form-horizontal device" } do |f| %>
+<%= form_for @device, url: "/control/#{ @device.id }/update", html: { class: "form-horizontal device" } do |f| %>
 
   <% if @parent_device.present? %>
     <%= hidden_field_tag :parent_device_id, @parent_device.id %>
@@ -20,14 +20,14 @@
   <% end %>
 
   <div class="form-group">
-    <label for="device_device_type" class="control-label col-lg-4">
+    <label for="device_control_template" class="control-label col-lg-4">
       Control template
     </label>
 
     <div class="col-lg-8">
-      <%= f.select :device_type, options_for_select(Device::CONTROL_TEMPLATES.map{ |x| [x.titleize, x] }, @device.device_type), { include_blank: false }, { class: 'form-control' } %>
+      <%= f.select :control_template, options_for_select(Device::CONTROL_TEMPLATES.map{ |x| [x.titleize, x] }, @device.control_template), { include_blank: false }, { class: 'form-control' } %>
     </div>
-    <%= f.error_span(:device_type) %>
+    <%= f.error_span(:control_template) %>
   </div>
 
   <div class="form-group">
