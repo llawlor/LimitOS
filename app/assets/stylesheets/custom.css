@@ -84,6 +84,7 @@ pre                             { border-radius: 0; }
 .well                           { background-color: transparent; border-color: #00dde3; border-radius: 0; }
 
 /* custom CSS declarations */
+#control-settings               { font-size: 20px; width: 25px; height: 25px; padding: 0; position: absolute; right: 0; z-index: 100; }
 #drive-controls                 { padding-top: 100px; padding-left: 15px; }
 #particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
 #security_note                  { font-size: 12px; }
