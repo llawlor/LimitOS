@@ -22,11 +22,10 @@
   <div class="form-group">
     <label for="device_device_type" class="control-label col-lg-4">
       Control template
-      <span class="glyphicon glyphicon-question-sign tooltip-trigger" aria-hidden="true" ata-toggle="tooltip" data-placement="top" title="If connecting an Arduino, please see the documentation for more info."></span>
     </label>
 
     <div class="col-lg-8">
-      <%= f.select :device_type, options_for_select(Device::DEVICE_TYPES.map{ |x| [x.titleize, x] }, @device.device_type), { include_blank: true }, { class: 'form-control' } %>
+      <%= f.select :device_type, options_for_select(Device::CONTROL_TEMPLATES.map{ |x| [x.titleize, x] }, @device.device_type), { include_blank: false }, { class: 'form-control' } %>
     </div>
     <%= f.error_span(:device_type) %>
   </div>
@@ -36,13 +35,12 @@
       <label>
         <%= f.check_box :public %>
         Allow public access?
-        <a href="/docs/live_video" class="small" style="margin-left: 5px;">more info</a>
       </label>
     </div>
   </div>
 
   <br><br>
-  
+
   <div class="form-group">
     <div class="col-lg-offset-4 col-lg-8">
       <%= f.submit nil, class: 'btn btn-primary', style: 'margin-right: 20px;' %>
@@ -51,25 +49,3 @@
   </div>
 
 <% end %>
-
-<script>
-  // when the document is ready
-  $(document).ready(function () {
-    // initialize tooltips
-    $('.tooltip-trigger').tooltip();
-
-    // when the 'video enabled' checkbox is changed
-    $('#device_video_enabled').on('change', function() {
-      // if the checkbox is checked
-      if ($(this).is(':checked')) {
-        // show the invert video option
-        $('#invert-video-div').removeClass('hidden');
-      // else the checkbox is not checked
-      } else {
-        // hide the invert video option
-        $('#invert-video-div').addClass('hidden');
-      }
-    });
-
-  });
-</script>

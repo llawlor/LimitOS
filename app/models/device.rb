@@ -19,8 +19,6 @@
 #
 
 # device_type can be: 'raspberry_pi', 'arduino'
-
-# control_template can be: 'default', 'drive'
 class Device < ApplicationRecord
   has_secure_token :auth_token
 
@@ -40,6 +38,9 @@ class Device < ApplicationRecord
 
   # options for device type
   DEVICE_TYPES = ['raspberry_pi', 'arduino']
+
+  # options for the control template
+  CONTROL_TEMPLATES = ['default', 'drive']
 
   # name that is displayed for a device
   def display_name
