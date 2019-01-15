@@ -1,0 +1,22 @@
+<% if @device.video_enabled? %>
+  <canvas id="video_canvas" class="hidden pull-left" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
+<% end %>
+
+<table id="drive-controls" class="pull-left" style="border-spacing: 5px; border-collapse: separate;">
+  <tr>
+    <td></td>
+    <td>
+      <span id="drive-forward" class="glyphicon glyphicon-arrow-up control-button"></span>
+    </td>
+  </tr>
+  <tr>
+    <td><span id="drive-left" class="glyphicon glyphicon-arrow-left control-button"></span></td>
+    <td></td>
+    <td><span id="drive-right" class="glyphicon glyphicon-arrow-right control-button"></span></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><span id="drive-reverse" class="glyphicon glyphicon-arrow-down control-button"></span></td>
+    <td></td>
+  </tr>
+</table>
