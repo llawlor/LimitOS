@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190106031828) do
+ActiveRecord::Schema.define(version: 20190115035406) do
 
   create_table "devices", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20190106031828) do
     t.boolean "invert_video", default: false
     t.boolean "video_enabled", default: false
     t.string "control_template"
+    t.boolean "public", default: false
     t.index ["auth_token"], name: "index_devices_on_auth_token", unique: true
     t.index ["broadcast_to_device_id"], name: "index_devices_on_broadcast_to_device_id"
     t.index ["device_id"], name: "index_devices_on_device_id"
