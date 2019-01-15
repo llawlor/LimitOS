@@ -1,3 +1,17 @@
+<% if @device.video_enabled? %>
+  <% content_for :custom_head do %>
+    <%= javascript_include_tag 'jsmpeg.min' %>
+  <% end %>
+<% end %>
+
+<% if @device.video_enabled? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <canvas id="video_canvas" class="hidden" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
+    </div>
+  </div>
+<% end %>
+
 <% if @device.control_template.blank? || @device.control_template == 'default' %>
   <a href="/control/<%= @device.id %>/edit" class="pull-right" id="control-settings" style="font-size: 20px; width: 25px; height: 25px; padding: 0;">
     <span class="glyphicon glyphicon-cog" style="padding: 0 0 0 3px;"></span>
@@ -33,12 +47,28 @@
 
   // keep track of the start transmission time
   var start_transmission_time = 0;
+  // keep track of the video player
+  var video_player = null;
+  // keep track of the video timeout
+  var video_timeout = null;
+  // keep track of whether the video is currently playing
+  var video_active = false;
+  // keep track of the stop motors timeout
+  var stop_motors_timeout = null;
 
   // when the document is ready
   $(document).ready(function() {
 
+    // when user activity is detected
+    $('body').on('mousemove mousedown touchstart touchmove', function() {
+      // only detect activity if video has been played
+      if (video_active === true) { activityDetected(); }
+    });
+
     // when the drive-forward button is clicked
     $('#drive-forward').on('mousedown touchstart', function() {
+      // clear the current timeout
+      clearTimeout(stop_motors_timeout);
       // create the message
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
       // send the message
@@ -59,6 +89,8 @@
 
     // when the drive-reverse button is clicked
     $('#drive-reverse').on('mousedown touchstart', function() {
+      // clear the current timeout
+      clearTimeout(stop_motors_timeout);
       // create the message
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
       // send the message
@@ -79,6 +111,8 @@
 
     // when the drive-left button is clicked
     $('#drive-left').on('mousedown touchstart', function() {
+      // clear the current timeout
+      clearTimeout(stop_motors_timeout);
       // create the message
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
       // send the message
@@ -99,6 +133,8 @@
 
     // when the drive-right button is clicked
     $('#drive-right').on('mousedown touchstart', function() {
+      // clear the current timeout
+      clearTimeout(stop_motors_timeout);
       // create the message
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
       // send the message
@@ -119,6 +155,17 @@
 
     // when the mouse is released
     $('#drive-right, #drive-left, #drive-forward, #drive-reverse').on('mouseup touchend', function() {
+      // stop all motors
+      stopMotors();
+
+      // add a 50ms timeout to stop all motors
+      stopMotorsTimeout = setTimeout(function() {
+        stopMotors();
+      }, 50);
+    });
+
+    // stop all motors
+    function stopMotors() {
       // create the message
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
       // send the message
@@ -135,7 +182,7 @@
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
       // send the message
       App.messaging.send_message(message);
-    });
+    }
 
     // create the subscription
     App.messaging = App.cable.subscriptions.create(
@@ -163,6 +210,56 @@
       }
     );
 
+    // start video on page load, with a slight delay to make sure everything has loaded
+    setTimeout(function() {
+      startVideo();
+    }, 1000);
+
   });
 
+  // new user activity is detected
+  function activityDetected() {
+    // clear the current timeout
+    clearTimeout(video_timeout);
+
+    // set new timeout for 10 minutes
+    video_timeout = setTimeout(function() {
+      // stop video
+      stopVideo();
+    }, 600000);
+  }
+
+  // start the video
+  function startVideo() {
+    // mark the video as started
+    video_active = true;
+    // hide the button
+    $('#video_start').addClass('hidden');
+    // show the canvas
+    $('#video_canvas').removeClass('hidden');
+    // create the message
+    var message = { command: 'start_video' };
+    // send the message to start the video
+    App.messaging.send_message(message);
+    // set the video url
+    var video_server_url = '<%= @device.video_to_clients_url %>';
+    // load the video
+    video_player = new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
+    // show the stop button
+    $('#video_stop').removeClass('hidden');
+  }
+
+  // stop the video
+  function stopVideo() {
+    // mark the video as stopped
+    video_active = false;
+    // hide the button
+    $('#video_stop').addClass('hidden');
+    // hide the canvas
+    $('#video_canvas').addClass('hidden');
+    // disconnect the video
+    video_player.destroy();
+    // show the start button
+    $('#video_start').removeClass('hidden');
+  }
 </script>
