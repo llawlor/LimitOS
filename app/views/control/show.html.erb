@@ -4,9 +4,11 @@
   <% end %>
 <% end %>
 
-<a href="/control/<%= @device.id %>/edit" id="control-settings">
-  <span class="glyphicon glyphicon-cog" style="padding: 0 0 0 3px;"></span>
-</a>
+<% if @owner == true %>
+  <a href="/control/<%= @device.id %>/edit" id="control-settings">
+    <span class="glyphicon glyphicon-cog" style="padding: 0 0 0 3px;"></span>
+  </a>
+<% end %>
 
 <% if @device.control_template.blank? || @device.control_template == 'default' %>
 
