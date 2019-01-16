@@ -88,6 +88,7 @@ pre                             { border-radius: 0; }
 #drive-controls                 { padding-top: 100px; padding-left: 15px; }
 #particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
 #security_note                  { font-size: 12px; }
+#video_canvas                   { width: 640px; height: 480px; }
 
 .control-button                 { cursor: pointer; border: 1px solid #00dde3; padding: 10px; }
 .header-right                   { float: right; }
@@ -107,7 +108,7 @@ pre                             { border-radius: 0; }
 /* extra small screens */
 @media screen and (max-width: 767px) {
   #drive-controls               { padding-top: 15px; }
-  #video_canvas                 { width: 100%; }
+  #video_canvas                 { width: 100%; height: initial; }
 
   .header-right                 { float: none; margin-top: 20px; }
   .limitos-command              { display: inherit; }
@@ -122,7 +123,7 @@ pre                             { border-radius: 0; }
 /* extra small screens in landscape mode */
 @media screen and (max-width: 767px) and (orientation: landscape) {
   #drive-controls               { padding-top: 100px; }
-  #video_canvas                 { width: 75%; }
+  #video_canvas                 { width: 75%; height: initial; }
 }
 
 /* larger screens */
