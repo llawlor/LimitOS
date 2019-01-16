@@ -82,15 +82,21 @@ class Device < ApplicationRecord
   # full url for video coming from devices
   # in the future, this method can return dynamic values based on additional servers
   def video_from_devices_url
+    # set the unique id to the auth_token, or to the id if the device is public
+    unique_id = self.public? ? self.id : self.auth_token
+
     # return the full url
-    return "#{ Rails.application.config_for(:limitos)['video_from_devices_host'] }/video_from_devices/#{self.auth_token}"
+    return "#{ Rails.application.config_for(:limitos)['video_from_devices_host'] }/video_from_devices/#{ unique_id }"
   end
 
   # full url for video going to clients
   # in the future, this method can return dynamic values based on additional servers
   def video_to_clients_url
+    # set the unique id to the auth_token, or to the id if the device is public
+    unique_id = self.public? ? self.id : self.auth_token
+
     # return the full url
-    return "#{ Rails.application.config_for(:limitos)['video_to_clients_host'] }/video_to_clients/#{self.auth_token}"
+    return "#{ Rails.application.config_for(:limitos)['video_to_clients_host'] }/video_to_clients/#{ unique_id }"
   end
 
   # digital pins
