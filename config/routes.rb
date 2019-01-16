@@ -31,6 +31,7 @@ Rails.application.routes.draw do
 
   # control a device
   get '/control/:slug' => 'control#show'
+  get '/drive/:slug' => 'control#show'
 
   # edit the control page
   get '/control/:slug/edit' => 'control#edit'

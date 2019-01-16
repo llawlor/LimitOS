@@ -6,7 +6,7 @@ class ControlController < ApplicationController
   def update
     # if the device was updated successfully
     if @device.update(device_params)
-      redirect_to "/control/#{@device.id}", notice: 'Device was successfully updated.'
+      redirect_to @device.control_path, notice: 'Controls were successfully updated.'
     # else the device was not updated
     else
       :edit

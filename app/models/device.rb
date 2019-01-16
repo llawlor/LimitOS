@@ -42,6 +42,17 @@ class Device < ApplicationRecord
   # options for the control template
   CONTROL_TEMPLATES = ['default', 'drive']
 
+  # path to the control page
+  def control_path
+    # if this is a drive template
+    if control_template == 'drive'
+      return "/drive/#{ self.id }"
+    # else default control page
+    else
+      return "/control/#{ self.id }"
+    end
+  end
+
   # name that is displayed for a device
   def display_name
     self.name.present? ? self.name : "Device ##{self.id}"
