@@ -229,6 +229,9 @@ class Device < ApplicationRecord
     # change the i2c_address to the target_device's i2c_address
     message["i2c_address"] = target_device.i2c_address if target_device.i2c_address.present?
 
+    # remove the i2c_address if it's blank
+    message.delete("i2c_address") if message["i2c_address"].blank?
+
     # if this is a start video command
     if message['command'].present? && message['command'] == 'start_video'
       # add the video url
