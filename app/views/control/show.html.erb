@@ -166,7 +166,7 @@
       {
         channel: 'DevicesChannel',
         id: <%= @master_device.id %>,
-        auth_token: '<%= @master_device.auth_token %>'
+        auth_token: '<%= @master_device.private? ? @master_device.auth_token : nil %>'
       },
       {
 

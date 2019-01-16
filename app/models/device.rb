@@ -42,6 +42,11 @@ class Device < ApplicationRecord
   # options for the control template
   CONTROL_TEMPLATES = ['default', 'drive']
 
+  # add method to determine if a device is private
+  def private?
+    !self.public?
+  end
+
   # path to the control page
   def control_path
     # if this is a drive template
@@ -83,7 +88,7 @@ class Device < ApplicationRecord
   # in the future, this method can return dynamic values based on additional servers
   def video_from_devices_url
     # set the unique id to the auth_token, or to the id if the device is public
-    unique_id = self.public? ? self.id : self.auth_token
+    unique_id = self.private? ? self.auth_token : self.id
 
     # return the full url
     return "#{ Rails.application.config_for(:limitos)['video_from_devices_host'] }/video_from_devices/#{ unique_id }"
@@ -93,7 +98,7 @@ class Device < ApplicationRecord
   # in the future, this method can return dynamic values based on additional servers
   def video_to_clients_url
     # set the unique id to the auth_token, or to the id if the device is public
-    unique_id = self.public? ? self.id : self.auth_token
+    unique_id = self.private? ? self.auth_token : self.id
 
     # return the full url
     return "#{ Rails.application.config_for(:limitos)['video_to_clients_host'] }/video_to_clients/#{ unique_id }"
