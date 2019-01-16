@@ -187,10 +187,12 @@
       }
     );
 
-    // start video on page load, with a slight delay to make sure everything has loaded
-    setTimeout(function() {
-      startVideo();
-    }, 1000);
+    <% if @device.video_enabled? %>
+      // start video on page load, with a slight delay to make sure everything has loaded
+      setTimeout(function() {
+        startVideo();
+      }, 1000);
+    <% end %>
 
   });
 
