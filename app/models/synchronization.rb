@@ -12,4 +12,5 @@
 
 class Synchronization < ApplicationRecord
   has_many :synchronized_pins
+  has_many :pins, through: :synchronized_pins
 end
