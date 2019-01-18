@@ -1,32 +1,6 @@
 <h4>Synchronizations</h4>
 <% @device.synchronizations.order("id asc").each do |synchronization| %>
   <div class="well">
-    <button class='synchronization_button' data-messages='<%= synchronization.messages %>'><%= synchronization.name %></button>
+    <button class="btn btn-primary btn-sm execute-synchronization" data-id="<%= synchronization.id %>"><%= synchronization.name %></button>
   </div>
 <% end %>
-
-<script>
-
-  // when the document is ready
-  $(document).ready(function() {
-
-    // when a synchronization button is clicked
-    $('.synchronization_button').click(function() {
-      // get the messages
-      var messages = $(this).data('messages');
-      // send the messages
-      sendSynchronization(messages);
-    });
-
-  });
-
-  // handle a synchronization
-  function sendSynchronization(messages) {
-    // for each message
-    for (var i = 0; i < messages.length; i++) {
-      // send the message
-      sendServoMessage(messages[i])
-    }
-  }
-
-</script>
