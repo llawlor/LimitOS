@@ -29,6 +29,7 @@ class Device < ApplicationRecord
   has_many :pins, dependent: :destroy
   has_many :synchronizations, dependent: :destroy
   has_many :registrations, dependent: :destroy
+  has_many :synchronized_pins, dependent: :destroy
 
   after_save :broadcast_device_information
   after_destroy :broadcast_device_information
@@ -204,6 +205,31 @@ class Device < ApplicationRecord
 
     # return the message
     return message
+  end
+
+  # execute a synchronization
+  def execute_synchronization(synchronization_id)
+    # get the synchronization
+    synchronization = self.synchronizations.find(synchronization_id)
+
+    # for each synchronized pin
+    synchronization.synchronized_pins.each do |synchronized_pin|
+      # construct the message
+      message = { "pin": synchronized_pin.pin_id }
+
+      # if this is a digital pin
+      if self.digital_pins.include?(synchronized_pin.pin)
+        # add to the message
+        message.merge!({ "digital": synchronized_pin.value })
+      # else this is an analog pin
+      else
+        # add to the message
+        message.merge!({ "servo": synchronized_pin.value })
+      end
+
+      # broadcast the message
+      self.broadcast_message(message)
+    end
   end
 
   # broadcasts a message

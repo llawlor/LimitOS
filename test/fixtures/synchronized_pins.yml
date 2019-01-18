@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: synchronized_pins
+#
+#  id                 :integer          not null, primary key
+#  pin_id             :integer
+#  synchronization_id :integer
+#  device_id          :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  value              :string(255)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  pin_id: 1
+  synchronization_id: 1
+  device_id: 1
+
+two:
+  pin_id: 1
+  synchronization_id: 1
+  device_id: 1
