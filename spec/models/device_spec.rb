@@ -15,6 +15,7 @@
 #  invert_video           :boolean          default(FALSE)
 #  video_enabled          :boolean          default(FALSE)
 #  control_template       :string(255)
+#  public                 :boolean          default(FALSE)
 #
 
 require 'rails_helper'

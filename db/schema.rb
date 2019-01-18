@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190106031828) do
+ActiveRecord::Schema.define(version: 20190118034414) do
 
   create_table "devices", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "user_id"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20190106031828) do
     t.boolean "invert_video", default: false
     t.boolean "video_enabled", default: false
     t.string "control_template"
+    t.boolean "public", default: false
     t.index ["auth_token"], name: "index_devices_on_auth_token", unique: true
     t.index ["broadcast_to_device_id"], name: "index_devices_on_broadcast_to_device_id"
     t.index ["device_id"], name: "index_devices_on_device_id"
@@ -59,10 +60,21 @@ ActiveRecord::Schema.define(version: 20190106031828) do
   create_table "synchronizations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
     t.integer "device_id"
-    t.text "messages"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["device_id"], name: "index_synchronizations_on_device_id"
+  end
+
+  create_table "synchronized_pins", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "pin_id"
+    t.integer "synchronization_id"
+    t.integer "device_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "value"
+    t.index ["device_id"], name: "index_synchronized_pins_on_device_id"
+    t.index ["pin_id"], name: "index_synchronized_pins_on_pin_id"
+    t.index ["synchronization_id"], name: "index_synchronized_pins_on_synchronization_id"
   end
 
   create_table "users", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

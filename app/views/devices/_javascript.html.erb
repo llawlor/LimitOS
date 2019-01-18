@@ -61,6 +61,14 @@
       App.messaging.send_message(message);
     });
 
+    // when an 'execute synchronization' button is clicked
+    $('.execute-synchronization').on('click', function() {
+      // create the message
+      var message = { synchronization_id: $(this).data('id') };
+      // send the message
+      App.messaging.send_message(message);
+    });
+
     // when the start video button is clicked
     $('#video_start').on('click', function() {
       // start the video

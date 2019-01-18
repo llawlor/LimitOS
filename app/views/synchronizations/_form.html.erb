@@ -26,11 +26,14 @@
   </div>
 
   <div class="form-group">
-    <%= f.label :messages, :class => 'control-label col-lg-2' %>
+    <%= f.label 'Synchronized Pins', :class => 'control-label col-lg-2' %>
     <div class="col-lg-10">
-      <%= f.text_area :messages, placeholder: '[{ "i2c_address": "0x04", "pin": 3, "servo": 0 }]', class: 'form-control', size: '30x6' %>
+      <% @device.pins.each do |pin| %>
+        <%= check_box_tag pin.name.parameterize, '1', false %>
+        <%= pin.name %>
+        <br>
+      <% end %>
     </div>
-    <%=f.error_span(:messages) %>
   </div>
 
   <div class="form-group">
