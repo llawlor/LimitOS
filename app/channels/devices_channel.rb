@@ -44,7 +44,15 @@ class DevicesChannel < ApplicationCable::Channel
     # return false if auth_token doesn't match
     return false if !Devise.secure_compare(device.auth_token, params[:auth_token])
 
-    # broadcast to the device
-    device.broadcast_message(input_data)
+    # if there is a synchronization present
+    if input_data["synchronization_id"].present?
+      # execute the synchronization
+      device.execute_synchronization(input_data["synchronization_id"].to_i)
+    # else no synchronization present
+    else
+      # broadcast to the device
+      device.broadcast_message(input_data)
+    end
+
   end
 end

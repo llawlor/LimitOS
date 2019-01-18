@@ -184,6 +184,30 @@ class Device < ApplicationRecord
     return message
   end
 
+  # execute a synchronization
+  def execute_synchronization(synchronization_id)
+    # get the synchronization
+    synchronization = self.synchronizations.find(synchronization_id)
+
+    # for each synchronized pin
+    synchronization.synchronized_pins.each do |synchronized_pin|
+      message = { "pin": synchronized_pin.pin_id }
+
+      # if this is a digital pin
+      if synchronized_pin.pin.pin_type == 'digital'
+        # add the message
+        message.merge!({ "digital": synchronized_pin.value })
+      # else this is a servo
+      else
+        # add the message
+        message.merge!({ "servo": synchronized_pin.value })
+      end
+
+      # broadcast the message
+      self.broadcast_message(message)
+    end
+  end
+
   # broadcasts a message
   def broadcast_message(message)
     # exit if the data is malformed (pin is not a number)
