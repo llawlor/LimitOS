@@ -191,15 +191,16 @@ class Device < ApplicationRecord
 
     # for each synchronized pin
     synchronization.synchronized_pins.each do |synchronized_pin|
+      # construct the message
       message = { "pin": synchronized_pin.pin_id }
 
       # if this is a digital pin
-      if synchronized_pin.pin.pin_type == 'digital'
-        # add the message
+      if self.digital_pins.include?(synchronized_pin.pin)
+        # add to the message
         message.merge!({ "digital": synchronized_pin.value })
-      # else this is a servo
+      # else this is an analog pin
       else
-        # add the message
+        # add to the message
         message.merge!({ "servo": synchronized_pin.value })
       end
 
