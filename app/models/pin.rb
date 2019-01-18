@@ -17,6 +17,7 @@
 
 class Pin < ApplicationRecord
   belongs_to :device
+  has_many :synchronized_pins
 
   validates_presence_of :device_id
 

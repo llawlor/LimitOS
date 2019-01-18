@@ -11,4 +11,7 @@
 #
 
 class SynchronizedPin < ApplicationRecord
+  belongs_to :synchronization
+  belongs_to :pin
+  belongs_to :device
 end

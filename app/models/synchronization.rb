@@ -11,4 +11,5 @@
 #
 
 class Synchronization < ApplicationRecord
+  has_many :synchronized_pins
 end

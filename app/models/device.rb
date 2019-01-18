@@ -31,6 +31,7 @@ class Device < ApplicationRecord
   has_many :pins, dependent: :destroy
   has_many :synchronizations, dependent: :destroy
   has_many :registrations, dependent: :destroy
+  has_many :synchronized_pins, dependent: :destroy
 
   after_save :broadcast_device_information
   after_destroy :broadcast_device_information
