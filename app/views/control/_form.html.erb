@@ -72,3 +72,25 @@
   </div>
 
 <% end %>
+
+<script>
+
+  // when the document is ready
+  $(document).ready(function() {
+
+    // for each drive control synchronization
+    <% @device.synchronizations.where(name: Device::DRIVE_CONTROL_TYPES).each do |synchronization| %>
+
+      // for each pin
+      <% synchronization.pins.each do |pin| %>
+
+        // select the appropriate checkbox
+        $('#control_<%= "#{synchronization.name}_pin_#{pin.id}" %>').prop('checked', true);
+        
+      <% end %>
+
+    <% end %>
+
+  });
+
+</script>
