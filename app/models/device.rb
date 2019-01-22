@@ -18,7 +18,6 @@
 #  public                 :boolean          default(FALSE)
 #
 
-# device_type can be: 'raspberry_pi', 'arduino'
 class Device < ApplicationRecord
   has_secure_token :auth_token
 
@@ -42,6 +41,9 @@ class Device < ApplicationRecord
 
   # options for the control template
   CONTROL_TEMPLATES = ['default', 'drive']
+
+  # options for the "drive" control type
+  DRIVE_CONTROL_TYPES = ['forward', 'backward', 'left', 'right']
 
   # add method to determine if a device is private
   def private?
