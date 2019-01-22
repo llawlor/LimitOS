@@ -39,6 +39,29 @@
     </div>
   </div>
 
+  <div class="form-group">
+    <label class="control-label col-lg-4">
+      Button mappings
+    </label>
+
+    <div class="col-lg-8">
+      <table class="table table-striped table-condensed table-responsive">
+        <% Device::DRIVE_CONTROL_TYPES.each do |control_type| %>
+          <tr>
+            <td><b><%= control_type.titleize %></b></td>
+            <td>
+              <% @device.pins.each do |pin| %>
+                <input type="checkbox" value="1" name="control_<%= "#{control_type}_pin_#{pin.id}" %>" id="control_<%= "#{control_type}_pin_#{pin.id}" %>">
+                <label for="control_<%= "#{control_type}_pin_#{pin.id}" %>"><%= pin.name %></label>
+                <br>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <table>
+    </div>
+  </div>
+
   <br><br>
 
   <div class="form-group">
