@@ -83,8 +83,33 @@ class Device < ApplicationRecord
 
   # set the "drive" control template synchronizations
   def set_drive_synchronizations(synchronization_params)
-    puts "##################"
-    puts synchronization_params
+    # for each synchronization
+    synchronization_params.each do |name, pin_mappings|
+
+      # get the synchronization (or create it)
+      synchronization = self.synchronizations.where(name: name).first_or_create
+
+      # for each pin mapping
+      pin_mappings.each do |pin_key, status|
+        # get the pin id
+        pin_id = pin_key.split('_')[1]
+
+        # get the synchronized pin
+        synchronized_pin = synchronization.synchronized_pins.find_by(device_id: self.id, pin_id: pin_id, value: 'on')
+
+        # if the pin should be on
+        if status == '1'
+          # add the pin if it doesn't exist
+          synchronization.synchronized_pins.create(device_id: self.id, pin_id: pin_id, value: 'on') if synchronized_pin.blank?
+        # else the pin should be off
+        else
+          # remove the pin if it exists
+          synchronized_pin.destroy if synchronized_pin.present?
+        end
+        
+      end
+
+    end
   end
 
   # get version of node.js install script
