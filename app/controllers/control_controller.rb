@@ -6,6 +6,11 @@ class ControlController < ApplicationController
   def update
     # if the device was updated successfully
     if @device.update(device_params)
+
+      # set synchronizations from parameters if this is a drive template
+      @device.set_drive_synchronizations(params[:synchronizations]) if @device.control_template == 'drive'
+
+      # redirect with a notice
       redirect_to @device.control_path, notice: 'Controls were successfully updated.'
     # else the device was not updated
     else

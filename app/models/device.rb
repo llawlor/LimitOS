@@ -81,6 +81,12 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
+  # set the "drive" control template synchronizations
+  def set_drive_synchronizations(synchronization_params)
+    puts "##################"
+    puts synchronization_params
+  end
+
   # get version of node.js install script
   def self.install_script_version
     # return the version, stored in config/limitos.yml
