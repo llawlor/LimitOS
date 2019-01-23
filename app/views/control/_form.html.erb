@@ -51,8 +51,8 @@
             <td><b><%= control_type.titleize %></b></td>
             <td>
               <% @device.pins.each do |pin| %>
-                <input type="checkbox" value="1" name="control_<%= "#{control_type}_pin_#{pin.id}" %>" id="control_<%= "#{control_type}_pin_#{pin.id}" %>">
-                <label for="control_<%= "#{control_type}_pin_#{pin.id}" %>"><%= pin.name %></label>
+                <%= check_box "control_#{control_type}_pin_#{pin.id}", 'status', {} %>
+                <label for="control_<%= "#{control_type}_pin_#{pin.id}[1]" %>"><%= pin.name %></label>
                 <br>
               <% end %>
             </td>
@@ -85,8 +85,8 @@
       <% synchronization.pins.each do |pin| %>
 
         // select the appropriate checkbox
-        $('#control_<%= "#{synchronization.name}_pin_#{pin.id}" %>').prop('checked', true);
-        
+        $('#control_<%= "#{synchronization.name}_pin_#{pin.id}" %>_status').prop('checked', true);
+
       <% end %>
 
     <% end %>
