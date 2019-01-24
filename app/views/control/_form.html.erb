@@ -1,9 +1,5 @@
 <%= form_for @device, url: "/control/#{ @device.id }/update", html: { class: "form-horizontal device" } do |f| %>
 
-  <% if @parent_device.present? %>
-    <%= hidden_field_tag :parent_device_id, @parent_device.id %>
-  <% end %>
-
   <% if @device.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
