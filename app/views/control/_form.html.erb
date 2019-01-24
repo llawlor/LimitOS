@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <div class="form-group">
+  <div id="button_mappings_div" class="form-group hidden">
     <label class="control-label col-lg-4">
       Button mappings
     </label>
@@ -54,7 +54,7 @@
             </td>
           </tr>
         <% end %>
-      <table>
+      </table>
     </div>
   </div>
 
@@ -74,6 +74,15 @@
   // when the document is ready
   $(document).ready(function() {
 
+    // set the initial button mappings visibility on page load
+    setButtonMappingsVisibility();
+
+    // when the control template is changed
+    $('#device_control_template').on('change', function() {
+      // set the button mappings visibility
+      setButtonMappingsVisibility();
+    });
+
     // for each drive control synchronization
     <% @device.synchronizations.where(name: Device::DRIVE_CONTROL_TYPES).each do |synchronization| %>
 
@@ -88,5 +97,21 @@
     <% end %>
 
   });
+
+  // set button mappings visibility
+  function setButtonMappingsVisibility() {
+    // get the control template value
+    var control_template = $('#device_control_template').val();
+
+    // if the control template is drive
+    if (control_template === 'drive') {
+      // show the button mappings
+      $('#button_mappings_div').removeClass('hidden');
+    // else another template
+    } else {
+      // hide the button mappings
+      $('#button_mappings_div').addClass('hidden');
+    }
+  }
 
 </script>
