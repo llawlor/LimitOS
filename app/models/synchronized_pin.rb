@@ -15,4 +15,21 @@ class SynchronizedPin < ApplicationRecord
   belongs_to :synchronization
   belongs_to :pin
   belongs_to :device
+
+  # get the opposite value for a pin
+  def opposite_value
+    # if the value is 'on'
+    if value == 'on'
+      return 'off'
+    # else if the value is 'off'
+    elsif value == 'off'
+      return 'on'
+    # else if the value is a number greater than 0
+    elsif values.to_i > 0
+      return '0'
+    # return nothing by default
+    else
+      return nil
+    end
+  end
 end
