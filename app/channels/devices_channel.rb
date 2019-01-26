@@ -47,7 +47,7 @@ class DevicesChannel < ApplicationCable::Channel
     # if there is a synchronization present
     if input_data["synchronization_id"].present?
       # execute the synchronization
-      device.execute_synchronization(input_data["synchronization_id"].to_i)
+      device.execute_synchronization(input_data["synchronization_id"].to_i, input_data["opposite"] == 'true')
     # else no synchronization present
     else
       # broadcast to the device

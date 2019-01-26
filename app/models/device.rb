@@ -241,7 +241,7 @@ class Device < ApplicationRecord
   end
 
   # execute a synchronization
-  def execute_synchronization(synchronization_id)
+  def execute_synchronization(synchronization_id, opposite = false)
     # get the synchronization
     synchronization = self.synchronizations.find(synchronization_id)
 
@@ -250,39 +250,17 @@ class Device < ApplicationRecord
       # construct the message
       message = { "pin": synchronized_pin.pin.pin_number }
 
-      # if this is a digital pin
-      if self.digital_pins.include?(synchronized_pin.pin)
-        # add to the message
-        message.merge!({ "digital": synchronized_pin.value })
-      # else this is an analog pin
-      else
-        # add to the message
-        message.merge!({ "servo": synchronized_pin.value })
-      end
-
-      # broadcast the message
-      self.broadcast_message(message)
-    end
-  end
-
-  # execute the opposite synchronization
-  def execute_opposite_synchronization(synchronization_id)
-    # get the synchronization
-    synchronization = self.synchronizations.find(synchronization_id)
-
-    # for each synchronized pin
-    synchronization.synchronized_pins.each do |synchronized_pin|
-      # construct the message
-      message = { "pin": synchronized_pin.pin_id }
+      # get the pin value based on whether we're getting the opposite value
+      pin_value = (opposite == true) ? synchronized_pin.opposite_value : synchronized_pin.value
 
       # if this is a digital pin
       if self.digital_pins.include?(synchronized_pin.pin)
         # add to the message
-        message.merge!({ "digital": synchronized_pin.opposite_value })
+        message.merge!({ "digital": pin_value })
       # else this is an analog pin
       else
         # add to the message
-        message.merge!({ "servo": synchronized_pin.opposite_value })
+        message.merge!({ "servo": pin_value })
       end
 
       # broadcast the message

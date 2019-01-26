@@ -50,6 +50,24 @@
       App.messaging.send_message(message);
     });
 
+    // when the drive-forward button is released
+    $('#drive-forward').on('mouseup touchend', function() {
+      console.log('forward opposite');
+      // stop all motors
+      // create the message
+      var message = { synchronization_id: <%= @device.synchronizations.find_by(name: 'forward').try(:id) %>, opposite: 'true' };
+      // send the message
+      App.messaging.send_message(message);
+
+      // add a 50ms timeout to stop all motors
+      stopMotorsTimeout = setTimeout(function() {
+        // create the message
+        var message = { synchronization_id: <%= @device.synchronizations.find_by(name: 'forward').try(:id) %>, opposite: 'true' };
+        // send the message
+        App.messaging.send_message(message);
+      }, 50);
+    });
+
     // when the drive-reverse button is clicked
     $('#drive-reverse').on('mousedown touchstart', function() {
       // clear the current timeout
