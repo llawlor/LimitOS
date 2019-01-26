@@ -58,120 +58,28 @@
       App.messaging.send_message(message);
     }
 
-    // when the drive-forward button is clicked
-    $('#drive-forward').on('mousedown touchstart', function() {
-      // send the synchronization
-      sendSynchronization('<%= @device.synchronizations.find_by(name: 'forward').try(:id) %>');
-    });
+    // for each control type ('forward', 'backward', 'left', 'right')
+    <% Device::DRIVE_CONTROL_TYPES.each do |device_control_type| %>
 
-    // when the drive-forward button is released
-    $('#drive-forward').on('mouseup touchend', function() {
-      // send the opposite synchronization
-      sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: 'forward').try(:id) %>');
+      // when the control button is clicked
+      $('#drive-<%= device_control_type %>').on('mousedown touchstart', function() {
+        // send the synchronization
+        sendSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
+      });
 
-      // add a 50ms timeout to stop all motors
-      stopMotorsTimeout = setTimeout(function() {
+      // when the control button is released
+      $('#drive-<%= device_control_type %>').on('mouseup touchend', function() {
         // send the opposite synchronization
-        sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: 'forward').try(:id) %>');
-      }, 50);
-    });
+        sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
 
-    // when the drive-reverse button is clicked
-    $('#drive-reverse').on('mousedown touchstart', function() {
-      // clear the current timeout
-      clearTimeout(stop_motors_timeout);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-    });
-
-    // when the drive-left button is clicked
-    $('#drive-left').on('mousedown touchstart', function() {
-      // clear the current timeout
-      clearTimeout(stop_motors_timeout);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-    });
-
-    // when the drive-right button is clicked
-    $('#drive-right').on('mousedown touchstart', function() {
-      // clear the current timeout
-      clearTimeout(stop_motors_timeout);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-    });
-
-    // when the mouse is released
-    $('#drive-right, #drive-left, #drive-forward, #drive-reverse').on('mouseup touchend', function() {
-      // stop all motors
-  //    stopMotors();
-
-      // add a 50ms timeout to stop all motors
-      stopMotorsTimeout = setTimeout(function() {
-    //    stopMotors();
-      }, 50);
-    });
-
-    // stop all motors
-    function stopMotors() {
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-    }
+        // add a 50ms timeout to stop the synchronization
+        stopMotorsTimeout = setTimeout(function() {
+          // send the opposite synchronization
+          sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
+        }, 50);
+      });
+      
+    <% end %>
 
     // create the subscription
     App.messaging = App.cable.subscriptions.create(
