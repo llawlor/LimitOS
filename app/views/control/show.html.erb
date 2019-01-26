@@ -42,29 +42,37 @@
       if (video_active === true) { activityDetected(); }
     });
 
-    // when the drive-forward button is clicked
-    $('#drive-forward').on('mousedown touchstart', function() {
+    // send a synchronization message by id
+    function sendSynchronization(synchronization_id) {
       // create the message
-      var message = { synchronization_id: <%= @device.synchronizations.find_by(name: 'forward').try(:id) %> };
+      var message = { synchronization_id: synchronization_id };
       // send the message
       App.messaging.send_message(message);
+    }
+
+    // send an opposite synchronization message by id
+    function sendOppositeSynchronization(synchronization_id) {
+      // create the message
+      var message = { synchronization_id: synchronization_id, opposite: 'true' };
+      // send the message
+      App.messaging.send_message(message);
+    }
+
+    // when the drive-forward button is clicked
+    $('#drive-forward').on('mousedown touchstart', function() {
+      // send the synchronization
+      sendSynchronization('<%= @device.synchronizations.find_by(name: 'forward').try(:id) %>');
     });
 
     // when the drive-forward button is released
     $('#drive-forward').on('mouseup touchend', function() {
-      console.log('forward opposite');
-      // stop all motors
-      // create the message
-      var message = { synchronization_id: <%= @device.synchronizations.find_by(name: 'forward').try(:id) %>, opposite: 'true' };
-      // send the message
-      App.messaging.send_message(message);
+      // send the opposite synchronization
+      sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: 'forward').try(:id) %>');
 
       // add a 50ms timeout to stop all motors
       stopMotorsTimeout = setTimeout(function() {
-        // create the message
-        var message = { synchronization_id: <%= @device.synchronizations.find_by(name: 'forward').try(:id) %>, opposite: 'true' };
-        // send the message
-        App.messaging.send_message(message);
+        // send the opposite synchronization
+        sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: 'forward').try(:id) %>');
       }, 50);
     });
 
