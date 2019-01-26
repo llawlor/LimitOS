@@ -63,12 +63,16 @@
 
       // when the control button is clicked
       $('#drive-<%= device_control_type %>').on('mousedown touchstart', function() {
+        // highlight the button
+        $(this).addClass('active');
         // send the synchronization
         sendSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
       });
 
       // when the control button is released
       $('#drive-<%= device_control_type %>').on('mouseup touchend', function() {
+        // remove the highlight
+        $(this).removeClass('active');
         // send the opposite synchronization
         sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
 
@@ -78,7 +82,7 @@
           sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
         }, 50);
       });
-      
+
     <% end %>
 
     // create the subscription
