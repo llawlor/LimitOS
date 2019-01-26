@@ -248,7 +248,7 @@ class Device < ApplicationRecord
     # for each synchronized pin
     synchronization.synchronized_pins.each do |synchronized_pin|
       # construct the message
-      message = { "pin": synchronized_pin.pin_id }
+      message = { "pin": synchronized_pin.pin.pin_number }
 
       # if this is a digital pin
       if self.digital_pins.include?(synchronized_pin.pin)
