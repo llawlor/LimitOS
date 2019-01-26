@@ -1,31 +1,22 @@
-<% if @device.control_template.blank? || @device.control_template == 'default' %>
-  <a href="/control/<%= @device.id %>/edit" class="pull-right" id="control-settings" style="font-size: 20px; width: 25px; height: 25px; padding: 0;">
+<% if @device.video_enabled? %>
+  <% content_for :custom_head do %>
+    <%= javascript_include_tag 'jsmpeg.min' %>
+  <% end %>
+<% end %>
+
+<% if @owner == true %>
+  <a href="/control/<%= @device.id %>/edit" id="control-settings">
     <span class="glyphicon glyphicon-cog" style="padding: 0 0 0 3px;"></span>
   </a>
+<% end %>
 
-  <h1><%= @device.name %> controls</h1>
-  <br>
-  <%= render 'devices/controls' %>
+<% if @device.control_template.blank? || @device.control_template == 'default' %>
+
+  <%= render 'default' %>
+
 <% elsif @device.control_template == 'drive' %>
 
-  <table style="border-spacing: 5px; border-collapse: separate;">
-    <tr>
-      <td></td>
-      <td>
-        <span id="drive-forward" class="glyphicon glyphicon-arrow-up control-button"></span>
-      </td>
-    </tr>
-    <tr>
-      <td><span id="drive-left" class="glyphicon glyphicon-arrow-left control-button"></span></td>
-      <td></td>
-      <td><span id="drive-right" class="glyphicon glyphicon-arrow-right control-button"></span></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><span id="drive-reverse" class="glyphicon glyphicon-arrow-down control-button"></span></td>
-      <td></td>
-    </tr>
-  </table>
+  <%= render 'drive' %>
 
 <% end %>
 
@@ -33,116 +24,73 @@
 
   // keep track of the start transmission time
   var start_transmission_time = 0;
+  // keep track of the video player
+  var video_player = null;
+  // keep track of the video timeout
+  var video_timeout = null;
+  // keep track of whether the video is currently playing
+  var video_active = false;
+  // keep track of the stop motors timeout
+  var stop_motors_timeout = null;
 
   // when the document is ready
   $(document).ready(function() {
 
-    // when the drive-forward button is clicked
-    $('#drive-forward').on('mousedown', function() {
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
+    // when user activity is detected
+    $('body').on('mousemove mousedown touchstart touchmove', function() {
+      // only detect activity if video has been played
+      if (video_active === true) { activityDetected(); }
     });
 
-    // when the drive-reverse button is clicked
-    $('#drive-reverse').on('mousedown', function() {
+    // send a synchronization message by id
+    function sendSynchronization(synchronization_id) {
       // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
+      var message = { synchronization_id: synchronization_id };
       // send the message
       App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-    });
+    }
 
-    // when the drive-left button is clicked
-    $('#drive-left').on('mousedown', function() {
+    // send an opposite synchronization message by id
+    function sendOppositeSynchronization(synchronization_id) {
       // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
+      var message = { synchronization_id: synchronization_id, opposite: 'true' };
       // send the message
       App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-    });
+    }
 
-    // when the drive-right button is clicked
-    $('#drive-right').on('mousedown', function() {
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-    });
+    // for each control type ('forward', 'backward', 'left', 'right')
+    <% Device::DRIVE_CONTROL_TYPES.each do |device_control_type| %>
 
-    // when the mouse is released
-    $('#drive-right, #drive-left, #drive-forward, #drive-reverse').on('mouseup', function() {
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-    });
+      // when the control button is clicked
+      $('#drive-<%= device_control_type %>').on('mousedown touchstart', function() {
+        // highlight the button
+        $(this).addClass('active');
+        // send the synchronization
+        sendSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
+      });
+
+      // when the control button is released
+      $('#drive-<%= device_control_type %>').on('mouseup touchend', function() {
+        // remove the highlight
+        $(this).removeClass('active');
+        // send the opposite synchronization
+        sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
+
+        // add a 50ms timeout to stop the synchronization
+        stopMotorsTimeout = setTimeout(function() {
+          // send the opposite synchronization
+          sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
+        }, 50);
+      });
+
+    <% end %>
 
     // create the subscription
     App.messaging = App.cable.subscriptions.create(
       {
         channel: 'DevicesChannel',
         id: <%= @master_device.id %>,
-        auth_token: '<%= @master_device.auth_token %>'
+        auth_token: '<%= @master_device.private? ? @master_device.auth_token : nil %>'
       },
       {
 
@@ -163,6 +111,58 @@
       }
     );
 
+    <% if @device.video_enabled? %>
+      // start video on page load, with a slight delay to make sure everything has loaded
+      setTimeout(function() {
+        startVideo();
+      }, 1000);
+    <% end %>
+
   });
 
+  // new user activity is detected
+  function activityDetected() {
+    // clear the current timeout
+    clearTimeout(video_timeout);
+
+    // set new timeout for 10 minutes
+    video_timeout = setTimeout(function() {
+      // stop video
+      stopVideo();
+    }, 600000);
+  }
+
+  // start the video
+  function startVideo() {
+    // mark the video as started
+    video_active = true;
+    // hide the button
+    $('#video_start').addClass('hidden');
+    // show the canvas
+    $('#video_canvas').removeClass('hidden');
+    // create the message
+    var message = { command: 'start_video' };
+    // send the message to start the video
+    App.messaging.send_message(message);
+    // set the video url
+    var video_server_url = '<%= @device.video_to_clients_url %>';
+    // load the video
+    video_player = new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
+    // show the stop button
+    $('#video_stop').removeClass('hidden');
+  }
+
+  // stop the video
+  function stopVideo() {
+    // mark the video as stopped
+    video_active = false;
+    // hide the button
+    $('#video_stop').addClass('hidden');
+    // hide the canvas
+    $('#video_canvas').addClass('hidden');
+    // disconnect the video
+    video_player.destroy();
+    // show the start button
+    $('#video_start').removeClass('hidden');
+  }
 </script>

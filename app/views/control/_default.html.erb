@@ -1,0 +1,17 @@
+<div class="container-fluid" style="margin-bottom: 20px;">
+  <div style="min-height: 525px;">
+
+    <% if @device.video_enabled? %>
+      <div class="row">
+        <div class="col-xs-12" style="padding-top: 15px;">
+          <canvas id="video_canvas" class="hidden" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
+        </div>
+      </div>
+    <% end %>
+
+    <h1><%= @device.name %> controls</h1>
+    <br>
+    <%= render 'devices/controls' %>
+
+  </div>
+</div>
