@@ -44,22 +44,8 @@
 
     // when the drive-forward button is clicked
     $('#drive-forward').on('mousedown touchstart', function() {
-      // clear the current timeout
-      clearTimeout(stop_motors_timeout);
       // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 21, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 19, digital: 'off' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 20, digital: 'on' };
-      // send the message
-      App.messaging.send_message(message);
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: 26, digital: 'on' };
+      var message = { synchronization_id: <%= @device.synchronizations.find_by(name: 'forward').try(:id) %> };
       // send the message
       App.messaging.send_message(message);
     });
@@ -133,11 +119,11 @@
     // when the mouse is released
     $('#drive-right, #drive-left, #drive-forward, #drive-reverse').on('mouseup touchend', function() {
       // stop all motors
-      stopMotors();
+  //    stopMotors();
 
       // add a 50ms timeout to stop all motors
       stopMotorsTimeout = setTimeout(function() {
-        stopMotors();
+    //    stopMotors();
       }, 50);
     });
 
