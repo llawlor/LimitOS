@@ -180,7 +180,7 @@ class DevicesController < ApplicationController
       redirect_to @device, notice: 'Device was successfully updated.'
     # else the device was not updated
     else
-      :edit
+      render :edit
     end
   end
 

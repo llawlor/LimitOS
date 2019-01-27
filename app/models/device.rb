@@ -31,6 +31,8 @@ class Device < ApplicationRecord
   has_many :registrations, dependent: :destroy
   has_many :synchronized_pins, dependent: :destroy
 
+  validate :validate_slug
+
   after_save :broadcast_device_information
   after_destroy :broadcast_device_information
 
@@ -307,5 +309,28 @@ class Device < ApplicationRecord
       message.merge({ time: (Time.now.to_f * 1000).to_i })
     )
   end
+
+  private
+
+    # validate the slug
+    def validate_slug
+      # blank slugs are fine
+      return true if self.slug.blank?
+
+      # if the slug is a reserved word
+      if %w(new create edit update).include?(self.slug)
+        self.errors.add(:base, "Custom URL is invalid.")
+      end
+
+      # if the slug contains no letters
+      if !self.slug.match(/[a-zA-Z]/).present?
+        self.errors.add(:base, "Custom URL must contain letters.")
+      end
+
+      # if the slug is taken
+      if Device.where(slug: self.slug).where.not(id: self.id).present?
+        self.errors.add(:base, "Custom URL has already been taken.")
+      end
+    end
 
 end

@@ -14,7 +14,7 @@ class ControlController < ApplicationController
       redirect_to @device.control_path, notice: 'Controls were successfully updated.'
     # else the device was not updated
     else
-      :edit
+      render :edit
     end
   end
 
