@@ -1,3 +1,7 @@
+<style>
+  .tooltip-inner { max-width: 300px; width: 300px; }
+</style>
+
 <%= form_for @device, url: "/control/#{ @device.id }/update", html: { class: "form-horizontal device" } do |f| %>
 
   <% if @device.errors.any? %>
@@ -14,6 +18,17 @@
       </div>
     </div>
   <% end %>
+
+  <div class="form-group">
+    <label for="device_slug" class="control-label col-lg-4">
+      Custom URL
+      <span class="glyphicon glyphicon-question-sign tooltip-trigger" aria-hidden="true" ata-toggle="tooltip" data-placement="bottom" title="Customizes the URL, replacing <%= @device.slug.present? ? @device.slug : @device.id %> in <%= full_server_url + @device.control_path %>"></span>
+    </label>
+    <div class="col-lg-8">
+      <%= f.text_field :slug, class: 'form-control' %>
+    </div>
+    <%= f.error_span(:slug) %>
+  </div>
 
   <div class="form-group">
     <label for="device_control_template" class="control-label col-lg-4">
@@ -73,6 +88,9 @@
 
   // when the document is ready
   $(document).ready(function() {
+
+    // initialize tooltips
+    $('.tooltip-trigger').tooltip();
 
     // set the initial button mappings visibility on page load
     setButtonMappingsVisibility();
