@@ -50,10 +50,16 @@ class ControlController < ApplicationController
 
       # if the user is logged in
       if current_user.present?
+        # get device by id
         @device = current_user.devices.find_by(id: params[:slug])
+        # get device by slug
+        @device = current_user.devices.find_by(slug: params[:slug]) if @device.blank? && params[:slug].present?
       # else the user is not logged in
       else
+        # get device by id
         @device = @devices.find_by(id: params[:slug])
+        # get device by slug
+        @device = @devices.find_by(slug: params[:slug]) if @device.blank? && params[:slug].present?
       end
 
       # set the owner status

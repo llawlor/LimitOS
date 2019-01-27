@@ -57,10 +57,10 @@ class Device < ApplicationRecord
   def control_path
     # if this is a drive template
     if control_template == 'drive'
-      return "/drive/#{ self.id }"
+      return "/drive/#{ self.slug || self.id }"
     # else default control page
     else
-      return "/control/#{ self.id }"
+      return "/control/#{ self.slug || self.id }"
     end
   end
 
@@ -316,6 +316,9 @@ class Device < ApplicationRecord
     def validate_slug
       # blank slugs are fine
       return true if self.slug.blank?
+
+      # parameterize the slug
+      self.slug = self.slug.parameterize
 
       # if the slug is a reserved word
       if %w(new create edit update).include?(self.slug)
