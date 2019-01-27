@@ -37,7 +37,7 @@ class ControlController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def device_params
-      params.fetch(:device, {}).permit(:control_template, :public)
+      params.fetch(:device, {}).permit(:control_template, :public, :slug)
     end
 
     # get the device for users that are logged in or out, and determine whether the user is the owner
