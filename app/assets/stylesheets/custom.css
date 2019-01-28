@@ -84,10 +84,14 @@ pre                             { border-radius: 0; }
 .well                           { background-color: transparent; border-color: #00dde3; border-radius: 0; }
 
 /* custom CSS declarations */
+#control-settings               { font-size: 20px; width: 25px; height: 25px; padding: 0; position: absolute; right: 0; z-index: 100; }
+#drive-controls                 { padding-top: 100px; padding-left: 15px; }
 #particle-background            { position: absolute; display: block; top: 0; left: 0; z-index: -1; }
 #security_note                  { font-size: 12px; }
+#video_canvas                   { width: 640px; height: 480px; }
 
 .control-button                 { cursor: pointer; border: 1px solid #00dde3; padding: 10px; }
+.control-button.active          { background-color: #ffd829; }
 .header-right                   { float: right; }
 .limitos-command                { background: linear-gradient(to right, rgba(39, 73, 78, 0.3), rgba(0,0,0,0)); color: #00dde3; display: inline-block; padding: 10px 25px; border: 2px solid #00dde3; }
 .limitos-command:hover          { background: transparent; color: #ffd829; border: 2px solid #ffd829; }
@@ -104,7 +108,8 @@ pre                             { border-radius: 0; }
 
 /* extra small screens */
 @media screen and (max-width: 767px) {
-  #video_canvas                 { width: 100%; }
+  #drive-controls               { padding-top: 15px; }
+  #video_canvas                 { width: 100%; height: initial; }
 
   .header-right                 { float: none; margin-top: 20px; }
   .limitos-command              { display: inherit; }
@@ -114,6 +119,12 @@ pre                             { border-radius: 0; }
   .navbar-default .navbar-toggle { margin-right: 0; }
   .navbar-left                  { padding-left: 0; padding-bottom: 20px; border-bottom: 1px solid rgba(0, 221, 227, 0.5); }
   .table-responsive             { border: 1px solid rgba(0, 221, 227, 0.5); }
+}
+
+/* extra small screens in landscape mode */
+@media screen and (max-width: 767px) and (orientation: landscape) {
+  #drive-controls               { padding-top: 100px; }
+  #video_canvas                 { width: 75%; height: initial; }
 }
 
 /* larger screens */

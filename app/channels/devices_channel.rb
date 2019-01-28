@@ -12,7 +12,7 @@ class DevicesChannel < ApplicationCable::Channel
     reject and return if device.blank?
 
     # reject if incorrect auth token
-    reject and return if !Devise.secure_compare(device.auth_token, params[:auth_token])
+    reject and return if device.private? && !Devise.secure_compare(device.auth_token, params[:auth_token])
 
     # start the stream
     stream_from "devices:#{device.id}"
@@ -27,7 +27,7 @@ class DevicesChannel < ApplicationCable::Channel
     return false if device.blank?
 
     # return false if auth_token doesn't match
-    return false if !Devise.secure_compare(device.auth_token, params[:auth_token])
+    return false if device.private? && !Devise.secure_compare(device.auth_token, params[:auth_token])
 
     # transmit the slave_devices only to this device
     device.broadcast_device_information
@@ -42,12 +42,12 @@ class DevicesChannel < ApplicationCable::Channel
     return false if device.blank?
 
     # return false if auth_token doesn't match
-    return false if !Devise.secure_compare(device.auth_token, params[:auth_token])
+    return false if device.private? && !Devise.secure_compare(device.auth_token, params[:auth_token])
 
     # if there is a synchronization present
     if input_data["synchronization_id"].present?
       # execute the synchronization
-      device.execute_synchronization(input_data["synchronization_id"].to_i)
+      device.execute_synchronization(input_data["synchronization_id"].to_i, input_data["opposite"] == 'true')
     # else no synchronization present
     else
       # broadcast to the device

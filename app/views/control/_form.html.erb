@@ -1,0 +1,134 @@
+<style>
+  .tooltip-inner { max-width: 300px; width: 300px; }
+</style>
+
+<%= form_for @device, url: "/control/#{ @device.id }/update", html: { class: "form-horizontal device" } do |f| %>
+
+  <% if @device.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@device.errors.count, "error") %> prohibited this device from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @device.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <label for="device_slug" class="control-label col-lg-4">
+      Custom URL
+      <span class="glyphicon glyphicon-question-sign tooltip-trigger" aria-hidden="true" ata-toggle="tooltip" data-placement="bottom" title="Customizes the URL, replacing <%= @device.slug.present? ? @device.slug : @device.id %> in <%= full_server_url + @device.control_path %>"></span>
+    </label>
+    <div class="col-lg-8">
+      <%= f.text_field :slug, class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="device_control_template" class="control-label col-lg-4">
+      Control template
+    </label>
+
+    <div class="col-lg-8">
+      <%= f.select :control_template, options_for_select(Device::CONTROL_TEMPLATES.map{ |x| [x.titleize, x] }, @device.control_template), { include_blank: false }, { class: 'form-control' } %>
+    </div>
+    <%= f.error_span(:control_template) %>
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
+      <label>
+        <%= f.check_box :public %>
+        Allow public access?
+      </label>
+    </div>
+  </div>
+
+  <div id="button_mappings_div" class="form-group hidden">
+    <label class="control-label col-lg-4">
+      Button mappings
+    </label>
+
+    <div class="col-lg-8">
+      <table class="table table-striped table-condensed table-responsive">
+        <% Device::DRIVE_CONTROL_TYPES.each do |control_type| %>
+          <tr>
+            <td><b><%= control_type.titleize %></b></td>
+            <td>
+              <% @device.pins.each do |pin| %>
+                <%= check_box "synchronizations[#{control_type}]", "pin_#{pin.id}", {} %>
+                <label for="synchronizations_<%= "#{control_type}_pin_#{pin.id}" %>"><%= pin.name %></label>
+                <br>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+
+  <br><br>
+
+  <div class="form-group">
+    <div class="col-lg-offset-4 col-lg-8">
+      <%= f.submit 'Update Controls', class: 'btn btn-primary', style: 'margin-right: 20px;' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")), "/control/#{@device.id}", :class => 'btn btn-default' %>
+    </div>
+  </div>
+
+<% end %>
+
+<script>
+
+  // when the document is ready
+  $(document).ready(function() {
+
+    // initialize tooltips
+    $('.tooltip-trigger').tooltip();
+
+    // set the initial button mappings visibility on page load
+    setButtonMappingsVisibility();
+
+    // when the control template is changed
+    $('#device_control_template').on('change', function() {
+      // set the button mappings visibility
+      setButtonMappingsVisibility();
+    });
+
+    // for each drive control synchronization
+    <% @device.synchronizations.where(name: Device::DRIVE_CONTROL_TYPES).each do |synchronization| %>
+
+      // for each pin
+      <% synchronization.pins.each do |pin| %>
+
+        // select the appropriate checkbox
+        $('#synchronizations_<%= "#{synchronization.name}_pin_#{pin.id}" %>').prop('checked', true);
+
+      <% end %>
+
+    <% end %>
+
+  });
+
+  // set button mappings visibility
+  function setButtonMappingsVisibility() {
+    // get the control template value
+    var control_template = $('#device_control_template').val();
+
+    // if the control template is drive
+    if (control_template === 'drive') {
+      // show the button mappings
+      $('#button_mappings_div').removeClass('hidden');
+    // else another template
+    } else {
+      // hide the button mappings
+      $('#button_mappings_div').addClass('hidden');
+    }
+  }
+
+</script>

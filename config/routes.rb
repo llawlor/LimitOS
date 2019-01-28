@@ -31,9 +31,12 @@ Rails.application.routes.draw do
 
   # control a device
   get '/control/:slug' => 'control#show'
+  get '/drive/:slug' => 'control#show'
 
   # edit the control page
   get '/control/:slug/edit' => 'control#edit'
+  # update the control page
+  patch '/control/:slug/update' => 'control#update'
 
   resources :devices do
     member do

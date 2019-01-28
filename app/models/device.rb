@@ -16,11 +16,9 @@
 #  video_enabled          :boolean          default(FALSE)
 #  control_template       :string(255)
 #  public                 :boolean          default(FALSE)
+#  slug                   :string(255)
 #
 
-# device_type can be: 'raspberry_pi', 'arduino'
-
-# control_template can be: 'default', 'drive'
 class Device < ApplicationRecord
   has_secure_token :auth_token
 
@@ -33,6 +31,8 @@ class Device < ApplicationRecord
   has_many :registrations, dependent: :destroy
   has_many :synchronized_pins, dependent: :destroy
 
+  validate :validate_slug
+
   after_save :broadcast_device_information
   after_destroy :broadcast_device_information
 
@@ -41,6 +41,28 @@ class Device < ApplicationRecord
 
   # options for device type
   DEVICE_TYPES = ['raspberry_pi', 'arduino']
+
+  # options for the control template
+  CONTROL_TEMPLATES = ['default', 'drive']
+
+  # options for the "drive" control type
+  DRIVE_CONTROL_TYPES = ['forward', 'backward', 'left', 'right']
+
+  # add method to determine if a device is private
+  def private?
+    !self.public?
+  end
+
+  # path to the control page
+  def control_path
+    # if this is a drive template
+    if control_template == 'drive'
+      return "/drive/#{ self.slug || self.id }"
+    # else default control page
+    else
+      return "/control/#{ self.slug || self.id }"
+    end
+  end
 
   # name that is displayed for a device
   def display_name
@@ -62,6 +84,37 @@ class Device < ApplicationRecord
     self.devices.present? ? self.devices.first : self
   end
 
+  # set the "drive" control template synchronizations
+  def set_drive_synchronizations(synchronization_params)
+    # for each synchronization
+    synchronization_params.each do |name, pin_mappings|
+
+      # get the synchronization (or create it)
+      synchronization = self.synchronizations.where(name: name).first_or_create
+
+      # for each pin mapping
+      pin_mappings.each do |pin_key, status|
+        # get the pin id
+        pin_id = pin_key.split('_')[1]
+
+        # get the synchronized pin
+        synchronized_pin = synchronization.synchronized_pins.find_by(device_id: self.id, pin_id: pin_id, value: 'on')
+
+        # if the pin should be on
+        if status == '1'
+          # add the pin if it doesn't exist
+          synchronization.synchronized_pins.create(device_id: self.id, pin_id: pin_id, value: 'on') if synchronized_pin.blank?
+        # else the pin should be off
+        else
+          # remove the pin if it exists
+          synchronized_pin.destroy if synchronized_pin.present?
+        end
+
+      end
+
+    end
+  end
+
   # get version of node.js install script
   def self.install_script_version
     # return the version, stored in config/limitos.yml
@@ -71,15 +124,21 @@ class Device < ApplicationRecord
   # full url for video coming from devices
   # in the future, this method can return dynamic values based on additional servers
   def video_from_devices_url
+    # set the unique id to the auth_token, or to the id if the device is public
+    unique_id = self.private? ? self.auth_token : self.id
+
     # return the full url
-    return "#{ Rails.application.config_for(:limitos)['video_from_devices_host'] }/video_from_devices/#{self.auth_token}"
+    return "#{ Rails.application.config_for(:limitos)['video_from_devices_host'] }/video_from_devices/#{ unique_id }"
   end
 
   # full url for video going to clients
   # in the future, this method can return dynamic values based on additional servers
   def video_to_clients_url
+    # set the unique id to the auth_token, or to the id if the device is public
+    unique_id = self.private? ? self.auth_token : self.id
+
     # return the full url
-    return "#{ Rails.application.config_for(:limitos)['video_to_clients_host'] }/video_to_clients/#{self.auth_token}"
+    return "#{ Rails.application.config_for(:limitos)['video_to_clients_host'] }/video_to_clients/#{ unique_id }"
   end
 
   # digital pins
@@ -185,23 +244,26 @@ class Device < ApplicationRecord
   end
 
   # execute a synchronization
-  def execute_synchronization(synchronization_id)
+  def execute_synchronization(synchronization_id, opposite = false)
     # get the synchronization
     synchronization = self.synchronizations.find(synchronization_id)
 
     # for each synchronized pin
     synchronization.synchronized_pins.each do |synchronized_pin|
       # construct the message
-      message = { "pin": synchronized_pin.pin_id }
+      message = { "pin": synchronized_pin.pin.pin_number }
+
+      # get the pin value based on whether we're getting the opposite value
+      pin_value = (opposite == true) ? synchronized_pin.opposite_value : synchronized_pin.value
 
       # if this is a digital pin
       if self.digital_pins.include?(synchronized_pin.pin)
         # add to the message
-        message.merge!({ "digital": synchronized_pin.value })
+        message.merge!({ "digital": pin_value })
       # else this is an analog pin
       else
         # add to the message
-        message.merge!({ "servo": synchronized_pin.value })
+        message.merge!({ "servo": pin_value })
       end
 
       # broadcast the message
@@ -232,6 +294,9 @@ class Device < ApplicationRecord
     # change the i2c_address to the target_device's i2c_address
     message["i2c_address"] = target_device.i2c_address if target_device.i2c_address.present?
 
+    # remove the i2c_address if it's blank
+    message.delete("i2c_address") if message["i2c_address"].blank?
+
     # if this is a start video command
     if message['command'].present? && message['command'] == 'start_video'
       # add the video url
@@ -244,5 +309,31 @@ class Device < ApplicationRecord
       message.merge({ time: (Time.now.to_f * 1000).to_i })
     )
   end
+
+  private
+
+    # validate the slug
+    def validate_slug
+      # blank slugs are fine
+      return true if self.slug.blank?
+
+      # parameterize the slug
+      self.slug = self.slug.parameterize
+
+      # if the slug is a reserved word
+      if %w(new create edit update).include?(self.slug)
+        self.errors.add(:base, "Custom URL is invalid.")
+      end
+
+      # if the slug contains no letters
+      if !self.slug.match(/[a-zA-Z]/).present?
+        self.errors.add(:base, "Custom URL must contain letters.")
+      end
+
+      # if the slug is taken
+      if Device.where(slug: self.slug).where.not(id: self.id).present?
+        self.errors.add(:base, "Custom URL has already been taken.")
+      end
+    end
 
 end
