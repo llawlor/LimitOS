@@ -14,7 +14,7 @@ class ControlController < ApplicationController
       redirect_to @device.control_path, notice: 'Controls were successfully updated.'
     # else the device was not updated
     else
-      :edit
+      render :edit
     end
   end
 
@@ -37,7 +37,7 @@ class ControlController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def device_params
-      params.fetch(:device, {}).permit(:control_template, :public)
+      params.fetch(:device, {}).permit(:control_template, :public, :slug)
     end
 
     # get the device for users that are logged in or out, and determine whether the user is the owner
@@ -50,10 +50,16 @@ class ControlController < ApplicationController
 
       # if the user is logged in
       if current_user.present?
+        # get device by id
         @device = current_user.devices.find_by(id: params[:slug])
+        # get device by slug
+        @device = current_user.devices.find_by(slug: params[:slug]) if @device.blank? && params[:slug].present?
       # else the user is not logged in
       else
+        # get device by id
         @device = @devices.find_by(id: params[:slug])
+        # get device by slug
+        @device = @devices.find_by(slug: params[:slug]) if @device.blank? && params[:slug].present?
       end
 
       # set the owner status

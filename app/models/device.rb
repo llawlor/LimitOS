@@ -16,6 +16,7 @@
 #  video_enabled          :boolean          default(FALSE)
 #  control_template       :string(255)
 #  public                 :boolean          default(FALSE)
+#  slug                   :string(255)
 #
 
 class Device < ApplicationRecord
@@ -29,6 +30,8 @@ class Device < ApplicationRecord
   has_many :synchronizations, dependent: :destroy
   has_many :registrations, dependent: :destroy
   has_many :synchronized_pins, dependent: :destroy
+
+  validate :validate_slug
 
   after_save :broadcast_device_information
   after_destroy :broadcast_device_information
@@ -54,10 +57,10 @@ class Device < ApplicationRecord
   def control_path
     # if this is a drive template
     if control_template == 'drive'
-      return "/drive/#{ self.id }"
+      return "/drive/#{ self.slug || self.id }"
     # else default control page
     else
-      return "/control/#{ self.id }"
+      return "/control/#{ self.slug || self.id }"
     end
   end
 
@@ -306,5 +309,31 @@ class Device < ApplicationRecord
       message.merge({ time: (Time.now.to_f * 1000).to_i })
     )
   end
+
+  private
+
+    # validate the slug
+    def validate_slug
+      # blank slugs are fine
+      return true if self.slug.blank?
+
+      # parameterize the slug
+      self.slug = self.slug.parameterize
+
+      # if the slug is a reserved word
+      if %w(new create edit update).include?(self.slug)
+        self.errors.add(:base, "Custom URL is invalid.")
+      end
+
+      # if the slug contains no letters
+      if !self.slug.match(/[a-zA-Z]/).present?
+        self.errors.add(:base, "Custom URL must contain letters.")
+      end
+
+      # if the slug is taken
+      if Device.where(slug: self.slug).where.not(id: self.id).present?
+        self.errors.add(:base, "Custom URL has already been taken.")
+      end
+    end
 
 end
