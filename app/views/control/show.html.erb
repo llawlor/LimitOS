@@ -76,11 +76,11 @@
         // send the opposite synchronization
         sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
 
-        // add a 50ms timeout to stop the synchronization
+        // add a 100ms timeout to stop the synchronization
         stopMotorsTimeout = setTimeout(function() {
           // send the opposite synchronization
           sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
-        }, 50);
+        }, 100);
       });
 
     <% end %>
