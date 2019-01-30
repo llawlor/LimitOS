@@ -67,8 +67,10 @@ class ControlController < ApplicationController
 
       # if there is no device
       if @device.blank?
-        # get the unauthorized device
-        unauthorized_device = Device.find(params[:slug])
+        # get the unauthorized device by id
+        unauthorized_device = Device.find_by(id: params[:slug])
+        # get the unauthorized device by slug
+        unauthorized_device = Device.find_by(slug: params[:slug]) if unauthorized_device.blank? && params[:slug].present?
 
         # get the device if it's public
         @device = unauthorized_device if unauthorized_device.public?
