@@ -8,7 +8,7 @@ class ControlController < ApplicationController
     if @device.update(device_params)
 
       # set synchronizations from parameters if this is a drive template
-      @device.set_drive_synchronizations(params[:synchronizations]) if @device.control_template == 'drive'
+      @device.set_drive_synchronizations(params[:synchronizations]) if @device.control_template == 'drive' && params[:synchronizations].present?
 
       # redirect with a notice
       redirect_to @device.control_path, notice: 'Controls were successfully updated.'
@@ -67,11 +67,13 @@ class ControlController < ApplicationController
 
       # if there is no device
       if @device.blank?
-        # get the unauthorized device
-        unauthorized_device = Device.find(params[:slug])
+        # get the unauthorized device by id
+        unauthorized_device = Device.find_by(id: params[:slug])
+        # get the unauthorized device by slug
+        unauthorized_device = Device.find_by(slug: params[:slug]) if unauthorized_device.blank? && params[:slug].present?
 
         # get the device if it's public
-        @device = unauthorized_device if unauthorized_device.public?
+        @device = unauthorized_device if unauthorized_device.present? && unauthorized_device.public?
       end
 
       # output message if no device
