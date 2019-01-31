@@ -154,13 +154,11 @@
 
       <h3 class="pull-left">Device Controls</h3>
 
-      <% if current_user.present? && current_user.admin? %>
-        <div class="pull-left" style="margin-top: 23px; margin-left: 10px;">
-          <a href="<%= @device.control_path %>" target="_blank">
-            <span class="glyphicon glyphicon-new-window" style="font-size: 14px; padding: 2px 0;"></span>
-          </a>
-        </div>
-      <% end %>
+      <div class="pull-left" style="margin-top: 23px; margin-left: 10px;">
+        <a href="<%= @device.control_path %>" target="_blank">
+          <span class="glyphicon glyphicon-new-window" style="font-size: 14px; padding: 2px 0;"></span>
+        </a>
+      </div>
 
       <div class="clearfix"></div>
 
