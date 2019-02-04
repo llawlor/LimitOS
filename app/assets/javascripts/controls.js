@@ -28,7 +28,51 @@ $(document).ready(function() {
     stopVideo();
   });
 
+  // when the digital on/off button is clicked
+  $('.digital_submit').on('click', function() {
+    // remove active class
+    $('.pin_' + $(this).data('pin') + '_buttons').removeClass('active');
+    // blur the button to make it unfocused
+    $('.pin_' + $(this).data('pin') + '_buttons').blur();
+    // create the message
+    var message = { i2c_address: device_i2c_address, pin: $(this).data('pin'), digital: $(this).data('digital') };
+    // send the message
+    App.messaging.send_message(message);
+  });
+
 });
+
+// start the video
+function startVideo() {
+  // mark the video as started
+  video_active = true;
+  // hide the button
+  $('#video_start').addClass('hidden');
+  // show the canvas
+  $('#video_canvas').removeClass('hidden');
+  // create the message
+  var message = { command: 'start_video' };
+  // send the message to start the video
+  App.messaging.send_message(message);
+  // load the video
+  video_player = new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
+  // show the stop button
+  $('#video_stop').removeClass('hidden');
+}
+
+// stop the video
+function stopVideo() {
+  // mark the video as stopped
+  video_active = false;
+  // hide the button
+  $('#video_stop').addClass('hidden');
+  // hide the canvas
+  $('#video_canvas').addClass('hidden');
+  // disconnect the video
+  video_player.destroy();
+  // show the start button
+  $('#video_start').removeClass('hidden');
+}
 
 // new user activity is detected
 function activityDetected() {

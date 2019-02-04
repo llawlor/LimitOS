@@ -22,6 +22,15 @@
 
 <script>
 
+  // set the device id
+  var device_id = '<%= @master_device.id %>';
+  // set the auth token
+  var device_auth_token = '<%= @master_device.private? ? @master_device.auth_token : nil %>';
+  // set the i2c address
+  var device_i2c_address = '<%= @device.i2c_address %>';
+  // set the video url
+  var video_server_url = '<%= @device.video_to_clients_url %>';
+
   <% @device.analog_pins.each do |pin| %>
     // initialize this slider
     var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {
@@ -56,18 +65,6 @@
         return false;
       });
     <% end %>
-
-    // when the digital on/off button is clicked
-    $('.digital_submit').on('click', function() {
-      // remove active class
-      $('.pin_' + $(this).data('pin') + '_buttons').removeClass('active');
-      // blur the button to make it unfocused
-      $('.pin_' + $(this).data('pin') + '_buttons').blur();
-      // create the message
-      var message = { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') };
-      // send the message
-      App.messaging.send_message(message);
-    });
 
     // send a synchronization message by id
     function sendSynchronization(synchronization_id) {
@@ -116,8 +113,8 @@
     App.messaging = App.cable.subscriptions.create(
       {
         channel: 'DevicesChannel',
-        id: <%= @master_device.id %>,
-        auth_token: '<%= @master_device.private? ? @master_device.auth_token : nil %>'
+        id: device_id,
+        auth_token: device_auth_token
       },
       {
 
@@ -147,37 +144,4 @@
 
   });
 
-  // start the video
-  function startVideo() {
-    // mark the video as started
-    video_active = true;
-    // hide the button
-    $('#video_start').addClass('hidden');
-    // show the canvas
-    $('#video_canvas').removeClass('hidden');
-    // create the message
-    var message = { command: 'start_video' };
-    // send the message to start the video
-    App.messaging.send_message(message);
-    // set the video url
-    var video_server_url = '<%= @device.video_to_clients_url %>';
-    // load the video
-    video_player = new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
-    // show the stop button
-    $('#video_stop').removeClass('hidden');
-  }
-
-  // stop the video
-  function stopVideo() {
-    // mark the video as stopped
-    video_active = false;
-    // hide the button
-    $('#video_stop').addClass('hidden');
-    // hide the canvas
-    $('#video_canvas').addClass('hidden');
-    // disconnect the video
-    video_player.destroy();
-    // show the start button
-    $('#video_start').removeClass('hidden');
-  }
 </script>
