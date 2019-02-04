@@ -40,7 +40,64 @@ $(document).ready(function() {
     App.messaging.send_message(message);
   });
 
+  // when an 'execute synchronization' button is clicked
+  $('.execute-synchronization').on('click', function() {
+    // create the message
+    var message = { synchronization_id: $(this).data('id') };
+    // send the message
+    App.messaging.send_message(message);
+  });
+
+  // create the subscription
+  App.messaging = App.cable.subscriptions.create(
+    {
+      channel: 'DevicesChannel',
+      id: device_id,
+      auth_token: device_auth_token
+    },
+    {
+
+      // when data is received
+      received: function(data) {
+        // log the data
+        logData(data);
+      },
+
+      // function to send a message
+      send_message: function(message) {
+        // mark the start time
+        start_transmission_time = (new Date).getTime();
+
+        // perform the "receive" action in app/channels/devices_channel.rb
+        this.perform('receive', message);
+      }
+
+    }
+  );
+
 });
+
+// send servo position
+function sendServoMessage(message) {
+  // send the message
+  App.messaging.send_message(message);
+}
+
+// send a synchronization message by id
+function sendSynchronization(synchronization_id) {
+  // create the message
+  var message = { synchronization_id: synchronization_id };
+  // send the message
+  App.messaging.send_message(message);
+}
+
+// send an opposite synchronization message by id
+function sendOppositeSynchronization(synchronization_id) {
+  // create the message
+  var message = { synchronization_id: synchronization_id, opposite: 'true' };
+  // send the message
+  App.messaging.send_message(message);
+}
 
 // start the video
 function startVideo() {

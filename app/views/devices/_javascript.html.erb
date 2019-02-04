@@ -43,84 +43,48 @@
       });
     <% end %>
 
-    // when an 'execute synchronization' button is clicked
-    $('.execute-synchronization').on('click', function() {
-      // create the message
-      var message = { synchronization_id: $(this).data('id') };
-      // send the message
-      App.messaging.send_message(message);
-    });
-
-    // create the subscription
-    App.messaging = App.cable.subscriptions.create(
-      {
-        channel: 'DevicesChannel',
-        id: device_id,
-        auth_token: device_auth_token
-      },
-      {
-
-        // when data is received
-        received: function(data) {
-          // if we've sent a message from the webpage
-          if (start_transmission_time !== 0) {
-            // calculate the delay
-            $('#delay').text(((new Date).getTime() - start_transmission_time) + 'ms');
-          }
-
-          // get the data as a string
-          var data_string = JSON.stringify(data);
-          // update the status
-          $('#device_status').text(data_string);
-
-          // if we should log commands
-          if ($('#log_commands_checkbox').is(':checked')) {
-            // show the logs
-            $('#device_logs').removeClass('hide');
-            // prepend the data to the existing text
-            var log_string = data_string + "\n" + $('#device_logs').text();
-            // limit the string to 100 lines of data
-            log_string = log_string.split("\n").slice(0, 100).join("\n");
-            // log the data
-            $('#device_logs').text(log_string);
-          }
-
-          // if this is a digital command
-          if (data.digital) {
-            // remove the active class
-            $('.pin_' + data.pin + '_buttons').removeClass('active');
-            // blur the buttons in case they're focused
-            $('.pin_' + data.pin + '_buttons').blur();
-            // make the appropriate button active
-            $('#pin_' + data.pin + '_' + data.digital).addClass('active');
-          // else if this is a servo command
-          } else if (data.servo) {
-            // update the slider value
-            window['slider_' + data.pin].setValue(data.servo);
-            // update the text input
-            $('#servo_input_' + data.pin).val(data.servo);
-          }
-
-        },
-
-        // function to send a message
-        send_message: function(message) {
-          // mark the start time
-          start_transmission_time = (new Date).getTime();
-
-          // perform the "receive" action in app/channels/devices_channel.rb
-          this.perform('receive', message);
-        }
-
-      }
-    );
-
   });
 
-  // send servo position
-  function sendServoMessage(message) {
-    // send the message
-    App.messaging.send_message(message);
+  // log the data
+  function logData(data) {
+    // if we've sent a message from the webpage
+    if (start_transmission_time !== 0) {
+      // calculate the delay
+      $('#delay').text(((new Date).getTime() - start_transmission_time) + 'ms');
+    }
+
+    // get the data as a string
+    var data_string = JSON.stringify(data);
+    // update the status
+    $('#device_status').text(data_string);
+
+    // if we should log commands
+    if ($('#log_commands_checkbox').is(':checked')) {
+      // show the logs
+      $('#device_logs').removeClass('hide');
+      // prepend the data to the existing text
+      var log_string = data_string + "\n" + $('#device_logs').text();
+      // limit the string to 100 lines of data
+      log_string = log_string.split("\n").slice(0, 100).join("\n");
+      // log the data
+      $('#device_logs').text(log_string);
+    }
+
+    // if this is a digital command
+    if (data.digital) {
+      // remove the active class
+      $('.pin_' + data.pin + '_buttons').removeClass('active');
+      // blur the buttons in case they're focused
+      $('.pin_' + data.pin + '_buttons').blur();
+      // make the appropriate button active
+      $('#pin_' + data.pin + '_' + data.digital).addClass('active');
+    // else if this is a servo command
+    } else if (data.servo) {
+      // update the slider value
+      window['slider_' + data.pin].setValue(data.servo);
+      // update the text input
+      $('#servo_input_' + data.pin).val(data.servo);
+    }
   }
 
 </script>

@@ -66,22 +66,6 @@
       });
     <% end %>
 
-    // send a synchronization message by id
-    function sendSynchronization(synchronization_id) {
-      // create the message
-      var message = { synchronization_id: synchronization_id };
-      // send the message
-      App.messaging.send_message(message);
-    }
-
-    // send an opposite synchronization message by id
-    function sendOppositeSynchronization(synchronization_id) {
-      // create the message
-      var message = { synchronization_id: synchronization_id, opposite: 'true' };
-      // send the message
-      App.messaging.send_message(message);
-    }
-
     // for each control type ('forward', 'backward', 'left', 'right')
     <% Device::DRIVE_CONTROL_TYPES.each do |device_control_type| %>
 
@@ -109,32 +93,6 @@
 
     <% end %>
 
-    // create the subscription
-    App.messaging = App.cable.subscriptions.create(
-      {
-        channel: 'DevicesChannel',
-        id: device_id,
-        auth_token: device_auth_token
-      },
-      {
-
-        // when data is received
-        received: function(data) {
-
-        },
-
-        // function to send a message
-        send_message: function(message) {
-          // mark the start time
-          start_transmission_time = (new Date).getTime();
-
-          // perform the "receive" action in app/channels/devices_channel.rb
-          this.perform('receive', message);
-        }
-
-      }
-    );
-
     <% if @device.video_enabled? %>
       // start video on page load, with a slight delay to make sure everything has loaded
       setTimeout(function() {
@@ -144,4 +102,8 @@
 
   });
 
+  // function to log the data
+  function logData(data) {
+    // do nothing
+  }
 </script>
