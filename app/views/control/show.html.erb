@@ -29,17 +29,6 @@
     });
   <% end %>
 
-  // keep track of the start transmission time
-  var start_transmission_time = 0;
-  // keep track of the video player
-  var video_player = null;
-  // keep track of the video timeout
-  var video_timeout = null;
-  // keep track of whether the video is currently playing
-  var video_active = false;
-  // keep track of the stop motors timeout
-  var stop_motors_timeout = null;
-
   // when the document is ready
   $(document).ready(function() {
 
@@ -78,12 +67,6 @@
       var message = { i2c_address: '<%= @device.i2c_address %>', pin: $(this).data('pin'), digital: $(this).data('digital') };
       // send the message
       App.messaging.send_message(message);
-    });
-    
-    // when user activity is detected
-    $('body').on('mousemove mousedown touchstart touchmove', function() {
-      // only detect activity if video has been played
-      if (video_active === true) { activityDetected(); }
     });
 
     // send a synchronization message by id
@@ -163,18 +146,6 @@
     <% end %>
 
   });
-
-  // new user activity is detected
-  function activityDetected() {
-    // clear the current timeout
-    clearTimeout(video_timeout);
-
-    // set new timeout for 10 minutes
-    video_timeout = setTimeout(function() {
-      // stop video
-      stopVideo();
-    }, 600000);
-  }
 
   // start the video
   function startVideo() {
