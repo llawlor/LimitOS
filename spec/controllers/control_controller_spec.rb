@@ -6,6 +6,56 @@ RSpec.describe ControlController, type: :controller do
   let(:device) { FactoryBot.create(:device, user: user, slug: 'my car') }
   let(:device_without_user) { FactoryBot.create(:device, user: nil, slug: 'my car 2') }
 
+  describe '#edit' do
+    it "shows the edit page when the user is signed in" do
+      sign_in(user)
+      get :edit, params: { slug: device.id }
+      expect(response).to be_successful
+    end
+
+    it "shows the edit page when the user is signed in and uses a slug" do
+      sign_in(user)
+      get :edit, params: { slug: device.slug }
+      expect(response).to be_successful
+    end
+
+    it "does not show the edit page when the user is signed out" do
+      get :edit, params: { slug: device.id }
+      expect(response.body).to eq('No device')
+    end
+
+    it "shows the edit page using @devices" do
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      get :edit, params: { slug: device_without_user.id }
+      expect(response).to be_successful
+    end
+
+    it "shows the edit page using @devices and slug as the parameter" do
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      get :edit, params: { slug: device_without_user.slug }
+      expect(response).to be_successful
+    end
+
+    it "does not show the edit page when the user is not signed in and the device is public" do
+      device.update_attributes(public: true)
+      get :edit, params: { slug: device.id }
+      expect(response.body).to eq('No device')
+    end
+
+    it "does not show the edit page when the user is incorrect" do
+      user_2 = FactoryBot.create(:user)
+      sign_in(user_2)
+      get :edit, params: { slug: device.id }
+      expect(response.body).to eq('No device')
+    end
+
+    it 'does not show the edit page if @devices is blank' do
+      cookies.encrypted[:device_ids] = []
+      get :edit, params: { slug: device.id }
+      expect(response.body).to eq('No device')
+    end
+  end
+
   describe '#update' do
     it "updates a user's device when the user is signed in" do
       sign_in(user)
@@ -40,6 +90,12 @@ RSpec.describe ControlController, type: :controller do
     end
 
     it "does not update a user's device when the user is not signed in" do
+      patch :update, params: { slug: device.id, device: { slug: 'new slug' } }
+      expect(response.body).to eq('No device')
+    end
+
+    it "does not update a user's device when the user is not signed in and the device is public" do
+      device.update_attributes(public: true)
       patch :update, params: { slug: device.id, device: { slug: 'new slug' } }
       expect(response.body).to eq('No device')
     end
@@ -98,6 +154,23 @@ RSpec.describe ControlController, type: :controller do
       get :show, params: { slug: device.id }
       expect(response.body).to eq('No device')
       expect(assigns(:device)).to eq(nil)
+    end
+
+    it 'sets @owner to true' do
+      sign_in(user)
+      get :show, params: { slug: device.id }
+      expect(assigns(:owner)).to eq(true)
+    end
+
+    it 'sets @owner to false' do
+      get :show, params: { slug: device.id }
+      expect(assigns(:owner)).to eq(false)
+    end
+
+    it 'sets @owner to false even if device is public' do
+      device.update(public: true)
+      get :show, params: { slug: device.id }
+      expect(assigns(:owner)).to eq(false)
     end
   end
 

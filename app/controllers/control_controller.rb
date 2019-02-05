@@ -4,6 +4,9 @@ class ControlController < ApplicationController
 
   # update the controls
   def update
+    # exit if not the owner
+    render plain: 'No device' and return if @owner != true
+
     # if the device was updated successfully
     if @device.update(device_params)
 
@@ -29,6 +32,9 @@ class ControlController < ApplicationController
 
   # edit the control page
   def edit
+    # exit if not the owner
+    render plain: 'No device' and return if @owner != true
+    
     # render the control layout
     render layout: 'control'
   end
