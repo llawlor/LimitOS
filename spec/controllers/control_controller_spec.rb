@@ -172,6 +172,19 @@ RSpec.describe ControlController, type: :controller do
       get :show, params: { slug: device.id }
       expect(assigns(:owner)).to eq(false)
     end
+
+    it 'includes the auth token' do
+      sign_in(user)
+      get :show, params: { slug: device.id }
+      expect(response.body).to include(device.auth_token)
+    end
+
+    it 'should not include the auth token if the device is public' do
+      sign_in(user)
+      device.update(public: true)
+      get :show, params: { slug: device.id }
+      expect(response.body).to_not include(device.auth_token)
+    end
   end
 
 end
