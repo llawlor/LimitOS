@@ -49,6 +49,19 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#video_from_devices_url' do
+    it 'includes the auth token' do
+      device.save
+      expect(device.video_from_devices_url).to eq("#{ Rails.application.config_for(:limitos)['video_from_devices_host'] }/video_from_devices/#{ device.auth_token }")
+    end
+
+    it 'should include the device id if the device is public' do
+      device.save
+      device.update(public: true)
+      expect(device.video_from_devices_url).to eq("#{ Rails.application.config_for(:limitos)['video_from_devices_host'] }/video_from_devices/#{ device.id }")
+    end
+  end
+
   describe '#broadcast_device_information on create/update/destroy' do
     it 'sends on create' do
       expect_any_instance_of(Device).to receive(:broadcast_device_information).once
