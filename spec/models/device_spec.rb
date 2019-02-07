@@ -139,6 +139,20 @@ RSpec.describe Device, type: :model do
       }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
     end
 
+    it 'broadcasts the message and includes the i2c address' do
+      slave_device = FactoryBot.create(:device, user: user, device: device, i2c_address: '0x04')
+      expect {
+        device.broadcast_message({ "pin" => '5', "servo" => '12', "i2c_address" => '0x04' })
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12', i2c_address: '0x04' }))
+    end
+
+    it 'broadcasts the message and does not include the i2c address' do
+      slave_device = FactoryBot.create(:device, user: user, device: device, i2c_address: '0x04')
+      expect {
+        device.broadcast_message({ "pin" => '5', "servo" => '12', "i2c_address" => '' })
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_excluding({ i2c_address: '' }))
+    end
+
     it 'adds the video url to a start_video command' do
       expect {
         device.broadcast_message({ 'command' => 'start_video' })
