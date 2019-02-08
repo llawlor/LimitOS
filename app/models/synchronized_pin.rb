@@ -25,7 +25,7 @@ class SynchronizedPin < ApplicationRecord
     elsif value == 'off'
       return 'on'
     # else if the value is a number greater than 0
-    elsif values.to_i > 0
+    elsif value.to_i > 0
       return '0'
     # return nothing by default
     else
