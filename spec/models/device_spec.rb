@@ -49,6 +49,25 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#execute_synchronization' do
+    before :each do
+      device.save
+      @pin_22 = FactoryBot.create(:pin, pin_number: 22, device: device)
+      @pin_23 = FactoryBot.create(:pin, pin_number: 23, device: device)
+      @synchronization = FactoryBot.create(:synchronization, device: device)
+      SynchronizedPin.create(device: device, pin: @pin_22, synchronization: @synchronization, value: 'on')
+      SynchronizedPin.create(device: device, pin: @pin_23, synchronization: @synchronization, value: 'on')
+      expect(@synchronization.pins.collect(&:id)).to eq([@pin_22.id, @pin_23.id])
+    end
+
+    it 'executes a synchronization' do
+      expect(device).to receive(:broadcast_message).with({pin: 22, digital: 'on'}).ordered
+      expect(device).to receive(:broadcast_message).with({pin: 23, digital: 'on'}).ordered
+      device.execute_synchronization(@synchronization.id)
+    end
+
+  end
+
   describe '#video_from_devices_url' do
     it 'includes the auth token' do
       device.save
