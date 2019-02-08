@@ -55,8 +55,8 @@ RSpec.describe Device, type: :model do
       @pin_22 = FactoryBot.create(:pin, pin_type: 'input', pin_number: 22, device: device)
       @pin_23 = FactoryBot.create(:pin, pin_type: 'servo', pin_number: 23, device: device)
       @synchronization = FactoryBot.create(:synchronization, device: device)
-      SynchronizedPin.create(device: device, pin: @pin_22, synchronization: @synchronization, value: 'on')
-      SynchronizedPin.create(device: device, pin: @pin_23, synchronization: @synchronization, value: '90')
+      FactoryBot.create(:synchronized_pin, device: device, pin: @pin_22, synchronization: @synchronization, value: 'on')
+      FactoryBot.create(:synchronized_pin, device: device, pin: @pin_23, synchronization: @synchronization, value: '90')
       expect(@synchronization.pins.collect(&:id)).to eq([@pin_22.id, @pin_23.id])
     end
 
