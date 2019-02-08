@@ -73,6 +73,18 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#private?' do
+    it 'is private' do
+      device.update(public: false)
+      expect(device.private?).to eq(true)
+    end
+
+    it 'is not private' do
+      device.update(public: true)
+      expect(device.private?).to eq(false)
+    end
+  end
+
   describe '#video_from_devices_url' do
     it 'includes the auth token' do
       device.save
