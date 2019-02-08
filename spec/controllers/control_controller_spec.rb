@@ -117,6 +117,18 @@ RSpec.describe ControlController, type: :controller do
   describe '#show' do
     render_views
 
+    it 'should not show a private device when no user signed in' do
+      device.update(public: false)
+      get :show, params: { slug: device.id }
+      expect(response.body).to eq('No device')
+    end
+
+    it 'should show a public device when no user signed in' do
+      device.update(public: true)
+      get :show, params: { slug: device.id }
+      expect(response.body).to_not eq('No device')
+    end
+
     it 'sets @device correctly for a user' do
       sign_in(user)
       get :show, params: { slug: device.id }
