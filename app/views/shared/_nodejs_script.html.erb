@@ -67,6 +67,12 @@ ws.on('open', function() {
   ws.send(JSON.stringify(device_subscription));
 });
 
+// when the websocket client is disconnected from the server
+ws.on('close', function() {
+  // throw an error, so that pm2 will restart this script and eventually reconnect
+  throw ('disconnected from server');
+});
+
 // when the websocket receives a message
 ws.on('message', function(data, flags) {
   // get the JSON data
