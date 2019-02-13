@@ -87,7 +87,7 @@ RSpec.describe DevicesChannel, type: :channel do
     it 'receives and broadcasts successfully' do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       expect {
-        subscription.receive({ pin: '5', servo: '12' })
+        subscription.receive({ "pin" => '5', "servo" => '12' })
       }.to have_broadcasted_to(device.id).with(hash_including({ pin: '5', servo: '12' }))
     end
 
@@ -96,7 +96,7 @@ RSpec.describe DevicesChannel, type: :channel do
       device.update_attributes(broadcast_to_device_id: target_device.id)
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       expect {
-        subscription.receive({ pin: '5', servo: '12' })
+        subscription.receive({ "pin" => '5', "servo" => '12'})
       }.to have_broadcasted_to(target_device.id).with(hash_including({ pin: '5', servo: '12' }))
     end
 
@@ -106,7 +106,7 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription.instance_variable_set(:@params, { })
       broadcasted_message = nil
       expect {
-        broadcasted_message = subscription.receive({ pin: '5', servo: '12' })
+        broadcasted_message = subscription.receive({ "pin" => '5', "servo" => '12' })
       }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
@@ -117,7 +117,7 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription.instance_variable_set(:@params, { id: 0 })
       broadcasted_message = nil
       expect {
-        broadcasted_message = subscription.receive({ pin: '5', servo: '12' })
+        broadcasted_message = subscription.receive({ "pin" => '5', "servo" => '12' })
       }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
@@ -128,7 +128,7 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription.instance_variable_set(:@params, { id: device.id, auth_token: 'INVALID_AUTH_TOKEN' })
       broadcasted_message = nil
       expect {
-        broadcasted_message = subscription.receive({ pin: '5', servo: '12' })
+        broadcasted_message = subscription.receive({ "pin" => '5', "servo" => '12' })
       }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
