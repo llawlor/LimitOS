@@ -17,6 +17,7 @@
 #  control_template       :string(255)
 #  public                 :boolean          default(FALSE)
 #  slug                   :string(255)
+#  last_active_at         :datetime
 #
 
 class Device < ApplicationRecord
