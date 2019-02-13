@@ -77,6 +77,13 @@ RSpec.describe DevicesChannel, type: :channel do
       expect(device.reload.last_active_at).to_not eq(nil)
     end
 
+    it 'performs a synchronization' do
+      allow_any_instance_of(Device).to receive(:execute_synchronization) { }
+      expect_any_instance_of(Device).to receive(:execute_synchronization)
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      subscription.receive({ "synchronization_id" => 1 })
+    end
+
     it 'receives and broadcasts successfully' do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       expect {
