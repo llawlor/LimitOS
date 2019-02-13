@@ -70,6 +70,13 @@ RSpec.describe DevicesChannel, type: :channel do
   end
 
   describe '#receive' do
+    it 'performs a status update' do
+      expect(device.last_active_at).to eq(nil)
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      subscription.receive({ "status_update" => true })
+      expect(device.reload.last_active_at).to_not eq(nil)
+    end
+
     it 'receives and broadcasts successfully' do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       expect {
