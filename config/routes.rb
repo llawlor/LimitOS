@@ -45,7 +45,6 @@ Rails.application.routes.draw do
       get :setup
       post :install
       post :send_message
-      post :status_update
     end
     collection do
       get :pretty_print_install
