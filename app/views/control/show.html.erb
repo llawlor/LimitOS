@@ -10,7 +10,11 @@
   </a>
 <% end %>
 
-<% if @device.control_template.blank? || @device.control_template == 'default' %>
+<% if @device.offline? %>
+
+  <div style="padding: 20px;">Device is offline.</div>
+
+<% elsif @device.control_template.blank? || @device.control_template == 'default' %>
 
   <%= render 'default' %>
 

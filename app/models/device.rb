@@ -17,6 +17,7 @@
 #  control_template       :string(255)
 #  public                 :boolean          default(FALSE)
 #  slug                   :string(255)
+#  last_active_at         :datetime
 #
 
 class Device < ApplicationRecord
@@ -47,6 +48,18 @@ class Device < ApplicationRecord
 
   # options for the "drive" control type
   DRIVE_CONTROL_TYPES = ['forward', 'backward', 'left', 'right']
+
+  # device is currently online
+  def online?
+    # last active at exists, and is more recent than (status_interval + 3) seconds ago
+    return (self.last_active_at.present? && (self.last_active_at > (Rails.application.config_for(:limitos)["status_interval"].to_i + 3).seconds.ago))
+  end
+
+  # devis is currently offline
+  def offline?
+    # opposite of online?
+    return !self.online?
+  end
 
   # add method to determine if a device is private
   def private?

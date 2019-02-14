@@ -28,11 +28,13 @@ RSpec.describe DevicesChannel, type: :channel do
   end
 
   describe '#request_device_information' do
-    it 'broadcasts successfully' do
+    it 'broadcasts successfully and updates the last_active_at' do
+      expect(device.last_active_at).to eq(nil)
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       expect {
         subscription.request_device_information
       }.to have_broadcasted_to(device.id).with(hash_including({ slave_devices: [] }))
+      expect(device.reload.last_active_at).to_not eq(nil)
     end
 
     it 'does not broadcast with no device id' do
@@ -70,10 +72,24 @@ RSpec.describe DevicesChannel, type: :channel do
   end
 
   describe '#receive' do
+    it 'performs a status update' do
+      expect(device.last_active_at).to eq(nil)
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      subscription.receive({ "status_update" => true })
+      expect(device.reload.last_active_at).to_not eq(nil)
+    end
+
+    it 'performs a synchronization' do
+      allow_any_instance_of(Device).to receive(:execute_synchronization) { }
+      expect_any_instance_of(Device).to receive(:execute_synchronization)
+      subscription = subscribe(id: device.id, auth_token: device.auth_token)
+      subscription.receive({ "synchronization_id" => 1 })
+    end
+
     it 'receives and broadcasts successfully' do
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       expect {
-        subscription.receive({ pin: '5', servo: '12' })
+        subscription.receive({ "pin" => '5', "servo" => '12' })
       }.to have_broadcasted_to(device.id).with(hash_including({ pin: '5', servo: '12' }))
     end
 
@@ -82,7 +98,7 @@ RSpec.describe DevicesChannel, type: :channel do
       device.update_attributes(broadcast_to_device_id: target_device.id)
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       expect {
-        subscription.receive({ pin: '5', servo: '12' })
+        subscription.receive({ "pin" => '5', "servo" => '12'})
       }.to have_broadcasted_to(target_device.id).with(hash_including({ pin: '5', servo: '12' }))
     end
 
@@ -92,7 +108,7 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription.instance_variable_set(:@params, { })
       broadcasted_message = nil
       expect {
-        broadcasted_message = subscription.receive({ pin: '5', servo: '12' })
+        broadcasted_message = subscription.receive({ "pin" => '5', "servo" => '12' })
       }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
@@ -103,7 +119,7 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription.instance_variable_set(:@params, { id: 0 })
       broadcasted_message = nil
       expect {
-        broadcasted_message = subscription.receive({ pin: '5', servo: '12' })
+        broadcasted_message = subscription.receive({ "pin" => '5', "servo" => '12' })
       }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end
@@ -114,7 +130,7 @@ RSpec.describe DevicesChannel, type: :channel do
       subscription.instance_variable_set(:@params, { id: device.id, auth_token: 'INVALID_AUTH_TOKEN' })
       broadcasted_message = nil
       expect {
-        broadcasted_message = subscription.receive({ pin: '5', servo: '12' })
+        broadcasted_message = subscription.receive({ "pin" => '5', "servo" => '12' })
       }.to_not have_broadcasted_to(device.id)
       expect(broadcasted_message).to eq(false)
     end

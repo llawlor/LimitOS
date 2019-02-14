@@ -17,6 +17,7 @@
 #  control_template       :string(255)
 #  public                 :boolean          default(FALSE)
 #  slug                   :string(255)
+#  last_active_at         :datetime
 #
 
 require 'rails_helper'
@@ -47,6 +48,27 @@ RSpec.describe Device, type: :model do
       device.save
       expect(device.auth_token.length).to eq(24)
     end
+  end
+
+  describe '#online? and #offline?' do
+    it 'is online' do
+      device.update(last_active_at: (Rails.application.config_for(:limitos)["status_interval"].to_i).seconds.ago)
+      expect(device.online?).to eq(true)
+      expect(device.offline?).to eq(false)
+    end
+
+    it 'is offline' do
+      device.update(last_active_at: (Rails.application.config_for(:limitos)["status_interval"].to_i + 4).seconds.ago)
+      expect(device.online?).to eq(false)
+      expect(device.offline?).to eq(true)
+    end
+
+    it 'is offline if no last_active_at' do
+      device.update(last_active_at: nil)
+      expect(device.online?).to eq(false)
+      expect(device.offline?).to eq(true)
+    end
+
   end
 
   describe '#execute_synchronization' do

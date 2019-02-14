@@ -31,6 +31,17 @@
     <% end %>
   </dd>
 
+  <% if @device.device_type == 'raspberry_pi' %>
+    <dt><strong>Status:</strong></dt>
+    <dd>
+      <% if @device.online? %>
+        Online
+      <% else %>
+        Offline
+      <% end %>
+    </dd>
+  <% end %>
+
   <% if @device.parent_device.present? %>
     <dt><strong>I2C Address:</strong></dt>
     <dd><%= @device.i2c_address %></dd>

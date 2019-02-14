@@ -29,6 +29,9 @@ class DevicesChannel < ApplicationCable::Channel
     # return false if auth_token doesn't match
     return false if device.private? && !Devise.secure_compare(device.auth_token, params[:auth_token])
 
+    # update the last_active_at, without invoking callbacks
+    device.update_column(:last_active_at, DateTime.now)
+    
     # transmit the slave_devices only to this device
     device.broadcast_device_information
   end
@@ -44,8 +47,12 @@ class DevicesChannel < ApplicationCable::Channel
     # return false if auth_token doesn't match
     return false if device.private? && !Devise.secure_compare(device.auth_token, params[:auth_token])
 
-    # if there is a synchronization present
-    if input_data["synchronization_id"].present?
+    # if this is a status update
+    if input_data["status_update"].present?
+      # update the last_active_at, without invoking callbacks
+      device.update_column(:last_active_at, DateTime.now)
+    # else if there is a synchronization present
+    elsif input_data["synchronization_id"].present?
       # execute the synchronization
       device.execute_synchronization(input_data["synchronization_id"].to_i, input_data["opposite"] == 'true')
     # else no synchronization present

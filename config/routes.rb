@@ -40,11 +40,11 @@ Rails.application.routes.draw do
 
   resources :devices do
     member do
-      post :send_message
-      get :nodejs_script
       get :arduino_script
-      post :install
+      get :nodejs_script
       get :setup
+      post :install
+      post :send_message
     end
     collection do
       get :pretty_print_install
