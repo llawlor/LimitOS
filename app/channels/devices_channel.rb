@@ -29,6 +29,9 @@ class DevicesChannel < ApplicationCable::Channel
     # return false if auth_token doesn't match
     return false if device.private? && !Devise.secure_compare(device.auth_token, params[:auth_token])
 
+    # update the last_active_at, without invoking callbacks
+    device.update_column(:last_active_at, DateTime.now)
+    
     # transmit the slave_devices only to this device
     device.broadcast_device_information
   end
