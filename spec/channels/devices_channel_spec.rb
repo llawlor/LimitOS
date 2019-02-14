@@ -28,11 +28,13 @@ RSpec.describe DevicesChannel, type: :channel do
   end
 
   describe '#request_device_information' do
-    it 'broadcasts successfully' do
+    it 'broadcasts successfully and updates the last_active_at' do
+      expect(device.last_active_at).to eq(nil)
       subscription = subscribe(id: device.id, auth_token: device.auth_token)
       expect {
         subscription.request_device_information
       }.to have_broadcasted_to(device.id).with(hash_including({ slave_devices: [] }))
+      expect(device.reload.last_active_at).to_not eq(nil)
     end
 
     it 'does not broadcast with no device id' do
