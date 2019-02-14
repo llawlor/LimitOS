@@ -463,3 +463,21 @@ setInterval(function() {
     }
   });
 }, 20);
+
+// send status updates every <%= Rails.application.config_for(:limitos)["status_interval"] %> seconds
+setInterval(function() {
+  // exit if websocket isn't ready
+  if (ws.readyState !== WebSocket.OPEN) { return }
+
+  // create the command to send
+  var input = {
+    command: 'message',
+    identifier: channel_json,
+    data: JSON.stringify({
+      status_update: true
+    })
+  }
+
+  // send the websocket command
+  ws.send(JSON.stringify(input));
+}, <%= Rails.application.config_for(:limitos)["status_interval"].to_i if Rails.application.config_for(:limitos)["status_interval"].to_i > 0 %>*1000);
