@@ -13,14 +13,14 @@
 
     <br><br><br>
 
-    <h4>1. Set up the circuit</h4>
+    <h4>Step 1: Set up the circuit</h4>
     Connect the button to GPIO pin 17, and ground it using a 10k ohm resistor.
     <br><br>
     <%= tutorial_image('tutorials/button_circuit.png') %>
 
     <br><br><br>
 
-    <h4>2. Install <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h4>
+    <h4>Step 2: Install <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h4>
     Installation is a single command:
     <br>
     <%= render 'shared/install_command' %>
@@ -31,7 +31,7 @@
 
     <br><br><br>
 
-    <h4>3. Set up the device on the <%= Rails.application.config_for(:limitos)['application_name'] %> website</h4>
+    <h4>Step 3: Set up the device on the <%= Rails.application.config_for(:limitos)['application_name'] %> website</h4>
     Add pin 17 as a digital input, and you can then push the button and see the on/off state on the <%= Rails.application.config_for(:limitos)['application_name'] %> webpage.
     <br><br>
     <%= tutorial_image('tutorials/button.jpg') %>
