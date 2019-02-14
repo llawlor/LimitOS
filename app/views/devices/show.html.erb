@@ -31,10 +31,10 @@
     <% end %>
   </dd>
 
-  <% if @device.device_type == 'raspberry_pi' && Rails.application.config_for(:limitos)["status_interval"].to_i > 0 %>
+  <% if @device.device_type == 'raspberry_pi' %>
     <dt><strong>Status:</strong></dt>
     <dd>
-      <% if @device.last_active_at.present? && (@device.last_active_at > (Rails.application.config_for(:limitos)["status_interval"].to_i + 3).seconds.ago) %>
+      <% if @device.online? %>
         Online
       <% else %>
         Offline
