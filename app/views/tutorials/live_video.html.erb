@@ -1,7 +1,15 @@
 <div class="row">
   <div class="col-xs-12 col-md-offset-2 col-md-8">
 
-    <h1>Live Video Tutorial</h1>
+    <div class="page-header">
+      <h1>Live Video Tutorial</h1>
+    </div>
+
+    <br>
+
+    <h3>What you'll be building</h3>
+
+    In this tutorial you'll learn how to set up a live video feed from your Raspberry Pi that can be viewed across the internet on your desktop, tablet, or mobile phone.
 
     <br><br>
 
@@ -14,7 +22,7 @@
 
     <br><br><br>
 
-    <h4>Step 1: Enable the camera</h4>
+    <h3>Step 1: Enable the camera</h3>
     The camera must be enabled first using the command:
     <br>
     <pre class="limitos-command" style="margin-top: 10px;">sudo raspi-config</pre>
@@ -25,7 +33,7 @@
 
     <br><br><br>
 
-    <h4>Step 2: Install <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h4>
+    <h3>Step 2: Install <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
     Installation is a single command:
     <br>
     <%= render 'shared/install_command' %>
@@ -36,7 +44,7 @@
 
     <br><br><br>
 
-    <h4>Step 3: Enable <%= Rails.application.config_for(:limitos)['application_name'] %> video</h4>
+    <h3>Step 3: Enable <%= Rails.application.config_for(:limitos)['application_name'] %> video</h3>
     Edit your device by selecting "My Devices" above, clicking on the device, and then clicking "Edit Device".
     <br>
     Make sure to check the "Enable live video" checkbox.
@@ -47,7 +55,7 @@
 
     <br><br><br>
 
-    <h4>Step 4: View your live video feed</h4>
+    <h3>Step 4: View your live video feed</h3>
     Navigate back to your device, and click the "Start Video" button.  Your live video feed should now appear!
     <br><br>
     <%= tutorial_image('tutorials/video_screenshot.gif', 'display: inline-block; border: 1px solid #00dde3;') %>
