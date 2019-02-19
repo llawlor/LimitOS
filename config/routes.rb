@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       get 'button'
       get 'active_buzzer'
       get 'live_video'
+      get 'rover'
     end
   end
 
