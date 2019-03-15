@@ -15,3 +15,4 @@
 //= require twitter/bootstrap
 //= require_tree .
 //= stub jsmpeg.min
+//= stub controls.js
