@@ -34,21 +34,36 @@ tutorial<div class="row">
     <br><br><br>
 
     <h3>Step 1: Build the Chassis</h3>
-    Follow the first 6 minutes and 15 seconds of <a href="https://www.youtube.com/watch?v=AZSiqj0NZgU" target="_blank">this tutorial video</a> to build the chassis. 
+    Follow the first 6 minutes and 15 seconds of <a href="https://www.youtube.com/watch?v=AZSiqj0NZgU" target="_blank">this tutorial video</a> to build the chassis.
+    <br><br>
+    <%= tutorial_image('tutorials/chassis.jpg') %>
 
     <br><br><br><br>
 
-    <h3>Step 2: Connect the Raspberry Pi</h3>
+    <h3>Step 2: Add the Raspberry Pi and L298N Module</h3>
+    Cut out a piece of foam to act as a cushion between the Raspberry Pi and chassis, and another piece of foam to sit between the Raspberry Pi and L298N Module.
+    Then attach them to the chassis using rubber bands.  Connect the Raspberry Pi Camera.
+    <br><br>
+    <%= tutorial_image('tutorials/chassis_with_pi.jpg') %>
 
     <br><br><br><br>
 
-    <h3>Step 3: Add the L298N Module</h3>
+    <h3>Step 3: Connect the Circuit</h3>
+    Connect the motors to the sides of the L298N module.  Connect pins 19, 20, 21, and 26 to the control pins of the L298N module.
+    Connect a ground wire between the Raspberry Pi and the L298N module, and finally connect the batteries (located underneath the chassis) to the L298N's ground and +12V.
+    <br><br>
+    <%= tutorial_image('tutorials/remote_car_circuit.png') %>
+    <br><br>
+    Add some foam insulation under the external power source, and secure it using rubber bands.  Tape the camera to the device to prevent it from moving while driving.
+    Connect the power source to the Raspberry Pi, and add the wheel treads if you haven't done so already.
+    <br><br>
+    <%= tutorial_image('tutorials/rover_assembled.jpg') %>
 
     <br><br><br><br>
 
 
     <h3>Step 4: Enable the camera</h3>
-    The camera must be enabled first using the command:
+    The camera must be enabled on the Raspberry Pi using the command:
     <br>
     <pre class="limitos-command" style="margin-top: 10px;">sudo raspi-config</pre>
     <br>
