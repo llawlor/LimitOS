@@ -11,6 +11,7 @@ tutorial<div class="row">
 
     This tutorial teaches you how to build a rover that can be driven using your mobile phone.
     It includes a live video feed and a control interface for driving.
+    Since the rover and your phone both have internet access, the toy car can be controlled from across the world.
 
     <br><br>
 
@@ -19,11 +20,62 @@ tutorial<div class="row">
       <li>Raspberry Pi connected to the internet</li>
       <li><a href="https://www.raspberrypi.org/products/camera-module-v2/">Raspberry Pi camera</a></li>
       <li><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspian Stretch</a> (or ffmpeg manually installed)</a></li>
+      <li>Chassis Components: </li>
+      <li>External Battery Pack</li>
+      <li>Wires and packaging material</li>
     </ul>
 
     <br><br><br>
 
-    <h3>Step 1: </h3>
+    <h3>Step 1: Build the Chassis</h3>
+
+    <br><br><br><br>
+
+    <h3>Step 2: Connect the Raspberry Pi</h3>
+
+    <br><br><br><br>
+
+    <h3>Step 3: Add the L298N? Module</h3>
+
+    <br><br><br><br>
+
+
+    <h3>Step 4: Enable the camera</h3>
+    The camera must be enabled first using the command:
+    <br>
+    <pre class="limitos-command" style="margin-top: 10px;">sudo raspi-config</pre>
+    <br>
+    Visit the <a href="https://www.raspberrypi.org/documentation/usage/camera/">official documentation</a> for more info.
+    <br><br>
+    <%= tutorial_image('tutorials/pi_camera.jpg') %>
+
+    <br><br><br>
+
+    <h3>Step 5: Install <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
+    Installation is a single command:
+    <br>
+    <%= render 'shared/install_command' %>
+    <br>
+    Follow the on-screen instructions to register the device afterwards.
+    <br><br>
+    <%= tutorial_image('tutorials/limitos_install.gif') %>
+
+    <br><br><br>
+
+    <h3>Step 6: Enable <%= Rails.application.config_for(:limitos)['application_name'] %> video</h3>
+    Edit your device by selecting "My Devices" above, clicking on the device, and then clicking "Edit Device".
+    <br>
+    Make sure to check the "Enable live video" checkbox.
+    <br>
+    If your video appears upside down, you can also come back here later to invert the video.
+    <br><br>
+    <%= tutorial_image('tutorials/enable_video.gif') %>
+
+    <h3>Step 7: Set up the Pins</h3>
+
+    <br><br><br><br>
+
+    <h3>Step 8: Set up the Control Interface</h3>
 
     <br><br><br><br>
 
