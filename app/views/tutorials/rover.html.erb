@@ -1,0 +1,120 @@
+tutorial<div class="row">
+  <div class="col-xs-12 col-md-offset-2 col-md-8">
+
+    <div class="page-header">
+      <h1>Rover (Toy Car) Tutorial</h1>
+    </div>
+
+    <br>
+
+    <h3>What you'll be building</h3>
+
+    This tutorial teaches you how to build a rover that can be driven using your mobile phone.
+    It includes a live video feed and a control interface for driving.
+    Since the rover and your phone both have internet access, the toy car can be controlled from across the world.
+
+    <br><br>
+
+    <h3>Requirements and Materials</h3>
+    <ul class="spaced-list">
+      <li>Raspberry Pi connected to the internet</li>
+      <li><a href="https://www.raspberrypi.org/products/camera-module-v2/">Raspberry Pi camera</a></li>
+      <li><a href="https://www.raspberrypi.org/downloads/raspbian/">Raspian Stretch</a> (or ffmpeg manually installed)</a></li>
+      <li>
+        Chassis Components:
+        <a href="https://www.pololu.com/product/1418/" target="_blank">Zumo chassis kit</a>,
+        <a href="https://www.pololu.com/product/998" target="_blank">2 micro motors</a>,
+        <a href="https://www.amazon.com/dp/B01CC8XI60/" target="_blank">L298N module</a>,
+        4 AA batteries
+      </li>
+      <li>External Power Source, for example the <a href="https://www.amazon.com/gp/product/B005X1Y7I2/" target="_blank">Anker PowerCore+ Mini</a></li>
+      <li>Wires, tape, foam packing material, rubber bands</li>
+    </ul>
+
+    <br><br><br>
+
+    <h3>Step 1: Build the Chassis</h3>
+    Follow the first 6 minutes and 15 seconds of <a href="https://www.youtube.com/watch?v=AZSiqj0NZgU" target="_blank">this tutorial video</a> to build the chassis.
+    <br><br>
+    <%= tutorial_image('tutorials/chassis.jpg') %>
+
+    <br><br><br><br>
+
+    <h3>Step 2: Add the Raspberry Pi and L298N Module</h3>
+    Cut out a piece of foam to act as a cushion between the Raspberry Pi and chassis, and another piece of foam to sit between the Raspberry Pi and L298N Module.
+    Then attach them to the chassis using rubber bands.  Connect the Raspberry Pi Camera.
+    <br><br>
+    <%= tutorial_image('tutorials/chassis_with_pi.jpg') %>
+
+    <br><br><br><br>
+
+    <h3>Step 3: Connect the Circuit</h3>
+    Connect the motors to the sides of the L298N module.  Connect pins 19, 20, 21, and 26 to the control pins of the L298N module.
+    Connect a ground wire between the Raspberry Pi and the L298N module, and finally connect the batteries (located underneath the chassis) to the L298N's ground and +12V.
+    <br><br>
+    <%= tutorial_image('tutorials/remote_car_circuit.png') %>
+    <br><br>
+    Add some foam insulation under the external power source, and secure it using rubber bands.  Tape the camera to the device to prevent it from moving while driving.
+    Connect the power source to the Raspberry Pi, and add the wheel treads if you haven't done so already.
+    <br><br>
+    <%= tutorial_image('tutorials/rover_assembled.jpg') %>
+
+    <br><br><br><br>
+
+
+    <h3>Step 4: Enable the camera</h3>
+    The camera must be enabled on the Raspberry Pi using the command:
+    <br>
+    <pre class="limitos-command" style="margin-top: 10px;">sudo raspi-config</pre>
+    <br>
+    Visit the <a href="https://www.raspberrypi.org/documentation/usage/camera/">official documentation</a> for more info.
+    <br><br>
+    <%= tutorial_image('tutorials/pi_camera.jpg') %>
+
+    <br><br><br>
+
+    <h3>Step 5: Install <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
+    Installation is a single command:
+    <br>
+    <%= render 'shared/install_command' %>
+    <br>
+    Follow the on-screen instructions to register the device afterwards.
+    <br><br>
+    <%= tutorial_image('tutorials/limitos_install.gif') %>
+
+    <br><br><br>
+
+    <h3>Step 6: Enable <%= Rails.application.config_for(:limitos)['application_name'] %> video</h3>
+    Edit your device by selecting "My Devices" above, clicking on the device, and then clicking "Edit Device".
+    <br>
+    Make sure to check the "Enable live video" checkbox.
+    <br>
+    If your video appears upside down, you can also come back here later to invert the video.
+    <br><br>
+    <%= tutorial_image('tutorials/enable_video.gif') %>
+
+    <br><br><br><br>
+
+    <h3>Step 7: Set up the Pins</h3>
+    On your LimitOS device page, add pins 19, 20, 21, and 26 as the "output - digital" pin type.
+    Test out each pin individually using the controls at the bottom of the page, and then name each pin accordingly.
+    <br><br>
+    <%= tutorial_image('tutorials/rover_pins.gif') %>
+
+    <br><br><br><br>
+
+    <h3>Step 8: Set up the Control Interface</h3>
+    Click the icon next to "Device Controls" to access the control interface.
+    Click the gear icon to edit the interface, select the "Drive" control template, allow public access if you'd like, and then map your pins appropriately and save the changes.
+    <br><br>
+    <%= tutorial_image('tutorials/rover_pin_mapping.gif') %>
+
+    <br><br><br><br>
+
+    Here's a video of the rover in action:
+    <%= video_tag("rover.mp4", size: "600x400", controls: true) %>
+
+    <br><br><br><br>
+
+  </div>
+</div>

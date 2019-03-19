@@ -4,6 +4,10 @@ class TutorialsController < ApplicationController
   def index
   end
 
+  # rover tutorial
+  def rover
+  end
+
   # live video tutorial
   def live_video
   end
