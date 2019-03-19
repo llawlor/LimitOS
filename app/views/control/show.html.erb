@@ -1,3 +1,5 @@
+<%= javascript_include_tag 'controls' %>
+
 <% if @device.video_enabled? %>
   <% content_for :custom_head do %>
     <%= javascript_include_tag 'jsmpeg.min' %>
