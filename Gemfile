@@ -10,7 +10,7 @@ gem 'mysql2'
 # redis can probably be updated in the future as long as it is compatible with ActionCable
 # this is the current version that is compatible, even though redis 4.x has been released
 gem 'redis', '~> 3.3'
-gem 'devise'
+gem "devise", ">= 4.6.0"
 gem 'twitter-bootstrap-rails'
 gem 'devise-bootstrap-views'
 gem 'sass'
