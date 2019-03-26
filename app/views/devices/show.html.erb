@@ -36,6 +36,9 @@
     <dd>
       <% if @device.online? %>
         Online
+        <a id="device-off">
+          <span class="glyphicon glyphicon-off" style="font-size: 14px; padding: 2px 0;"></span>
+        </a>
       <% else %>
         Offline
       <% end %>
