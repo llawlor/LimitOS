@@ -254,8 +254,12 @@ function handleDeviceMessage(message) {
   // else if this is a device command
   } else if (message.command) {
 
-    // if this is a command to start the video
-    if ((message.command === 'start_video') && (video_active === false)) {
+    // if this is a shutdown command
+    if (message.command === 'shutdown') {
+      // perform the shutdown
+      spawn('sudo', ['shutdown', '-h', 'now']);
+    // else if this is a command to start the video
+    } else if ((message.command === 'start_video') && (video_active === false)) {
       // start the video
       startVideo(message.video_url);
     }
