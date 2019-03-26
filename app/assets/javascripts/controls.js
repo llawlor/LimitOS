@@ -10,6 +10,17 @@ var video_active = false;
 // when the document is ready
 $(document).ready(function() {
 
+  // when the power off button is clicked
+  $('#device-off').on('click', function() {
+    // if confirmed
+    if (confirm('Are you sure you want to shut down?')) {
+      // create the message
+      var message = { command: 'shutdown' };
+      // send the message to shut down
+      App.messaging.send_message(message);
+    }
+  });
+
   // when user activity is detected
   $('body').on('mousemove mousedown touchstart touchmove', function() {
     // only detect activity if video has been played
