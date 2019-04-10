@@ -23,6 +23,9 @@ class ControlController < ApplicationController
 
   # show the controls page
   def show
+    # allow iframe to be used
+    response.headers.delete "X-Frame-Options"
+
     # get the master device
     @master_device = @device.master_device
 
@@ -34,7 +37,7 @@ class ControlController < ApplicationController
   def edit
     # exit if not the owner
     render plain: 'No device' and return if @owner != true
-    
+
     # render the control layout
     render layout: 'control'
   end
