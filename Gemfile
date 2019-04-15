@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.1.6'
+gem 'rails', '~> 5.2.0'
 gem 'mysql2'
 # redis can probably be updated in the future as long as it is compatible with ActionCable
 # this is the current version that is compatible, even though redis 4.x has been released
