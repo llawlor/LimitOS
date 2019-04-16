@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/faye/websocket-driver-ruby
+  revision: ee39af83d03ae3059c775583e4c4b291641257b8
+  ref: ee39af83d03ae3059c775583e4c4b291641257b8
+  specs:
+    websocket-driver (0.7.0)
+      websocket-extensions (>= 0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -298,8 +306,6 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-    websocket-driver (0.7.0)
-      websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
     whenever (0.10.0)
       chronic (>= 0.6.3)
@@ -338,6 +344,7 @@ DEPENDENCIES
   twitter-bootstrap-rails
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
+  websocket-driver!
   whenever
 
 BUNDLED WITH
