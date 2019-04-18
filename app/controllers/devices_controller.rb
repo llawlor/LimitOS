@@ -5,7 +5,11 @@ class DevicesController < ApplicationController
 
   # embed video in another page
   def embed
-    render plain: 'embed'
+    # allow iframe to be used
+    response.headers.delete "X-Frame-Options"
+
+    # get the master device
+    @master_device = @device.master_device
   end
 
   # setup and help page
@@ -200,7 +204,10 @@ class DevicesController < ApplicationController
     # get the device for users that are logged in or out
     def get_device
       # exit if no id in the params
-      return true if params[:id].blank?
+      return true if params[:id].blank? && params[:slug].blank?
+
+      # allow slug to be used instead of id
+      params[:id] = params[:slug] if params[:slug].present?
 
       # if the user is logged in
       if current_user.present?

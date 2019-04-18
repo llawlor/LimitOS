@@ -23,9 +23,6 @@ class ControlController < ApplicationController
 
   # show the controls page
   def show
-    # allow iframe to be used
-    response.headers.delete "X-Frame-Options"
-
     # get the master device
     @master_device = @device.master_device
 
