@@ -1,7 +1,12 @@
 class DevicesController < ApplicationController
-  before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script, :setup]
+  before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script, :setup, :embed]
   before_action :get_parent_device, only: [:new]
   skip_before_action :verify_authenticity_token, only: [:install]
+
+  # embed video in another page
+  def embed
+    render plain: 'embed'
+  end
 
   # setup and help page
   def setup

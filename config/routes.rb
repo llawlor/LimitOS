@@ -33,6 +33,9 @@ Rails.application.routes.draw do
   get '/control/:slug' => 'control#show'
   get '/drive/:slug' => 'control#show'
 
+  # embed a device in another webpage
+  get '/embed/:slug' => 'devices#embed'
+
   # edit the control page
   get '/control/:slug/edit' => 'control#edit'
   # update the control page
