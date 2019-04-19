@@ -15,8 +15,6 @@
   var device_id = '<%= @master_device.id %>';
   // set the auth token
   var device_auth_token = '<%= @master_device.private? ? @master_device.auth_token : nil %>';
-  // set the i2c address
-  var device_i2c_address = '<%= @device.i2c_address %>';
   // set the video url
   var video_server_url = '<%= @device.video_to_clients_url %>';
 
@@ -62,8 +60,6 @@
   function startVideo() {
     // mark the video as started
     video_active = true;
-    // hide the button
-    $('#video_start').addClass('hidden');
     // show the canvas
     $('#video_canvas').removeClass('hidden');
     // create the message
@@ -72,22 +68,16 @@
     App.messaging.send_message(message);
     // load the video
     video_player = new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
-    // show the stop button
-    $('#video_stop').removeClass('hidden');
   }
 
   // stop the video
   function stopVideo() {
     // mark the video as stopped
     video_active = false;
-    // hide the button
-    $('#video_stop').addClass('hidden');
     // hide the canvas
     $('#video_canvas').addClass('hidden');
     // disconnect the video
     video_player.destroy();
-    // show the start button
-    $('#video_start').removeClass('hidden');
   }
 
   // new user activity is detected
