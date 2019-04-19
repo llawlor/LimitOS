@@ -1,3 +1,7 @@
+<% if @device.video_enabled? %>
+  <%= javascript_include_tag 'jsmpeg.min' %>
+<% end %>
+
 <script>
   // keep track of the start transmission time
   var start_transmission_time = 0;
@@ -116,18 +120,12 @@
   }
 </script>
 
-<% if @device.video_enabled? %>
-  <% content_for :custom_head do %>
-    <%= javascript_include_tag 'jsmpeg.min' %>
-  <% end %>
-<% end %>
-
 <% if @device.offline? %>
 
   <div style="padding: 20px;">Device is offline.</div>
 
 <% elsif @device.video_enabled? %>
 
-    <canvas id="video_canvas" class="hidden pull-left" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
+  <canvas id="video_canvas" class="hidden pull-left" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
 
 <% end %>
