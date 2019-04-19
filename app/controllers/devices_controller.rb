@@ -10,6 +10,9 @@ class DevicesController < ApplicationController
 
     # get the master device
     @master_device = @device.master_device
+
+    # use the embed layout
+    render layout: 'embed'
   end
 
   # setup and help page
