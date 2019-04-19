@@ -6,25 +6,13 @@
   <% end %>
 <% end %>
 
-<% if @owner == true %>
-  <a href="/control/<%= @device.id %>/edit" id="control-settings">
-    <span class="glyphicon glyphicon-cog" style="padding: 0 0 0 3px;"></span>
-  </a>
-<% end %>
-
 <% if @device.offline? %>
 
   <div style="padding: 20px;">Device is offline.</div>
 
-<% elsif @device.control_template.blank? || @device.control_template == 'default' %>
+<% elsif @device.video_enabled? %>
 
-  <%= render 'default' %>
-
-<% elsif @device.control_template == 'drive' %>
-
-  <% if @device.video_enabled? %>
     <canvas id="video_canvas" class="hidden pull-left" <%= "style='transform: scaleY(-1) scaleX(-1);'".html_safe if @device.invert_video? %>></canvas>
-  <% end %>
 
 <% end %>
 
@@ -39,67 +27,8 @@
   // set the video url
   var video_server_url = '<%= @device.video_to_clients_url %>';
 
-  <% @device.analog_pins.each do |pin| %>
-    // initialize this slider
-    var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {
-      tooltip: 'hide'
-    });
-  <% end %>
-
   // when the document is ready
   $(document).ready(function() {
-
-
-    <% @device.analog_pins.each do |pin| %>
-      // when the slider is moved
-      slider_<%= pin.pin_number %>.on('change', function() {
-        // get the slider value
-        var slider_value = slider_<%= pin.pin_number %>.getValue();
-        // update the text input
-        $('#servo_input_' + <%= pin.pin_number %>).val(slider_value);
-        // send the value via the master device
-        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: slider_value });
-      });
-
-      // when the servo form is submitted
-      $('#servo_form_<%= pin.pin_number %>').submit(function() {
-        // get the input value
-        var input_value = $('#servo_input_' + <%= pin.pin_number %>).val();
-        // update the slider value
-        slider_<%= pin.pin_number %>.setValue(input_value);
-        // send the value via the master device
-        sendServoMessage({ i2c_address: '<%= @device.i2c_address %>', pin: <%= pin.pin_number %>, servo: input_value });
-        // don't reload the page
-        return false;
-      });
-    <% end %>
-
-    // for each control type ('forward', 'backward', 'left', 'right')
-    <% Device::DRIVE_CONTROL_TYPES.each do |device_control_type| %>
-
-      // when the control button is clicked
-      $('#drive-<%= device_control_type %>').on('mousedown touchstart', function() {
-        // highlight the button
-        $(this).addClass('active');
-        // send the synchronization
-        sendSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
-      });
-
-      // when the control button is released
-      $('#drive-<%= device_control_type %>').on('mouseup touchend', function() {
-        // remove the highlight
-        $(this).removeClass('active');
-        // send the opposite synchronization
-        sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
-
-        // add a 100ms timeout to stop the synchronization
-        stopMotorsTimeout = setTimeout(function() {
-          // send the opposite synchronization
-          sendOppositeSynchronization('<%= @device.synchronizations.find_by(name: device_control_type).try(:id) %>');
-        }, 100);
-      });
-
-    <% end %>
 
     <% if @device.video_enabled? %>
       // start video on page load, with a slight delay to make sure everything has loaded
