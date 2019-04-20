@@ -18,6 +18,7 @@
 #  public                 :boolean          default(FALSE)
 #  slug                   :string(255)
 #  last_active_at         :datetime
+#  public_video           :boolean          default(FALSE)
 #
 
 require 'rails_helper'

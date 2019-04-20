@@ -2,7 +2,7 @@
 #
 # Table name: synchronized_pins
 #
-#  id                 :integer          not null, primary key
+#  id                 :bigint(8)        not null, primary key
 #  pin_id             :integer
 #  synchronization_id :integer
 #  device_id          :integer
