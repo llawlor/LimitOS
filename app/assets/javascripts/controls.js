@@ -126,14 +126,18 @@ function startVideo() {
   video_player = new JSMpeg.Player(video_server_url, {canvas: $('#video_canvas')[0]});
   // show the stop button
   $('#video_stop').removeClass('hidden');
+  // show the embed button
+  $('#video_embed_button').removeClass('hidden');
 }
 
 // stop the video
 function stopVideo() {
   // mark the video as stopped
   video_active = false;
-  // hide the button
+  // hide the video stop button
   $('#video_stop').addClass('hidden');
+  // hide the embed button
+  $('#video_embed_button').addClass('hidden');
   // hide the canvas
   $('#video_canvas').addClass('hidden');
   // disconnect the video
