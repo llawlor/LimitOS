@@ -81,6 +81,15 @@
         </label>
       </div>
     </div>
+
+    <div id="public-video-div" class="form-group <%= 'hidden' if !@device.video_enabled? %>">
+      <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
+        <label>
+          <%= f.check_box :public_video %>
+          Allow public video?
+        </label>
+      </div>
+    </div>
   <% end %>
 
   <div class="form-group">
@@ -104,10 +113,14 @@
       if ($(this).is(':checked')) {
         // show the invert video option
         $('#invert-video-div').removeClass('hidden');
+        // show the public video option
+        $('#public-video-div').removeClass('hidden');
       // else the checkbox is not checked
       } else {
         // hide the invert video option
         $('#invert-video-div').addClass('hidden');
+        // hide the public video option
+        $('#public-video-div').addClass('hidden');
       }
     });
 
