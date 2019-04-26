@@ -39,6 +39,14 @@ $(document).ready(function() {
     stopVideo();
   });
 
+  // when the embed code button is clicked
+  $('#video_embed_button').on('click', function() {
+    // show the embed code
+    $('#embed_code_div').removeClass('hidden');
+    // hide the button
+    $(this).addClass('hidden');
+  });
+
   // when the digital on/off button is clicked
   $('.digital_submit').on('click', function() {
     // remove active class
@@ -138,6 +146,8 @@ function stopVideo() {
   $('#video_stop').addClass('hidden');
   // hide the embed button
   $('#video_embed_button').addClass('hidden');
+  // hide the embed code
+  $('#embed_code_div').addClass('hidden');
   // hide the canvas
   $('#video_canvas').addClass('hidden');
   // disconnect the video
