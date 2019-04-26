@@ -1,5 +1,5 @@
 class DevicesController < ApplicationController
-  before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script, :setup, :embed]
+  before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script, :setup]
   before_action :get_parent_device, only: [:new]
   skip_before_action :verify_authenticity_token, only: [:install]
 
@@ -7,6 +7,12 @@ class DevicesController < ApplicationController
   def embed
     # allow iframe to be used
     response.headers.delete "X-Frame-Options"
+
+    # get the device
+    @device = Device.find(params[:slug])
+
+    # error if not public video
+    render plain: 'Video is not public.' and return if @device.private? && !@device.public_video?
 
     # get the master device
     @master_device = @device.master_device

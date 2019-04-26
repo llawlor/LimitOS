@@ -1,7 +1,6 @@
 class ControlController < ApplicationController
   before_action :get_device_and_owner
 
-
   # update the controls
   def update
     # exit if not the owner
