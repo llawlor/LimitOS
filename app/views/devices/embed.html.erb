@@ -14,7 +14,7 @@
   // set the device id
   var device_id = '<%= @master_device.id %>';
   // set the auth token
-  var device_auth_token = '<%= @master_device.private? ? @master_device.auth_token : nil %>';
+  var device_auth_token = '';
   // set the video url
   var video_server_url = '<%= @device.video_to_clients_url %>';
 

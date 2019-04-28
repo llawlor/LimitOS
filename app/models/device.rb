@@ -149,7 +149,7 @@ class Device < ApplicationRecord
   # in the future, this method can return dynamic values based on additional servers
   def video_to_clients_url
     # set the unique id to the auth_token, or to the id if the device is public
-    unique_id = self.private? ? self.auth_token : self.id
+    unique_id = (self.private? && !self.public_video) ? self.auth_token : self.id
 
     # return the full url
     return "#{ Rails.application.config_for(:limitos)['video_to_clients_host'] }/video_to_clients/#{ unique_id }"

@@ -6,6 +6,30 @@ RSpec.describe DevicesController, type: :controller do
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
 
+  describe '#embed' do
+    render_views
+
+    it 'is successful with public_video' do
+      device.update(public_video: true, public: false)
+      get :embed, params: { slug: device.id }
+      expect(response.body).to include('video_canvas')
+      expect(response.body).not_to include(device.auth_token)
+    end
+
+    it 'is successful with public flag' do
+      device.update(public_video: false, public: true)
+      get :embed, params: { slug: device.id }
+      expect(response.body).to include('video_canvas')
+      expect(response.body).not_to include(device.auth_token)
+    end
+
+    it 'displays an error if not public' do
+      device.update(public_video: false, public: false)
+      get :embed, params: { slug: device.id }
+      expect(response.body).to eq('Video is not public.')
+    end
+  end
+
   describe '#submit_registration' do
     before :each do
       @registration = FactoryBot.create(:registration, device: device_without_user, expires_at: 1.minute.from_now)
