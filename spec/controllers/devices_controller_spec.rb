@@ -12,6 +12,15 @@ RSpec.describe DevicesController, type: :controller do
     it 'is successful with public_video' do
       device.update(public_video: true, public: false)
       get :embed, params: { slug: device.id }
+      expect(response.headers).not_to include('X-Frame-Options')
+      expect(response.body).to include('video_canvas')
+      expect(response.body).not_to include(device.auth_token)
+    end
+
+    it 'is successful using the slug' do
+      device.update(public_video: true, public: false, slug: 'my-device')
+      get :embed, params: { slug: 'my-device' }
+      expect(response.headers).not_to include('X-Frame-Options')
       expect(response.body).to include('video_canvas')
       expect(response.body).not_to include(device.auth_token)
     end
@@ -205,6 +214,7 @@ RSpec.describe DevicesController, type: :controller do
       sign_in(user)
       get :show, params: { id: device.id }
       expect(assigns(:device)).to eq(device)
+      expect(response.headers).to include('X-Frame-Options')
     end
 
     it 'does not set @device if incorrect id' do
