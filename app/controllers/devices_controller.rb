@@ -8,8 +8,10 @@ class DevicesController < ApplicationController
     # allow iframe to be used
     response.headers.delete "X-Frame-Options"
 
-    # get the device
-    @device = Device.find(params[:slug])
+    # get device by id
+    @device = Device.find_by(id: params[:slug])
+    # get device by slug
+    @device = Device.find_by(slug: params[:slug]) if @device.blank? && params[:slug].present?
 
     # error if not public video
     render plain: 'Video is not public.' and return if @device.private? && !@device.public_video?
