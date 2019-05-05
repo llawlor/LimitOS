@@ -1,3 +1,7 @@
+<style>
+  .tooltip-inner { max-width: 300px; width: 300px; }
+</style>
+
 <%= form_for @device, :html => { :class => "form-horizontal device" } do |f| %>
 
   <% if @parent_device.present? %>
@@ -90,6 +94,16 @@
         </label>
       </div>
     </div>
+
+    <div id="custom-url-div" class="form-group <%= 'hidden' if !@device.public_video? %>">
+      <label for="device_slug" class="control-label col-lg-4">
+        Custom URL
+        <span class="glyphicon glyphicon-question-sign tooltip-trigger" aria-hidden="true" ata-toggle="tooltip" data-placement="bottom" title="Customizes the video URL, replacing <%= @device.slug.present? ? @device.slug : @device.id %> in <%= full_server_url + @device.embed_path %>"></span>
+      </label>
+      <div class="col-lg-8">
+        <%= f.text_field :slug, class: 'form-control' %>
+      </div>
+    </div>
   <% end %>
 
   <div class="form-group">
@@ -106,6 +120,19 @@
   $(document).ready(function () {
     // initialize tooltips
     $('.tooltip-trigger').tooltip();
+
+    // when the 'public video' checkbox is changed
+    $('#device_public_video').on('change', function() {
+      // if the checkbox is checked
+      if ($(this).is(':checked')) {
+        // show the custom URL option
+        $('#custom-url-div').removeClass('hidden');
+      // else the checkbox is not checked
+      } else {
+        // hide the custom URL option
+        $('#custom-url-div').addClass('hidden');
+      }
+    });
 
     // when the 'video enabled' checkbox is changed
     $('#device_video_enabled').on('change', function() {

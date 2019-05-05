@@ -67,6 +67,11 @@ class Device < ApplicationRecord
     !self.public?
   end
 
+  # path to the embed page
+  def embed_path
+    return "/embed/#{ self.slug || self.id }"
+  end
+
   # path to the control page
   def control_path
     # if this is a drive template
