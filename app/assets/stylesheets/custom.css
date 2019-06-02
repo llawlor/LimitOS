@@ -1,5 +1,5 @@
 /* bootstrap overrides */
-a                               { cursor: pointer; font-weight: 600; color: #01232b; background-color: #00dde3; padding: 2px 5px; }
+a                               { cursor: pointer; font-weight: 600; color: #01232b; background-color: #00dde3; padding: 1px 5px; }
 a:active, a:hover, a:focus      { text-decoration: none; }
 a:hover                         { color: #01232b; background-color: #ffd829; }
 body                            { overflow-x: hidden; font-family: 'Libre Franklin', sans-serif; color: #00dde3; background-color:#01232B; background-image: linear-gradient(#0A2F37 1px, transparent 1px), linear-gradient(90deg, #0A2F37 1px, transparent 1px), linear-gradient(rgba(10,47,55,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(10,47,55,.3) 1px, transparent 1px); background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px; background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px; }
