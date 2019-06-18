@@ -4,8 +4,8 @@ class DocsController < ApplicationController
   def index
   end
 
-  # installation page
-  def installation
+  # activation page
+  def activation
   end
 
   # api documentation
