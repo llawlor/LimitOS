@@ -58,7 +58,7 @@ Rails.application.routes.draw do
 
   resources :docs do
     collection do
-      get 'installation'
+      get 'activation'
       get 'pins'
       get 'i2c'
       get 'security'
