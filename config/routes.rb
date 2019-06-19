@@ -46,7 +46,7 @@ Rails.application.routes.draw do
       get :arduino_script
       get :nodejs_script
       get :setup
-      post :install
+      post :run
       post :send_message
     end
     collection do
