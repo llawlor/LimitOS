@@ -22,8 +22,8 @@ Rails.application.routes.draw do
   get '/account' => 'users#account'
   resources :users
 
-  # install limitos scripts onto a linux box
-  get '/install' => 'devices#install'
+  # run limitos scripts on a linux box
+  get '/run' => 'devices#run'
 
   # register a device and take ownership of it
   get '/register' => 'devices#register'

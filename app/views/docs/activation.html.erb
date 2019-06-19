@@ -28,7 +28,7 @@
 <h4>Detailed activation steps:</h4>
 <ol>
   <li>Log in as a root user on your Raspberry Pi (default username is "pi", default password is "raspberry")</li>
-  <li>Type (or copy/paste) the following command: curl -sS <%= full_server_url %>/install | bash</li>
+  <li>Type (or copy/paste) the following command: curl -sS <%= full_server_url %>/run | bash</li>
   <li>When you see a registration code appear, go to <a href="https://<%= Rails.application.config_for(:limitos)['domain'] %>/register">https://<%= Rails.application.config_for(:limitos)['domain'] %>/register</a> (on any device) and type in your registration code</li>
 </ol>
 
