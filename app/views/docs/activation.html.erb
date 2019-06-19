@@ -1,6 +1,6 @@
-<h1>Installing <%= Rails.application.config_for(:limitos)['application_name'] %></h1>
+<h1>Activating <%= Rails.application.config_for(:limitos)['application_name'] %></h1>
 
-<%= Rails.application.config_for(:limitos)['application_name'] %> is designed to be installed on a Raspberry Pi.
+<%= Rails.application.config_for(:limitos)['application_name'] %> is designed to be run on a Raspberry Pi.
 
 <br><br>
 
@@ -9,7 +9,7 @@
 
 <br><br>
 
-<h4>What the installation script does:</h4>
+<h4>What the activation script does:</h4>
 <ol>
   <li>Downloads Node.js</li>
   <li>Adds the <%= Rails.application.config_for(:limitos)['application_name'] %> script</li>
@@ -25,17 +25,17 @@
 
 <br>
 
-<h4>Detailed installation steps:</h4>
+<h4>Detailed activation steps:</h4>
 <ol>
   <li>Log in as a root user on your Raspberry Pi (default username is "pi", default password is "raspberry")</li>
-  <li>Type (or copy/paste) the following command: curl -sS <%= full_server_url %>/install | bash</li>
+  <li>Type (or copy/paste) the following command: curl -sS <%= full_server_url %>/run | bash</li>
   <li>When you see a registration code appear, go to <a href="https://<%= Rails.application.config_for(:limitos)['domain'] %>/register">https://<%= Rails.application.config_for(:limitos)['domain'] %>/register</a> (on any device) and type in your registration code</li>
 </ol>
 
 <br>
 
 <h4>Arduino setup:</h4>
-<%= Rails.application.config_for(:limitos)['application_name'] %> also be installed on an Arduino that is connected to a Raspberry Pi via I<sup>2</sup>C:
+<%= Rails.application.config_for(:limitos)['application_name'] %> also be run on an Arduino that is connected to a Raspberry Pi via I<sup>2</sup>C:
 <ol>
   <li>Connect the Arduino to a Raspberry Pi using I<sup>2</sup>C by connecting the ground, SDA, and SCL pins on the Arduino to the same pins on the Raspberry Pi.</li>
   <li>Copy and paste the customized Arduino script from your device page into the Arduino IDE and upload to the device.</li>
@@ -44,7 +44,7 @@ Please see the <a href="/docs/i2c">I<sup>2</sup>C page</a> for more information.
 
 <br><br>
 
-<h2 id="uninstall">Uninstalling <%= Rails.application.config_for(:limitos)['application_name'] %></h2>
+<h2 id="remove">Removing <%= Rails.application.config_for(:limitos)['application_name'] %></h2>
 
 To pause <%= Rails.application.config_for(:limitos)['application_name'] %> on your device:
 <br>

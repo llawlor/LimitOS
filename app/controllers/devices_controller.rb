@@ -1,7 +1,7 @@
 class DevicesController < ApplicationController
   before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script, :setup]
   before_action :get_parent_device, only: [:new]
-  skip_before_action :verify_authenticity_token, only: [:install]
+  skip_before_action :verify_authenticity_token, only: [:run]
 
   # embed video in another page
   def embed
@@ -36,7 +36,7 @@ class DevicesController < ApplicationController
 
     # error if the registration does not exist
     if registration.blank?
-      flash[:error] = 'Invalid or expired registration code. Please reinstall LimitOS on your Raspberry Pi.'
+      flash[:error] = 'Invalid or expired registration code. Please activate LimitOS on your Raspberry Pi again.'
       redirect_to register_path and return
     end
 
@@ -79,7 +79,7 @@ class DevicesController < ApplicationController
   end
 
   # create the dynamic raspberry pi setup script
-  def install
+  def run
     # if this is for a specific device
     if params[:id].present? && params[:auth_token].present?
       # get the device
@@ -89,7 +89,7 @@ class DevicesController < ApplicationController
     end
 
     # use a text template but don't use a layout
-    render '/devices/_install.text.erb', layout: false, content_type: 'text/plain'
+    render '/devices/_run.text.erb', layout: false, content_type: 'text/plain'
   end
 
   # pretty print the install script

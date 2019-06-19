@@ -2,8 +2,8 @@
 Websocket control for IoT devices: https://limitos.com .
 
 
-## Client Installation Notes
-To use LimitOS with your Raspberry Pi, please see the installation documentation at https://limitos.com/docs/installation .
+## Client Activation Notes
+To use LimitOS with your Raspberry Pi, please see the activation documentation at https://limitos.com/docs/activation .
 
 ### Auto-Update Functionality
 <b>Raspberry Pi Clients:</b> Every 1 hour, the LimitOS Node.js script will automatically attempt to update to the latest version.  Please be aware that by installing LimitOS on your Raspberry Pi you are explicity agreeing to this functionality.
@@ -23,4 +23,4 @@ If you're also running the video server, it should be run via Node.js, and certa
 If you need additional help setting up a server, please contact us at info@limitos.com .
 
 ### Auto-Update Functionality
-<b>Self-Hosted Servers:</b> Every 5 minutes, the LimitOS server application will automatically attempt to update to the latest "master" branch version on GitHub at https://github.com/llawlor/LimitOS .  Please be aware that by running an installation of LimitOS you are explicity agreeing to this functionality.
+<b>Self-Hosted Servers:</b> Every 5 minutes, the LimitOS server application will automatically attempt to update to the latest "master" branch version on GitHub at https://github.com/llawlor/LimitOS .  Please be aware that by running a self-hosted LimitOS cloud server you are explicity agreeing to this functionality.

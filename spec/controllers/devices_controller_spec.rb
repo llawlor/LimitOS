@@ -161,23 +161,23 @@ RSpec.describe DevicesController, type: :controller do
     end
   end
 
-  describe '#install' do
+  describe '#run' do
     render_views
 
-    it 'shows the install script for a new device' do
-      get :install
+    it 'shows the run script for a new device' do
+      get :run
       expect(response).to be_successful
       expect(assigns(:device)).to eq(nil)
     end
 
-    it 'shows the install script for an existing device' do
-      get :install, params: { id: device.id, auth_token: device.auth_token }
+    it 'shows the run script for an existing device' do
+      get :run, params: { id: device.id, auth_token: device.auth_token }
       expect(response).to be_successful
       expect(assigns(:device)).to eq(device)
     end
 
-    it 'shows the install script but not for a specific device if the auth_token is invalid' do
-      get :install, params: { id: device.id, auth_token: 'INVALID_AUTH_TOKEN' }
+    it 'shows the run script but not for a specific device if the auth_token is invalid' do
+      get :run, params: { id: device.id, auth_token: 'INVALID_AUTH_TOKEN' }
       expect(response).to be_successful
       expect(assigns(:device)).to eq(nil)
     end
