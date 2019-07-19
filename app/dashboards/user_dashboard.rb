@@ -33,7 +33,7 @@ class UserDashboard < Administrate::BaseDashboard
     :devices,
     :id,
     :email,
-    :encrypted_password,
+    :current_sign_in_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
