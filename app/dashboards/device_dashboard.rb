@@ -23,6 +23,7 @@ class DeviceDashboard < Administrate::BaseDashboard
     auth_token: Field::String,
     i2c_address: Field::String,
     broadcast_to_device_id: Field::Number,
+    last_active_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -35,7 +36,7 @@ class DeviceDashboard < Administrate::BaseDashboard
     :name,
     :device_type,
     :created_at,
-    :updated_at
+    :last_active_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
