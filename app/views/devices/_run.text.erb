@@ -13,6 +13,12 @@ perform_install()
   # install npm (node.js package manager)
   install_npm
 
+  # install n (node.js version management)
+  install_n
+
+  # install nodejs 6.14.4
+  install_nodejs_6_14_4
+
   # install ws node.js library
   install_ws
 
@@ -85,13 +91,49 @@ function install_npm()
 
 }
 
+# function to install n version management
+function install_n()
+{
+  # check if n is installed
+  # npm list --depth=0: show top-level node.js modules
+  # 2> /dev/null: ignore npm list error output
+  n_installed=$(npm list --depth=0 2> /dev/null | grep " n@" | wc -l)
+
+  # if n is not installed
+  if [ $n_installed -eq 0 ]
+    # then execute the commands below
+    then
+
+      # output activation message
+      echo 'n not found, installing...'
+
+      # install n globally, and log output
+      sudo npm install n -g &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+
+  # end the if statement
+  fi
+
+}
+
+
+# function to install node.js version 6.14.4 (for compatibility with necessary libraries)
+function install_nodejs_6_14_4()
+{
+    # output activation message
+    echo 'installing node.js v6.14.4...'
+
+    # install nodejs v6.14.4, and log output
+    sudo n install 6.14.4 &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+
+}
+
 # function to install node.js websocket libary (ws)
 function install_ws()
 {
   # check if ws is installed
   # npm list --depth=0: show top-level node.js modules
   # 2> /dev/null: ignore npm list error output
-  ws_installed=$(npm list --depth=0 2> /dev/null | grep " ws@" | wc -l)
+  ws_installed=$(npm list --depth=0 2> /dev/null | grep " ws@6.2.1" | wc -l)
 
   # if ws is not installed
   if [ $ws_installed -eq 0 ]
@@ -102,7 +144,7 @@ function install_ws()
       echo 'ws not found, installing...'
 
       # install ws, and log output
-      sudo npm install ws &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+      sudo npm install ws@6.2.1 &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
