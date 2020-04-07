@@ -322,7 +322,6 @@ DEPENDENCIES
   capistrano-rails
   dentaku
   devise (>= 4.7.0)
-  devise-bootstrap-views
   exception_notification
   factory_bot_rails
   guard-rspec
