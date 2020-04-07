@@ -20,6 +20,7 @@ gem 'puma', '~> 3.0'
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
+gem 'actionview', '>= 5.2.4.2'
 
 # fix websocket error, see https://github.com/faye/websocket-driver-ruby/issues/58
 gem 'websocket-driver', git: 'https://github.com/faye/websocket-driver-ruby', ref: 'ee39af83d03ae3059c775583e4c4b291641257b8'
