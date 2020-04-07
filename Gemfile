@@ -12,7 +12,6 @@ gem 'mysql2'
 gem 'redis', '~> 3.3'
 gem "devise", ">= 4.6.0"
 gem 'twitter-bootstrap-rails'
-gem 'devise-bootstrap-views'
 gem 'sass'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
