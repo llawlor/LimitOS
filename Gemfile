@@ -11,6 +11,7 @@ gem 'mysql2'
 # this is the current version that is compatible, even though redis 4.x has been released
 gem 'redis', '~> 3.3'
 gem "devise", ">= 4.7.0"
+gem 'devise-bootstrap-views'
 gem 'twitter-bootstrap-rails'
 gem 'sass'
 # Use Puma as the app server
