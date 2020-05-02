@@ -346,6 +346,3 @@ DEPENDENCIES
   web-console (>= 3.3.0)
   websocket-driver!
   whenever
-
-BUNDLED WITH
-   1.17.3
