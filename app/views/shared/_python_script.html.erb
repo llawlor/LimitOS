@@ -1,0 +1,511 @@
+#!/usr/bin/python3
+
+# run this script via: python3 test.py
+
+import sys
+import websocket
+import json
+import requests
+import time
+import datetime
+import subprocess
+import threading
+import gpiozero
+import RPi.GPIO as GPIO
+from smbus2 import SMBus
+
+# set the version information; updating this version on the server will cause all connected clients to update to the newest version
+limitos_client_version = '2019-03-25'
+
+# variable for the device ID
+device_id = '273'
+# variable for the auth_token
+auth_token = 'dqRyVG37M546key63Br9VEyh'
+# variable for the slave device information
+slave_devices = []
+# variable for the input pins
+input_pins = []
+# variable to keep track of whether slaves have been set up
+slave_devices_ready = False
+# time of last successful request for i2c data
+last_i2c_data_received = datetime.datetime.now()
+# variable for the state of the video camera
+video_active = False
+# variable for the ffmpeg process
+ffmpeg_process = None
+# variable for the remote relay server
+remote_video_websocket = None
+
+# keep track of the last value; key is (i2c_address + '_' + pin_number)
+# for example to access the value for i2c_address '0x04' and pin #8: last_values['0x04_8']
+last_values = {}
+
+# use Broadcom GPIO pin naming
+GPIO.setmode(GPIO.BCM)
+
+# create the channel JSON
+channel_json = json.dumps({
+    'channel': 'DevicesChannel',
+    'id': device_id,
+    'auth_token': auth_token
+})
+
+# when the websocket is opened
+def on_open(ws):
+    # create the device subscription
+    device_subscription = {
+        'command': 'subscribe',
+        'identifier': channel_json
+    }
+
+    # send the subscription command
+    ws.send(json.dumps(device_subscription))
+
+    # send a status update now
+    status_update_timer = threading.Timer(0, status_update)
+    # make the timer a daemon so that it can be stopped along with the program
+    status_update_timer.daemon = True
+    # start the timer
+    status_update_timer.start()
+
+    # check for updates now
+    check_for_updates_timer = threading.Timer(0, check_for_updates)
+    # make the timer a daemon so that it can be stopped along with the program
+    check_for_updates_timer.daemon = True
+    # start the timer
+    check_for_updates_timer.start()
+
+    # request slave data now
+    request_slave_data_timer = threading.Timer(0, request_slave_data)
+    # make the timer a daemon so that it can be stopped along with the program
+    request_slave_data_timer.daemon = True
+    # start the timer
+    request_slave_data_timer.start()
+
+# when the websocket client is disconnected from the server
+def on_error(ws, error):
+    # raise an error, so that process manager will restart this script and eventually reconnect
+    raise Exception('websocket error')
+
+# when the websocket client is disconnected from the server
+def on_close(ws):
+    # raise an error, so that process manager will restart this script and eventually reconnect
+    raise Exception('disconnected from server')
+
+# when the websocket receives a message
+def on_message(ws, data):
+    # get the JSON data
+    json_data = json.loads(data)
+
+    # if this is a ping command
+    if (json_data.get('type') == 'ping'):
+
+        # log the ping message
+        # print('ping: ' + str(json_data.get('message')))
+        # do nothing
+        pass
+
+    # else if this is a subscription confirmation
+    elif (json_data.get('type') == 'confirm_subscription'):
+
+        print('subscribed to: ' + str(json_data.get('identifier')))
+        # after subscription confirmation, send request for device information
+        request_device_information()
+
+    # else if this is a device message, handle it
+    elif (json_data.get('identifier') == channel_json):
+        handle_device_message(json_data.get('message'))
+
+    # else log the full message
+    else:
+
+        print('message received: ' + str(data))
+
+# continually request i2c data
+def request_slave_data():
+    # if the slave devices are ready
+    if (slave_devices_ready == True):
+        # for each slave_device i2c_address
+        for slave_device in slave_devices:
+            # if there are input pins
+            if (slave_device.get('input_pins') and (len(slave_device['input_pins']) > 0)):
+                #request the i2c data from the connected slave
+                request_i2c_data(slave_device)
+
+    # request slave data again in 20ms
+    threading.Timer(0.02, request_slave_data).start()
+
+# request i2c data
+def request_i2c_data(slave_device):
+    # for each pin
+    for pin_number in slave_device['input_pins']:
+        # request the value
+        request_i2c_pin_value(slave_device['i2c_address'], pin_number)
+
+# request i2c data for a single pin
+def request_i2c_pin_value(i2c_address, pin_number):
+    # convert the i2c_address to an int, parsing in hex format
+    int_i2c_address = int(i2c_address, 16)
+
+    global last_i2c_data_received
+
+    # set baudrate high for faster polling speed; don't set to 100000 or message corruption occurs
+    set_i2c_frequency(30000)
+
+    # use /dev/i2c-1
+    with SMBus(1) as bus:
+        # write the pin that we will be requesting data from
+        bus.write_i2c_block_data(int_i2c_address, 0, bytes("request_pin:" + str(pin_number), 'utf-8'))
+        # read at i2c_address with offset of 0 and request 5 bytes
+        # the max message length is 5 bytes, for 1023 (4 bytes) + terminating character (1 byte)
+        receive_buffer = bus.read_i2c_block_data(int_i2c_address, 0, 5)
+        # convert the buffer to a string
+        message = ''.join(map(chr, receive_buffer))
+        # remove extra data from the end of the string
+        message = message.split(';')[0]
+        # print(str(pin_number) + ':' + message)
+
+        # if there is a message, mark the time
+        if (len(message) > 0):
+            last_i2c_data_received = (1000 * time.time())
+
+        # if the message is blank and we haven't received data for 5 seconds
+        if (len(message) == 0) and ((last_i2c_data_received + 5000) < (1000 * time.time())):
+            # mark the time
+            last_i2c_data_received = (1000 * time.time())
+
+            # for each address
+            for slave_device in slave_devices:
+                # if the i2c addresses match
+                if (i2c_address == slave_device['i2c_address']):
+                    # send the setup command with the pin numbers
+                    send_i2c_command(slave_device)
+
+        # if the last value for this pin is different than the current value
+        if (last_values.get(i2c_address + '_' + str(pin_number)) != message):
+            # print(message)
+            # remember this value
+            last_values[i2c_address + '_' + str(pin_number)] = message
+            # send the websocket command
+            send_websocket_command(i2c_address, pin_number, 'servo', message)
+
+# send an i2c command message to a connected slave device
+def send_i2c_command(message):
+    # set up variables
+    start_time = (1000 * time.time())
+    delay = 0
+    i2c_delay = 0
+    log_message = None
+    i2c_address = int(message['i2c_address'], 16)
+
+    # if there is a time, set the delay
+    if message.get('time'):
+        delay = start_time - message['time']
+
+    # set baudrate low (to 500) so that commands are sent reliably without interference from previous commands
+    set_i2c_frequency(500)
+
+    # use /dev/i2c-1
+    with SMBus(1) as bus:
+
+        # if there is a digital output command
+        if message.get('digital'):
+
+            # construct the digital command
+            command = "pin:" + str(message['pin']) + ",digital:" + str(message['digital'])
+            # send the digital command
+            bus.write_i2c_block_data(i2c_address, 0, bytes(command, 'utf-8'))
+            log_message = command
+
+        # if there is a servo command
+        elif message.get('servo'):
+
+            # construct the servo command
+            command = "pin:" + str(message['pin']) + ",servo:" + str(message['servo'])
+            # send the servo command
+            bus.write_i2c_block_data(i2c_address, 0, bytes(command, 'utf-8'))
+            log_message = command
+
+
+        # if there is a pin setup command
+        elif message.get('input_pins'):
+
+            # construct the command
+            command = "setup_pins:" + str(message['input_pins'])
+            # send the setup command to the slave
+            bus.write_i2c_block_data(i2c_address, 0, bytes(command, 'utf-8'))
+            log_message = command
+
+    # set the i2c delay
+    i2c_delay = (1000 * time.time()) - start_time
+    websocket_delay_string = (', ws delay: ' + str(delay) + 'ms') if message.get('time') else ''
+    print(log_message + websocket_delay_string + ', i2c delay: ' + str(i2c_delay) + 'ms')
+
+# set the i2c communication frequency
+def set_i2c_frequency(frequency):
+    # unload module
+    subprocess.call(['sudo', 'modprobe', '-r', 'i2c_bcm2708'])
+    # set baudrate
+    subprocess.call(['sudo', 'modprobe', 'i2c_bcm2708', 'baudrate=' + str(frequency)])
+    # check baudrate
+    # sudo cat /sys/module/i2c_bcm2708/parameters/baudrate
+
+# check to see if an update is available
+def check_for_updates():
+    print('checking for updates')
+
+    # perform the request
+    response = requests.get('http://192.168.1.174:3000/api/v1/devices/install_script_info')
+
+    # if the request was successful
+    if response.status_code == 200:
+        # parse the data
+        json_data = json.loads(response.content)
+        # get the version
+        remote_limitos_client_version = json_data.get('version')
+
+        # log the remote version
+        print('remote version: ' + remote_limitos_client_version)
+
+        # if the versions are different
+        if (remote_limitos_client_version != limitos_client_version):
+            # start the update
+            print('starting update process...')
+            #subprocess.call(['sudo', 'modprobe', 'bcm2835-v4l2'])
+            subprocess.call(['sh', '-c', 'curl -sS --data "auth_token=dqRyVG37M546key63Br9VEyh" http://192.168.1.174:3000/devices/273/run | bash'])
+
+    # check for updates again in an hour
+    threading.Timer(3600, check_for_updates).start()
+
+# send a request to get the device information
+def request_device_information():
+    # create the command to send
+    input = {
+        'command': 'message',
+        'identifier': channel_json,
+        'data': json.dumps({ 'action': 'request_device_information' })
+    }
+    # send the message
+    ws.send(json.dumps(input))
+
+def initialize_input_pins(pin_numbers):
+    # save the input pins to the proper variable
+    global input_pins
+    input_pins = pin_numbers
+
+    # for each pin number
+    for pin_number in pin_numbers:
+        # initialize the pin as an input
+        GPIO.setup(pin_number, GPIO.IN)
+        # poll the pin and add a callback
+        GPIO.add_event_detect(pin_number, GPIO.BOTH, callback=poll_callback)
+
+# callback for the polled pin
+def poll_callback(pin_number):
+    # read the message value
+    message_value = 'on' if (GPIO.input(pin_number) == GPIO.HIGH) else 'off'
+    # send the command via websockets
+    send_websocket_command('', pin_number, 'digital', message_value)
+
+# send websocket command with the correct value
+def send_websocket_command(i2c_address, pin_number, message_type, message_value):
+    # if the websocket is ready
+    if ws.sock and ws.sock.connected:
+
+        # create the command to send
+        input = {
+            'command': 'message',
+            'identifier': channel_json,
+            'data': json.dumps({
+                'i2c_address': i2c_address,
+                'pin': pin_number,
+                message_type: message_value
+            })
+        }
+
+        # send the websocket input
+        ws.send(json.dumps(input))
+
+# handle a device message
+def handle_device_message(message):
+    # if this is an i2c command
+    if ('i2c_address' in message):
+
+        # send the command
+        send_i2c_command(message)
+
+    # else if this is a device command
+    elif ('command' in message):
+
+        # if this is a shutdown command
+        if (message['command'] == 'shutdown'):
+            # perform the shutdown
+            subprocess.call(['sudo', 'shutdown', '-h', 'now'])
+        # else if this is a command to start the video
+        elif ((message['command'] == 'start_video') and (video_active == False)):
+            # start the video
+            start_video(message['video_url'])
+
+    # else if this is a message with the device information
+    elif ('input_pins' in message):
+
+        # set the input pins
+        print("input pins: " + str(message['input_pins']))
+        initialize_input_pins(message['input_pins'])
+
+        # set the slave device information
+        global slave_devices
+        slave_devices = message['slave_devices']
+
+        # for each address
+        for slave_device in slave_devices:
+
+            # send the setup command with the pin numbers
+            send_i2c_command(slave_device)
+
+            # mark the slave devices as having been set up
+            global slave_devices_ready
+            slave_devices_ready = True
+
+    # else this is a direct message for the raspberry pi
+    else:
+
+        # handle the direct message
+        handle_direct_message(message)
+
+# handle a direct message to the raspberry pi
+def handle_direct_message(message):
+    # initialize variables
+    pin_state = None
+    pin_number = int(message['pin'])
+
+    # if the direct message is for an input pin
+    if (pin_number in input_pins):
+        # exit so that the input pin isn't changed to an output pin
+        # also exit since if an input_pin was pushed,
+        # the message will be sent back to the pi
+        return
+
+    # if this is an on message
+    if (message.get('digital') == 'on'):
+        pin_state = GPIO.HIGH
+    # else if this is an off message
+    elif (message.get('digital') == 'off'):
+        pin_state = GPIO.LOW
+
+    # if this is a digital message
+    if (message.get('digital') and len(message.get('digital')) != 0):
+        # output the message to the correct pin
+        GPIO.setup(pin_number, GPIO.OUT, initial=pin_state)
+
+# function to start ffmpeg and video servers
+def start_video(video_url):
+    print('starting video')
+
+    # mark the video camera as active
+    global video_active
+    video_active = True
+
+    # connect to the remote relay server
+    connect_remote_video_relay(video_url)
+
+    # start ffmpeg
+    start_FFMPEG()
+
+# function to stop ffmpeg and video servers
+def stop_video():
+    print('stopping video')
+    # mark the video as inactive
+    global video_active
+    video_active = False
+    # stop ffmpeg
+    ffmpeg_process.kill()
+    # stop the remote relay websocket
+    remote_video_websocket.close()
+
+# start ffmpeg video streaming
+def start_FFMPEG():
+    print('start ffmpeg')
+
+    # enable the pi camera module (legacy method)
+    subprocess.call(['sudo', 'modprobe', 'bcm2835-v4l2'])
+    # enable the pi camera module (new method)
+    subprocess.call(['sudo', 'modprobe', 'v4l2_common'])
+
+    # full command: ffmpeg -loglevel panic -f v4l2 -framerate 25 -video_size 640x480 -i /dev/video0 -f mpegts -codec:v mpeg1video -s 640x480 -b:v 1000k -bf 0 pipe:1
+    ffmpeg_command = ['ffmpeg', '-loglevel', 'panic', '-f', 'v4l2', '-framerate', '25', '-video_size', '640x480', '-i', '/dev/video0', '-f', 'mpegts', '-codec:v', 'mpeg1video', '-s', '640x480', '-b:v', '1000k', '-bf', '0', 'pipe:1']
+    # start ffmpeg, and pipe to stdout with the proper buffer size
+    global ffmpeg_process
+    ffmpeg_process = subprocess.Popen(ffmpeg_command, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    # when ffmpeg data is received
+    for chunk in ffmpeg_process.stdout:
+        # if the remote connection is available
+        if remote_video_websocket.sock and remote_video_websocket.sock.connected:
+            # send data as binary
+            remote_video_websocket.send(chunk, websocket.ABNF.OPCODE_BINARY)
+
+# connect to the remote video relay server
+def connect_remote_video_relay(video_url):
+    print('sending video to ' + video_url)
+
+    # when data is received from the relay server
+    def on_video_message(remote_video_websocket, data):
+        # parse the message
+        json_data = json.loads(data)
+        # if there's a stop video command
+        if (json_data.get('stop_video')):
+            # if the auth tokens match and video is active
+            if ((json_data.get('stop_video') == auth_token) and (video_active == True)):
+                # stop the video
+                stop_video()
+
+    # if there is an error, stop the video
+    def on_video_error(remote_video_websocket, error):
+        stop_video()
+
+    # when the remote video websocket is closed, stop the video
+    def on_video_close(remote_video_websocket):
+        stop_video()
+
+    # start the websocket with callbacks
+    global remote_video_websocket
+    remote_video_websocket = websocket.WebSocketApp(video_url,
+        #on_open = on_open,
+        on_message = on_video_message,
+        on_error = on_video_error,
+        on_close = on_video_close,
+        subprotocols = ["binary", "base64"])
+
+    # continue running in a separate thread
+    websocket_thread = threading.Thread(target=remote_video_websocket.run_forever)
+    websocket_thread.daemon = True
+    websocket_thread.start()
+
+# let the web server know we're online
+def status_update():
+    # create the command to send
+    input = {
+        'command': 'message',
+        'identifier': channel_json,
+        'data': json.dumps({ 'status_update': True })
+    }
+
+    # send the websocket command
+    ws.send(json.dumps(input))
+
+    # send another status update after 30 seconds
+    threading.Timer(30, status_update).start()
+
+# main program start
+if __name__ == "__main__":
+    # display network traffic and enable errors to be raised
+    websocket.enableTrace(True)
+    # start the websocket with callbacks
+    ws = websocket.WebSocketApp("ws://192.168.1.174:3000/cable",
+        on_open = on_open,
+        on_message = on_message,
+        on_error = on_error,
+        on_close = on_close)
+    # continue running
+    ws.run_forever()
