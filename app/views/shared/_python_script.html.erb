@@ -12,7 +12,7 @@ import subprocess
 import threading
 import gpiozero
 import RPi.GPIO as GPIO
-from smbus2 import SMBus
+from smbus2 import SMBus, i2c_msg
 
 # set the version information; updating this version on the server will cause all connected clients to update to the newest version
 limitos_client_version = '2019-03-25'
@@ -139,8 +139,13 @@ def request_slave_data():
 def request_i2c_data(slave_device):
     # for each pin
     for pin_number in slave_device['input_pins']:
-        # request the value
-        request_i2c_pin_value(slave_device['i2c_address'], pin_number)
+        # error handling for i2c I/O errors
+        try:
+            # request the value
+            request_i2c_pin_value(slave_device['i2c_address'], pin_number)
+        # ignore errors
+        except:
+            pass
 
 # request i2c data for a single pin
 def request_i2c_pin_value(i2c_address, pin_number):
@@ -149,18 +154,17 @@ def request_i2c_pin_value(i2c_address, pin_number):
 
     global last_i2c_data_received
 
-    # set baudrate high for faster polling speed; don't set to 100000 or message corruption occurs
-    set_i2c_frequency(30000)
-
     # use /dev/i2c-1
     with SMBus(1) as bus:
         # write the pin that we will be requesting data from
         bus.write_i2c_block_data(int_i2c_address, 0, bytes("request_pin:" + str(pin_number), 'utf-8'))
         # read at i2c_address with offset of 0 and request 5 bytes
         # the max message length is 5 bytes, for 1023 (4 bytes) + terminating character (1 byte)
-        receive_buffer = bus.read_i2c_block_data(int_i2c_address, 0, 5)
+        read_msg = i2c_msg.read(int_i2c_address, 5)
+        # perform the read; bus.read_i2c_block_data is not used since it first sends a write byte
+        bus.i2c_rdwr(read_msg)
         # convert the buffer to a string
-        message = ''.join(map(chr, receive_buffer))
+        message = ''.join(map(chr, read_msg))
         # remove extra data from the end of the string
         message = message.split(';')[0]
         # print(str(pin_number) + ':' + message)
@@ -229,9 +233,9 @@ def send_i2c_command(message):
 
         # if there is a pin setup command
         elif message.get('input_pins'):
-
+            print(message['input_pins'])
             # construct the command
-            command = "setup_pins:" + str(message['input_pins'])
+            command = "setup_pins:" + ','.join(map(str, message['input_pins']))
             # send the setup command to the slave
             bus.write_i2c_block_data(i2c_address, 0, bytes(command, 'utf-8'))
             log_message = command
@@ -240,6 +244,9 @@ def send_i2c_command(message):
     i2c_delay = (1000 * time.time()) - start_time
     websocket_delay_string = (', ws delay: ' + str(delay) + 'ms') if message.get('time') else ''
     print(log_message + websocket_delay_string + ', i2c delay: ' + str(i2c_delay) + 'ms')
+
+    # set baudrate back to high for faster polling speed; don't set to 100000 or message corruption occurs
+    set_i2c_frequency(30000)
 
 # set the i2c communication frequency
 def set_i2c_frequency(frequency):
