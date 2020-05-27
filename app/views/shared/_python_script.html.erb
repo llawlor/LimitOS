@@ -18,9 +18,9 @@ from smbus2 import SMBus, i2c_msg
 limitos_client_version = '2019-03-25'
 
 # variable for the device ID
-device_id = '273'
+device_id = '241'
 # variable for the auth_token
-auth_token = 'dqRyVG37M546key63Br9VEyh'
+auth_token = 'VDdN7W9a9FxBKy9co9W259bB'
 # variable for the slave device information
 slave_devices = []
 # variable for the input pins
@@ -199,7 +199,7 @@ def send_i2c_command(message):
     start_time = (1000 * time.time())
     delay = 0
     i2c_delay = 0
-    log_message = None
+    log_message = ''
     i2c_address = int(message['i2c_address'], 16)
 
     # if there is a time, set the delay
@@ -217,17 +217,20 @@ def send_i2c_command(message):
 
             # construct the digital command
             command = "pin:" + str(message['pin']) + ",digital:" + str(message['digital'])
-            # send the digital command
-            bus.write_i2c_block_data(i2c_address, 0, bytes(command, 'utf-8'))
+            # create the write message
+            write_msg = i2c_msg.write(i2c_address, bytes(command, 'utf-8'))
+            # perform the write; bus.write_i2c_block_data is not used since it doesn't work properly here
+            bus.i2c_rdwr(write_msg)
             log_message = command
 
         # if there is a servo command
         elif message.get('servo'):
-
             # construct the servo command
             command = "pin:" + str(message['pin']) + ",servo:" + str(message['servo'])
-            # send the servo command
-            bus.write_i2c_block_data(i2c_address, 0, bytes(command, 'utf-8'))
+            # create the write message
+            write_msg = i2c_msg.write(i2c_address, bytes(command, 'utf-8'))
+            # perform the write; bus.write_i2c_block_data is not used since it doesn't work properly here
+            bus.i2c_rdwr(write_msg)
             log_message = command
 
 
@@ -236,15 +239,15 @@ def send_i2c_command(message):
             print(message['input_pins'])
             # construct the command
             command = "setup_pins:" + ','.join(map(str, message['input_pins']))
-            # send the setup command to the slave
-            bus.write_i2c_block_data(i2c_address, 0, bytes(command, 'utf-8'))
+            # create the write message
+            write_msg = i2c_msg.write(i2c_address, bytes(command, 'utf-8'))
+            # send the setup command to the slave; bus.write_i2c_block_data is not used since it doesn't work properly here
+            bus.i2c_rdwr(write_msg)
             log_message = command
 
     # set the i2c delay
     i2c_delay = (1000 * time.time()) - start_time
     websocket_delay_string = (', ws delay: ' + str(delay) + 'ms') if message.get('time') else ''
-    print(log_message + websocket_delay_string + ', i2c delay: ' + str(i2c_delay) + 'ms')
-
     # set baudrate back to high for faster polling speed; don't set to 100000 or message corruption occurs
     set_i2c_frequency(30000)
 
@@ -262,12 +265,12 @@ def check_for_updates():
     print('checking for updates')
 
     # perform the request
-    response = requests.get('http://192.168.1.174:3000/api/v1/devices/install_script_info')
+    response = requests.get('http://192.168.1.101:3000/api/v1/devices/install_script_info')
 
     # if the request was successful
     if response.status_code == 200:
         # parse the data
-        json_data = json.loads(response.content)
+        json_data = json.loads(str(response.content, 'utf-8'))
         # get the version
         remote_limitos_client_version = json_data.get('version')
 
@@ -279,7 +282,7 @@ def check_for_updates():
             # start the update
             print('starting update process...')
             #subprocess.call(['sudo', 'modprobe', 'bcm2835-v4l2'])
-            subprocess.call(['sh', '-c', 'curl -sS --data "auth_token=dqRyVG37M546key63Br9VEyh" http://192.168.1.174:3000/devices/273/run | bash'])
+            subprocess.call(['sh', '-c', 'curl -sS --data "auth_token=dqRyVG37M546key63Br9VEyh" http://192.168.1.101:3000/devices/273/run | bash'])
 
     # check for updates again in an hour
     threading.Timer(3600, check_for_updates).start()
@@ -509,7 +512,7 @@ if __name__ == "__main__":
     # display network traffic and enable errors to be raised
     websocket.enableTrace(True)
     # start the websocket with callbacks
-    ws = websocket.WebSocketApp("ws://192.168.1.174:3000/cable",
+    ws = websocket.WebSocketApp("ws://192.168.1.101:3000/cable",
         on_open = on_open,
         on_message = on_message,
         on_error = on_error,
