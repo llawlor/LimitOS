@@ -18,9 +18,9 @@ from smbus2 import SMBus, i2c_msg
 limitos_client_version = '2019-03-25'
 
 # variable for the device ID
-device_id = '241'
+device_id = '273'
 # variable for the auth_token
-auth_token = 'VDdN7W9a9FxBKy9co9W259bB'
+auth_token = 'dqRyVG37M546key63Br9VEyh'
 # variable for the slave device information
 slave_devices = []
 # variable for the input pins
@@ -35,6 +35,8 @@ video_active = False
 ffmpeg_process = None
 # variable for the remote relay server
 remote_video_websocket = None
+# variable for the i2c frequency
+i2c_frequency = 0
 
 # keep track of the last value; key is (i2c_address + '_' + pin_number)
 # for example to access the value for i2c_address '0x04' and pin #8: last_values['0x04_8']
@@ -132,8 +134,8 @@ def request_slave_data():
                 #request the i2c data from the connected slave
                 request_i2c_data(slave_device)
 
-    # request slave data again in 20ms
-    threading.Timer(0.02, request_slave_data).start()
+    # request slave data again in 100ms
+    threading.Timer(0.1, request_slave_data).start()
 
 # request i2c data
 def request_i2c_data(slave_device):
@@ -154,10 +156,14 @@ def request_i2c_pin_value(i2c_address, pin_number):
 
     global last_i2c_data_received
 
+    # set baudrate back to high for faster polling speed; don't set to 100000 or message corruption occurs
+    set_i2c_frequency(30000)
+
     # use /dev/i2c-1
     with SMBus(1) as bus:
         # write the pin that we will be requesting data from
-        bus.write_i2c_block_data(int_i2c_address, 0, bytes("request_pin:" + str(pin_number), 'utf-8'))
+        write_msg = i2c_msg.write(int_i2c_address, bytes("request_pin:" + str(pin_number), 'utf-8'))
+        bus.i2c_rdwr(write_msg)
         # read at i2c_address with offset of 0 and request 5 bytes
         # the max message length is 5 bytes, for 1023 (4 bytes) + terminating character (1 byte)
         read_msg = i2c_msg.read(int_i2c_address, 5)
@@ -193,6 +199,13 @@ def request_i2c_pin_value(i2c_address, pin_number):
             # send the websocket command
             send_websocket_command(i2c_address, pin_number, 'servo', message)
 
+# reset i2c module
+def reset_i2c():
+    # remove module
+    subprocess.call(['sudo', 'rmmod', 'i2c_bcm2835'])
+    # enable module
+    subprocess.call(['sudo', 'modprobe', 'i2c_bcm2835'])
+
 # send an i2c command message to a connected slave device
 def send_i2c_command(message):
     # set up variables
@@ -209,56 +222,70 @@ def send_i2c_command(message):
     # set baudrate low (to 500) so that commands are sent reliably without interference from previous commands
     set_i2c_frequency(500)
 
-    # use /dev/i2c-1
-    with SMBus(1) as bus:
+    # if there is a digital output command
+    if message.get('digital'):
 
-        # if there is a digital output command
-        if message.get('digital'):
-
-            # construct the digital command
-            command = "pin:" + str(message['pin']) + ",digital:" + str(message['digital'])
-            # create the write message
-            write_msg = i2c_msg.write(i2c_address, bytes(command, 'utf-8'))
+        # construct the digital command
+        command = "pin:" + str(message['pin']) + ",digital:" + str(message['digital'])
+        # create the write message
+        write_msg = i2c_msg.write(i2c_address, bytes(command, 'utf-8'))
+        # use /dev/i2c-1
+        with SMBus(1) as bus:
             # perform the write; bus.write_i2c_block_data is not used since it doesn't work properly here
             bus.i2c_rdwr(write_msg)
+        log_message = command
+
+    # if there is a servo command
+    elif message.get('servo'):
+        # construct the servo command
+        command = "pin:" + str(message['pin']) + ",servo:" + str(message['servo'])
+        # create the write message
+        write_msg = i2c_msg.write(i2c_address, bytes(command, 'utf-8'))
+        # error handling for i2c I/O errors
+        try:
+            # use /dev/i2c-1
+            with SMBus(1) as bus:
+                # perform the write; bus.write_i2c_block_data is not used since it doesn't work properly here
+                bus.i2c_rdwr(write_msg)
             log_message = command
-
-        # if there is a servo command
-        elif message.get('servo'):
-            # construct the servo command
-            command = "pin:" + str(message['pin']) + ",servo:" + str(message['servo'])
-            # create the write message
-            write_msg = i2c_msg.write(i2c_address, bytes(command, 'utf-8'))
-            # perform the write; bus.write_i2c_block_data is not used since it doesn't work properly here
-            bus.i2c_rdwr(write_msg)
-            log_message = command
+        # reset i2c module on error
+        except:
+            reset_i2c()
 
 
-        # if there is a pin setup command
-        elif message.get('input_pins'):
-            print(message['input_pins'])
-            # construct the command
-            command = "setup_pins:" + ','.join(map(str, message['input_pins']))
-            # create the write message
-            write_msg = i2c_msg.write(i2c_address, bytes(command, 'utf-8'))
+    # if there is a pin setup command
+    elif message.get('input_pins'):
+        print(message['input_pins'])
+        # construct the command
+        command = "setup_pins:" + ','.join(map(str, message['input_pins']))
+        # create the write message
+        write_msg = i2c_msg.write(i2c_address, bytes(command, 'utf-8'))
+        # use /dev/i2c-1
+        with SMBus(1) as bus:
             # send the setup command to the slave; bus.write_i2c_block_data is not used since it doesn't work properly here
             bus.i2c_rdwr(write_msg)
-            log_message = command
+        log_message = command
 
     # set the i2c delay
     i2c_delay = (1000 * time.time()) - start_time
     websocket_delay_string = (', ws delay: ' + str(delay) + 'ms') if message.get('time') else ''
-    # set baudrate back to high for faster polling speed; don't set to 100000 or message corruption occurs
-    set_i2c_frequency(30000)
 
 # set the i2c communication frequency
 def set_i2c_frequency(frequency):
-    # unload module
-    subprocess.call(['sudo', 'modprobe', '-r', 'i2c_bcm2708'])
-    # set baudrate
-    subprocess.call(['sudo', 'modprobe', 'i2c_bcm2708', 'baudrate=' + str(frequency)])
-    # check baudrate
-    # sudo cat /sys/module/i2c_bcm2708/parameters/baudrate
+    # use the global i2c_frequency variable
+    global i2c_frequency
+
+    # if the frequency is different
+    if i2c_frequency != frequency:
+        print("updating frequency to: " + str(frequency))
+        # update the saved frequency variable
+        i2c_frequency = frequency
+        # unload module
+        subprocess.call(['sudo', 'modprobe', '-r', 'i2c_bcm2708'])
+        # set baudrate
+        subprocess.call(['sudo', 'modprobe', 'i2c_bcm2708', 'baudrate=' + str(frequency)])
+        # check baudrate
+        # sudo cat /sys/module/i2c_bcm2708/parameters/baudrate
 
 # check to see if an update is available
 def check_for_updates():
@@ -510,7 +537,7 @@ def status_update():
 # main program start
 if __name__ == "__main__":
     # display network traffic and enable errors to be raised
-    websocket.enableTrace(True)
+    #websocket.enableTrace(True)
     # start the websocket with callbacks
     ws = websocket.WebSocketApp("ws://192.168.1.101:3000/cable",
         on_open = on_open,
