@@ -310,7 +310,7 @@ def check_for_updates():
             # start the update
             print('starting update process...')
             #subprocess.call(['sudo', 'modprobe', 'bcm2835-v4l2'])
-            subprocess.call(['sh', '-c', 'curl -sS --data "auth_token=dqRyVG37M546key63Br9VEyh" http://192.168.1.101:3000/devices/273/run | bash'])
+            subprocess.call(['sh', '-c', '<%= reinstall_script_command(@device).html_safe %>'])
 
     # check for updates again in an hour
     threading.Timer(3600, check_for_updates).start()
@@ -532,8 +532,10 @@ def status_update():
     # send the websocket command
     ws.send(json.dumps(input))
 
-    # send another status update after 30 seconds
-    threading.Timer(30, status_update).start()
+    <% if Rails.application.config_for(:limitos)["status_interval"].to_i > 0 %>
+    # send another status update after <%= Rails.application.config_for(:limitos)["status_interval"] %> seconds
+    threading.Timer(<%= Rails.application.config_for(:limitos)["status_interval"].to_i %>, status_update).start()
+    <% end %>
 
 # main program start
 if __name__ == "__main__":
