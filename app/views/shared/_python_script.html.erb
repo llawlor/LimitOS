@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
-# run this script via: python3 test.py
+# this script must be run via sudo for the i2c communication to work
+# example: sudo python3 limitos.py
 
 import sys
 import websocket
@@ -15,12 +16,12 @@ import RPi.GPIO as GPIO
 from smbus2 import SMBus, i2c_msg
 
 # set the version information; updating this version on the server will cause all connected clients to update to the newest version
-limitos_client_version = '2019-03-25'
+limitos_client_version = '<%= Rails.application.config_for(:limitos)["limitos_client_version"] %>'
 
 # variable for the device ID
-device_id = '273'
+device_id = '<%= @device.id %>'
 # variable for the auth_token
-auth_token = 'dqRyVG37M546key63Br9VEyh'
+auth_token = '<%= @device.auth_token %>'
 # variable for the slave device information
 slave_devices = []
 # variable for the input pins
@@ -292,7 +293,7 @@ def check_for_updates():
     print('checking for updates')
 
     # perform the request
-    response = requests.get('http://192.168.1.101:3000/api/v1/devices/install_script_info')
+    response = requests.get('<%= full_server_url %>/api/v1/devices/install_script_info')
 
     # if the request was successful
     if response.status_code == 200:
@@ -539,7 +540,7 @@ if __name__ == "__main__":
     # display network traffic and enable errors to be raised
     #websocket.enableTrace(True)
     # start the websocket with callbacks
-    ws = websocket.WebSocketApp("ws://192.168.1.101:3000/cable",
+    ws = websocket.WebSocketApp("<%= Rails.application.config_for(:limitos)["websocket_server_url"] %>",
         on_open = on_open,
         on_message = on_message,
         on_error = on_error,
