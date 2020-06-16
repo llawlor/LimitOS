@@ -1,5 +1,5 @@
 class DevicesController < ApplicationController
-  before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :arduino_script, :setup]
+  before_action :get_device, only: [:show, :edit, :update, :destroy, :nodejs_script, :python_script, :arduino_script, :setup]
   before_action :get_parent_device, only: [:new]
   skip_before_action :verify_authenticity_token, only: [:run]
 
@@ -97,6 +97,12 @@ class DevicesController < ApplicationController
 
   # create the dynamic arduino script
   def arduino_script
+    # don't use a layout
+    render layout: false
+  end
+
+  # create the dynamic python script
+  def python_script
     # don't use a layout
     render layout: false
   end
