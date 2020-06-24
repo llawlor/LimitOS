@@ -493,8 +493,8 @@ def connect_remote_video_relay(video_url):
         json_data = json.loads(data)
         # if there's a stop video command
         if (json_data.get('stop_video')):
-            # if the auth tokens match and video is active
-            if ((json_data.get('stop_video') == auth_token) and (video_active == True)):
+            # if the auth tokens match or device_id matches, and video is active
+            if (((json_data.get('stop_video') == auth_token) or (json_data.get('stop_video') == device_id)) and (video_active == True)):
                 # stop the video
                 stop_video()
 
