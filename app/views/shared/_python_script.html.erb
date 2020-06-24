@@ -529,8 +529,10 @@ def status_update():
         'data': json.dumps({ 'status_update': True })
     }
 
-    # send the websocket command
-    ws.send(json.dumps(input))
+    # if the websocket is ready
+    if ws.sock and ws.sock.connected:
+        # send the websocket command
+        ws.send(json.dumps(input))
 
     <% if Rails.application.config_for(:limitos)["status_interval"].to_i > 0 %>
     # send another status update after <%= Rails.application.config_for(:limitos)["status_interval"] %> seconds
