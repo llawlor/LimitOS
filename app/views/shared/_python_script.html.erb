@@ -478,7 +478,13 @@ def start_FFMPEG():
     # start ffmpeg, and pipe to stdout with the proper buffer size
     global ffmpeg_process
     ffmpeg_process = subprocess.Popen(ffmpeg_command, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    ffmpeg_thread = threading.Thread(target=process_video_stream)
+    ffmpeg_thread.daemon = True
+    ffmpeg_thread.start()
 
+# process ffmpeg stream
+def process_video_stream():
+    global ffmpeg_process
     # when ffmpeg data is received
     for chunk in ffmpeg_process.stdout:
         # if the remote connection is available
