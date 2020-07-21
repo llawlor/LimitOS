@@ -53,13 +53,13 @@ class Device < ApplicationRecord
   # device is currently online
   def online?
     # last active at exists, and is more recent than (status_interval + 3) seconds ago
-    return (self.last_active_at.present? && (self.last_active_at > (Rails.application.config_for(:limitos)["status_interval"].to_i + 3).seconds.ago))
+    return (master_device.last_active_at.present? && (master_device.last_active_at > (Rails.application.config_for(:limitos)["status_interval"].to_i + 3).seconds.ago))
   end
 
   # devis is currently offline
   def offline?
     # opposite of online?
-    return !self.online?
+    return !master_device.online?
   end
 
   # add method to determine if a device is private
