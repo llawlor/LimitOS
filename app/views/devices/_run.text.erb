@@ -34,12 +34,12 @@ perform_install()
   <% end %>
 }
 
-# function to install nodejs
+# function to install python3
 function install_python3()
 {
   # check if python3 is installed
   # command -v: outputs location of specified program, wc -l: count line numbers
-  python3_installed=$(command -v nodejs | wc -l)
+  python3_installed=$(command -v python3 | wc -l)
 
   # if python3 is not installed (command location line count is zero)
   if [ $python3_installed -eq 0 ]
@@ -61,7 +61,7 @@ function install_python3()
 function install_python3_pip()
 {
   # check if python3-pip is installed
-  python3_pip_installed=$(command -v python3-pip | wc -l)
+  python3_pip_installed=$(command -v pip3 | wc -l)
 
   # if python3-pip is not installed
   if [ $python3_pip_installed -eq 0 ]
@@ -94,18 +94,18 @@ function install_websocket_client()
 function install_smbus2()
 {
   # output activation message
-  echo 'installing websocket-client...'
+  echo 'installing smbus2...'
 
   # install smbus2, and log output
   sudo pip3 install smbus2 &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 }
 
-# function to download limitos.js
+# function to download limitos.py
 function download_limitos_py()
 {
   <% if @device.present? %>
-  # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
-  curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_server_url %>/api/v1/devices/<%= @device.id %>/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
+  # retrieve the python script and save it as limitos<%= '_dev' if !Rails.env.production? %>.py
+  curl -sS --data "auth_token=<%= @device.auth_token %>" <%= full_server_url %>/api/v1/devices/<%= @device.id %>/python_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.py
   <% else %>
   # create a new device and save the auth_token as device_json
   # curl: request a remote url, -s: silent, -S: show errors, -L: follow redirects, -X POST: use a HTTP POST request
@@ -126,12 +126,12 @@ function download_limitos_py()
   # get the auth token from the JSON
   registration_auth_token=$(echo $registration_json | grep -Po '"auth_token":.*?[^\\]"' | awk -F':' '{print $2}' | tr -d '"')
 
-  # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
-  curl -sS --data "auth_token=$device_auth_token" <%= full_server_url %>/api/v1/devices/$device_id/nodejs_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
+  # retrieve the python script and save it as limitos<%= '_dev' if !Rails.env.production? %>.py
+  curl -sS --data "auth_token=$device_auth_token" <%= full_server_url %>/api/v1/devices/$device_id/python_script > limitos<%= '_dev' if !Rails.env.production? %>_unverified.py
   <% end %>
 
   # if the file is valid
-  if python -c "import ast; ast.parse(open(' limitos<%= '_dev' if !Rails.env.production? %>_unverified.py').read())"
+  if python3 -c "import ast; ast.parse(open('limitos<%= '_dev' if !Rails.env.production? %>_unverified.py').read())"
     # then execute the commands below
     then
 
@@ -146,19 +146,19 @@ function download_limitos_py()
 function install_limitos_py()
 {
   # output message
-  #echo 'starting limitos<%= '_dev' if !Rails.env.production? %>.js process...'
+  echo 'starting limitos<%= '_dev' if !Rails.env.production? %>.py process...'
 
-  # stop any previously running limitos<%= '_dev' if !Rails.env.production? %>.js processes
-  #sudo pm2 stop limitos<%= '_dev' if !Rails.env.production? %>.js &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+  # stop any previously running limitos<%= '_dev' if !Rails.env.production? %>.py processes
+  # sudo pm2 stop limitos<%= '_dev' if !Rails.env.production? %>.py &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
-  # start the limitos<%= '_dev' if !Rails.env.production? %>.js node script, -s: silent mode
-  #sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
+  # start the limitos<%= '_dev' if !Rails.env.production? %>.py python script, -s: silent mode
+  # sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.py
 
-  # save the current limitos<%= '_dev' if !Rails.env.production? %>.js process
-  #sudo pm2 -s save
+  # save the current limitos<%= '_dev' if !Rails.env.production? %>.py process
+  # sudo pm2 -s save
 
   # start pm2 when server is started, and log output
-  #sudo pm2 startup &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+  # sudo pm2 startup &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 }
 
 # run the main function
