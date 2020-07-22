@@ -245,6 +245,39 @@ RSpec.describe DevicesController, type: :controller do
     end
   end
 
+  describe '#python_script' do
+    render_views
+
+    it 'shows the python script to a user' do
+      sign_in(user)
+      get :python_script, params: { id: device.id }
+      expect(response).to be_successful
+      expect(assigns(:device)).to eq(device)
+    end
+
+    it 'does not show the python script to a user if incorrect id' do
+      sign_in(user)
+      get :python_script, params: { id: 0 }
+      expect(response).to be_successful
+      expect(response.body).to eq('No device')
+      expect(assigns(:device)).to eq(nil)
+    end
+
+    it 'shows the python script to a visitor' do
+      cookies.encrypted[:device_ids] = [device_without_user.id]
+      get :python_script, params: { id: device_without_user.id }
+      expect(response).to be_successful
+      expect(assigns(:device)).to eq(device_without_user)
+    end
+
+    it 'does not show the python script for a visitor if device has a user' do
+      cookies.encrypted[:device_ids] = [device.id]
+      get :python_script, params: { id: device.id }
+      expect(response.body).to eq('No device')
+      expect(assigns(:device)).to eq(nil)
+    end
+  end
+
   describe '#nodejs_script' do
     render_views
 
