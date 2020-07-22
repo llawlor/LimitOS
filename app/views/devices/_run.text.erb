@@ -131,12 +131,12 @@ function download_limitos_py()
   <% end %>
 
   # if the file is valid
-  if node --check limitos<%= '_dev' if !Rails.env.production? %>_unverified.js
+  if python -c "import ast; ast.parse(open(' limitos<%= '_dev' if !Rails.env.production? %>_unverified.py').read())"
     # then execute the commands below
     then
 
       # move the file
-      mv limitos<%= '_dev' if !Rails.env.production? %>_unverified.js limitos<%= '_dev' if !Rails.env.production? %>.js
+      mv limitos<%= '_dev' if !Rails.env.production? %>_unverified.py limitos<%= '_dev' if !Rails.env.production? %>.py
 
   # end the if statement
   fi
@@ -146,19 +146,19 @@ function download_limitos_py()
 function install_limitos_py()
 {
   # output message
-  echo 'starting limitos<%= '_dev' if !Rails.env.production? %>.js process...'
+  #echo 'starting limitos<%= '_dev' if !Rails.env.production? %>.js process...'
 
   # stop any previously running limitos<%= '_dev' if !Rails.env.production? %>.js processes
-  sudo pm2 stop limitos<%= '_dev' if !Rails.env.production? %>.js &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+  #sudo pm2 stop limitos<%= '_dev' if !Rails.env.production? %>.js &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # start the limitos<%= '_dev' if !Rails.env.production? %>.js node script, -s: silent mode
-  sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
+  #sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.js
 
   # save the current limitos<%= '_dev' if !Rails.env.production? %>.js process
-  sudo pm2 -s save
+  #sudo pm2 -s save
 
   # start pm2 when server is started, and log output
-  sudo pm2 startup &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+  #sudo pm2 startup &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 }
 
 # run the main function
