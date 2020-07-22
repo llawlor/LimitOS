@@ -45,6 +45,24 @@ class Api::V1::DevicesController < ApplicationController
     render json: device.to_json
   end
 
+  # create the dynamic python script
+  def python_script
+    # get the device
+    @device = Device.find_by(id: params[:id])
+
+    # error if invalid
+    render json: { error: 'Invalid device credentials.' } and return if @device.blank?
+
+    # check the authentication
+    valid = true if Devise.secure_compare(@device.auth_token, params[:auth_token])
+
+    # error if invalid
+    render json: { error: 'Invalid device credentials.' } and return if valid != true
+
+    # don't use a layout
+    render partial: 'shared/python_script', layout: false, content_type: 'text/plain'
+  end
+
   # create the dynamic nodejs script
   def nodejs_script
     # get the device
