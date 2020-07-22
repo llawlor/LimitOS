@@ -83,6 +83,7 @@ Rails.application.routes.draw do
       resources :devices do
         member do
           post :nodejs_script
+          post :python_script
           post :control
         end
         collection do
