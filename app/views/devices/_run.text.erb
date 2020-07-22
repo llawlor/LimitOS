@@ -7,23 +7,17 @@ perform_install()
   # echo: output a message to the screen
   echo 'Starting activation process...'
 
-  # install nodejs (javascript runtime without a web browser)
-  install_nodejs
+  # install python3
+  install_python3
 
-  # install npm (node.js package manager)
-  install_npm
+  # install python3-pip (python3 package installer)
+  install_python3_pip
 
-  # install n (node.js version management)
-  install_n
+  # install websocket-client python3 library
+  install_websocket_client
 
-  # install nodejs 6.14.4
-  install_nodejs_6_14_4
-
-  # install ws node.js library
-  install_ws
-
-  # install rpio node.js library
-  install_rpio
+  # install smbus2 python3 library
+  install_smbus2
 
   # install pm2 to run the limitos javascript process via node
   install_pm2
@@ -44,135 +38,69 @@ perform_install()
 }
 
 # function to install nodejs
-function install_nodejs()
+function install_python3()
 {
-  # check if nodejs is installed
+  # check if python3 is installed
   # command -v: outputs location of specified program, wc -l: count line numbers
-  nodejs_installed=$(command -v nodejs | wc -l)
+  python3_installed=$(command -v nodejs | wc -l)
 
-  # if nodejs is not installed (command location line count is zero)
-  if [ $nodejs_installed -eq 0 ]
+  # if python3 is not installed (command location line count is zero)
+  if [ $python3_installed -eq 0 ]
     # then execute the commands below
     then
 
       # output activation message
-      echo 'node.js not found, installing...'
+      echo 'python3 not found, installing...'
 
-      # install version 6 of nodejs, and log output
-      sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo bash - &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
-
-      # install nodejs, and log output
-      sudo apt-get install -y nodejs &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+      # install python3, and log output
+      sudo apt-get install -y python3 &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
 
 }
 
-# function to install npm
-function install_npm()
+# function to install python3-pip
+function install_python3_pip()
 {
-  # check if npm is installed
-  npm_installed=$(command -v npm | wc -l)
+  # check if python3-pip is installed
+  python3_pip_installed=$(command -v python3-pip | wc -l)
 
-  # if npm is not installed
-  if [ $npm_installed -eq 0 ]
+  # if python3-pip is not installed
+  if [ $python3_pip_installed -eq 0 ]
     # then execute the commands below
     then
 
       # output activation message
-      echo 'npm not found, installing...'
+      echo 'python3-pip not found, installing...'
 
-      # install npm, and log output
-      sudo apt-get install npm -y &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+      # install python3-pip, and log output
+      sudo apt-get install python3-pip -y &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
   # end the if statement
   fi
 
 }
 
-# function to install n version management
-function install_n()
+# function to install python3 websocket libary (websocket-client)
+# checking if a library is installed takes almost as long as installation, so we proceed with installation only
+function install_websocket_client()
 {
-  # check if n is installed
-  # npm list --depth=0: show top-level node.js modules
-  # 2> /dev/null: ignore npm list error output
-  n_installed=$(npm list --depth=0 2> /dev/null | grep " n@" | wc -l)
+  # output activation message
+  echo 'installing websocket-client...'
 
-  # if n is not installed
-  if [ $n_installed -eq 0 ]
-    # then execute the commands below
-    then
-
-      # output activation message
-      echo 'n not found, installing...'
-
-      # install n globally, and log output
-      sudo npm install n -g &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
-
-  # end the if statement
-  fi
-
+  # install websocket-client, and log output
+  sudo pip3 install websocket-client &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 }
 
-
-# function to install node.js version 6.14.4 (for compatibility with necessary libraries)
-function install_nodejs_6_14_4()
+# function to install python3 bus communication library (smbus2)
+function install_smbus2()
 {
-    # output activation message
-    echo 'installing node.js v6.14.4...'
+  # output activation message
+  echo 'installing websocket-client...'
 
-    # install nodejs v6.14.4, and log output
-    sudo n install 6.14.4 &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
-
-}
-
-# function to install node.js websocket libary (ws)
-function install_ws()
-{
-  # check if ws is installed
-  # npm list --depth=0: show top-level node.js modules
-  # 2> /dev/null: ignore npm list error output
-  ws_installed=$(npm list --depth=0 2> /dev/null | grep " ws@6.2.1" | wc -l)
-
-  # if ws is not installed
-  if [ $ws_installed -eq 0 ]
-    # then execute the commands below
-    then
-
-      # output activation message
-      echo 'ws not found, installing...'
-
-      # install ws, and log output
-      sudo npm install ws@6.2.1 &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
-
-  # end the if statement
-  fi
-
-}
-
-# function to install node.js gpio library for the raspberry pi (rpio)
-function install_rpio()
-{
-  # check if rpio is installed
-  # npm list --depth=0: show top-level node.js modules
-  # 2> /dev/null: ignore npm list error output
-  rpio_installed=$(npm list --depth=0 2> /dev/null | grep " rpio@" | wc -l)
-
-  # if rpio is not installed
-  if [ $rpio_installed -eq 0 ]
-    # then execute the commands below
-    then
-
-      # output activation message
-      echo 'rpio not found, installing...'
-
-      # install rpio, and log output
-      sudo npm install rpio &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
-
-  # end the if statement
-  fi
-
+  # install smbus2, and log output
+  sudo pip3 install smbus2 &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 }
 
 # function to install pm2
