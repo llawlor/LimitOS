@@ -19,14 +19,11 @@ perform_install()
   # install smbus2 python3 library
   install_smbus2
 
-  # install pm2 to run the limitos javascript process via node
-  install_pm2
+  # download the limitos<%= '_dev' if !Rails.env.production? %>.py file
+  download_limitos_py
 
-  # download the limitos<%= '_dev' if !Rails.env.production? %>.js file
-  download_limitos_js
-
-  # start the limitos<%= '_dev' if !Rails.env.production? %>.js process
-  start_limitos_js
+  # add the limitos<%= '_dev' if !Rails.env.production? %>.py process to systemctl
+  install_limitos_py
 
   <% if @device.present? %>
   echo "<%= Rails.application.config_for(:limitos)['application_name'] %> script installed successfully"
@@ -103,30 +100,8 @@ function install_smbus2()
   sudo pip3 install smbus2 &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 }
 
-# function to install pm2
-function install_pm2()
-{
-  # check if pm2 is installed
-  pm2_installed=$(command -v pm2 | wc -l)
-
-  # if pm2 is not installed
-  if [ $pm2_installed -eq 0 ]
-    # then execute the commands below
-    then
-
-      # output activation message
-      echo 'pm2 not found, installing...'
-
-      # install pm2
-      sudo npm install pm2@2.9.3 -g &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
-
-  # end the if statement
-  fi
-
-}
-
 # function to download limitos.js
-function download_limitos_js()
+function download_limitos_py()
 {
   <% if @device.present? %>
   # retrieve the nodejs script and save it as limitos<%= '_dev' if !Rails.env.production? %>.js
@@ -167,8 +142,8 @@ function download_limitos_js()
   fi
 }
 
-# function to start the limitos<%= '_dev' if !Rails.env.production? %>.js process
-function start_limitos_js()
+# function to install the limitos<%= '_dev' if !Rails.env.production? %>.py process
+function install_limitos_py()
 {
   # output message
   echo 'starting limitos<%= '_dev' if !Rails.env.production? %>.js process...'
