@@ -41,6 +41,25 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
     end
   end
 
+  describe '#python_script' do
+    render_views
+
+    it 'returns the script' do
+      post :python_script, params: { id: device.id, auth_token: device.auth_token }
+      expect(response.body).to match('def request_i2c_data')
+    end
+
+    it 'returns an error if no device' do
+      post :python_script, params: { id: 0, auth_token: device.auth_token }
+      expect(response.body).to match('Invalid device credentials.')
+    end
+
+    it 'returns an error if invalid auth token' do
+      post :python_script, params: { id: device.id, auth_token: 'INVALID' }
+      expect(response.body).to match('Invalid device credentials.')
+    end
+  end
+
   describe '#nodejs_script' do
     render_views
 
