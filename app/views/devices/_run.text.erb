@@ -138,6 +138,12 @@ function download_limitos_py()
       # move the file
       mv limitos<%= '_dev' if !Rails.env.production? %>_unverified.py limitos<%= '_dev' if !Rails.env.production? %>.py
 
+    # else the script is invalid
+    else
+
+      # exit
+      exit 0
+
   # end the if statement
   fi
 }
