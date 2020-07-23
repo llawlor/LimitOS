@@ -1,0 +1,14 @@
+[Unit]
+Description=LimitOS Service
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/limitos_dev.py
+StandardOutput=syslog
+Restart=always
+RestartSec=5s
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target
+Alias=limitos_dev.service

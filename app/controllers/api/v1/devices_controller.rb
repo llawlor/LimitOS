@@ -1,6 +1,12 @@
 class Api::V1::DevicesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  # systemd install script for python
+  def systemd_script
+    # respond with plain text and don't use a layout
+    render '/api/v1/devices/systemd_script.text.erb', layout: false, content_type: 'text/plain'
+  end
+
   # get data for the install script
   def install_script_info
     # return the last commit date of the install script

@@ -88,6 +88,7 @@ Rails.application.routes.draw do
         end
         collection do
           get :install_script_info
+          get :systemd_script
         end
         resources :registrations
       end

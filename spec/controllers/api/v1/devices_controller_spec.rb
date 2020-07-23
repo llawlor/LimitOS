@@ -6,6 +6,13 @@ RSpec.describe Api::V1::DevicesController, type: :controller do
   let(:device) { FactoryBot.create(:device, user: user) }
   let(:device_without_user) { FactoryBot.create(:device, user: nil) }
 
+  describe '.systemd_script' do
+    it 'is successful' do
+      get :systemd_script
+      expect(response).to be_successful
+    end
+  end
+
   describe '#install_script_info' do
     it 'returns the proper version' do
       get :install_script_info
