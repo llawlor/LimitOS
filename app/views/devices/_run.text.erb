@@ -154,6 +154,15 @@ function install_limitos_py()
   # output message
   echo 'starting limitos<%= '_dev' if !Rails.env.production? %>.py process...'
 
+  # get the python3 directory
+  python3_directory=$(which python3)
+
+  # get the current directory
+  current_directory=$(pwd)
+
+  # retrieve the systemd script and save it as systemd.service
+  curl -sS "<%= full_server_url %>/api/v1/devices/systemd_script?python3_directory=$python3_directory&current_directory=$current_directory" > systemd.service
+
   # stop any previously running limitos<%= '_dev' if !Rails.env.production? %>.py processes
   # sudo pm2 stop limitos<%= '_dev' if !Rails.env.production? %>.py &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
 
