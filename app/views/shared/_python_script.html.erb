@@ -314,6 +314,8 @@ def check_for_updates():
             print('starting update process...')
             #subprocess.call(['sudo', 'modprobe', 'bcm2835-v4l2'])
             subprocess.call(['sh', '-c', '<%= reinstall_script_command(@device).html_safe %>'])
+            # quit so that the updated script can run instead
+            quit()
 
     # check for updates again in an hour
     threading.Timer(3600, check_for_updates).start()

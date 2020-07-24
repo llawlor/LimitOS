@@ -193,11 +193,8 @@ function install_limitos_py()
   # reload systemd
   sudo systemctl daemon-reload
 
-  # stop any previously running limitos<%= '_dev' if !Rails.env.production? %>.py processes
-  sudo systemctl stop limitos<%= '_dev' if !Rails.env.production? %>
-
-  # start the systemd service
-  sudo systemctl start limitos<%= '_dev' if !Rails.env.production? %>
+  # start (or restart) the systemd service
+  sudo systemctl restart limitos<%= '_dev' if !Rails.env.production? %>
 }
 
 # run the main function
