@@ -22,6 +22,9 @@ perform_install()
   # download the limitos<%= '_dev' if !Rails.env.production? %>.py file
   download_limitos_py
 
+  # remove previous installations
+  remove_limitos_js
+
   # add the limitos<%= '_dev' if !Rails.env.production? %>.py process to systemctl
   install_limitos_py
 
@@ -143,6 +146,30 @@ function download_limitos_py()
 
       # exit
       exit 0
+
+  # end the if statement
+  fi
+}
+
+# function to remove previous node.js installations of the limitos<%= '_dev' if !Rails.env.production? %>.py process
+function remove_limitos_js()
+{
+  # check if pm2 is installed
+  pm2_installed=$(command -v pm2 | wc -l)
+
+  # if pm2 is installed
+  if [ $pm2_installed -eq 1 ]
+    # then execute the commands below
+    then
+
+      # output removal message
+      echo 'previous version of limitos found, removing...'
+
+      # remove node.js script
+      sudo pm2 -s stop limitos<%= '_dev' if !Rails.env.production? %>
+      sudo pm2 -s delete limitos<%= '_dev' if !Rails.env.production? %>
+      sudo pm2 -s save
+      rm limitos*.js
 
   # end the if statement
   fi
