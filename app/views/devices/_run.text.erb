@@ -160,20 +160,20 @@ function install_limitos_py()
   # get the current directory
   current_directory=$(pwd)
 
-  # retrieve the systemd script and save it as systemd.service
-  curl -sS "<%= full_server_url %>/api/v1/devices/systemd_script?python3_directory=$python3_directory&current_directory=$current_directory" > systemd.service
+  # retrieve the systemd script
+  curl -sS "<%= full_server_url %>/api/v1/devices/systemd_script?python3_directory=$python3_directory&current_directory=$current_directory" > limitos<%= '_dev' if !Rails.env.production? %>.service
+
+  # move the service file to /lib/systemd/system/
+  sudo mv limitos<%= '_dev' if !Rails.env.production? %>.service /lib/systemd/system/
+
+  # reload systemd
+  sudo systemctl daemon-reload
 
   # stop any previously running limitos<%= '_dev' if !Rails.env.production? %>.py processes
-  # sudo pm2 stop limitos<%= '_dev' if !Rails.env.production? %>.py &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+  sudo systemctl stop limitos<%= '_dev' if !Rails.env.production? %>
 
-  # start the limitos<%= '_dev' if !Rails.env.production? %>.py python script, -s: silent mode
-  # sudo pm2 -s start limitos<%= '_dev' if !Rails.env.production? %>.py
-
-  # save the current limitos<%= '_dev' if !Rails.env.production? %>.py process
-  # sudo pm2 -s save
-
-  # start pm2 when server is started, and log output
-  # sudo pm2 startup &> 'limitos<%= '_dev' if !Rails.env.production? %>_install.log'
+  # start the systemd service
+  sudo systemctl start limitos<%= '_dev' if !Rails.env.production? %>
 }
 
 # run the main function
