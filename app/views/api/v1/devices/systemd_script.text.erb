@@ -3,6 +3,7 @@ Description=LimitOS Service
 After=network-online.target
 
 [Service]
+WorkingDirectory=<%= params[:current_directory] || '/home/pi' %>
 ExecStart=<%= params[:python3_directory] || '/user/bin/python3' %> <%= params[:current_directory] || '/home/pi' %>/limitos_dev.py
 StandardOutput=syslog
 Restart=always
