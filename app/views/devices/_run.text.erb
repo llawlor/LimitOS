@@ -162,14 +162,11 @@ function remove_limitos_js()
     # then execute the commands below
     then
 
-      # output removal message
-      echo 'previous version of limitos found, removing...'
-
       # remove node.js script
       sudo pm2 -s stop limitos<%= '_dev' if !Rails.env.production? %>
       sudo pm2 -s delete limitos<%= '_dev' if !Rails.env.production? %>
       sudo pm2 -s save
-      rm limitos*.js
+      rm limitos*.js 2> /dev/null
 
   # end the if statement
   fi
