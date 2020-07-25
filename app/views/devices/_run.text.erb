@@ -22,12 +22,12 @@ perform_install()
   # download the limitos<%= '_dev' if !Rails.env.production? %>.py file
   download_limitos_py
 
-  # remove previous installations
-  remove_limitos_js
-
   # add the limitos<%= '_dev' if !Rails.env.production? %>.py process to systemctl
   install_limitos_py
 
+  # remove previous installations
+  remove_limitos_js
+  
   <% if @device.present? %>
   echo "<%= Rails.application.config_for(:limitos)['application_name'] %> script installed successfully"
   <% else %>
