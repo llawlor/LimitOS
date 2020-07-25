@@ -27,7 +27,7 @@ perform_install()
 
   # remove previous installations
   remove_limitos_js
-  
+
   <% if @device.present? %>
   echo "<%= Rails.application.config_for(:limitos)['application_name'] %> script installed successfully"
   <% else %>
@@ -192,6 +192,9 @@ function install_limitos_py()
 
   # reload systemd
   sudo systemctl daemon-reload
+
+  # enable the script
+  sudo systemctl enable limitos<%= '_dev' if !Rails.env.production? %>
 
   # start (or restart) the systemd service
   sudo systemctl restart limitos<%= '_dev' if !Rails.env.production? %>
