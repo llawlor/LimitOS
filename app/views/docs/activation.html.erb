@@ -49,8 +49,8 @@ Please see the <a href="/docs/i2c">I<sup>2</sup>C page</a> for more information.
 To pause <%= Rails.application.config_for(:limitos)['application_name'] %> on your device:
 <br>
 <pre class="limitos-command">
-sudo pm2 stop limitos
-sudo pm2 unstartup
+sudo systemctl stop limitos
+sudo systemctl disable limitos
 </pre>
 
 <br><br>
