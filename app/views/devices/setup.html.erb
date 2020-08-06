@@ -32,7 +32,7 @@ HTTP POST https://<%= Rails.application.config_for(:limitos)['domain'] %>/api/v1
 
     <% if @device.device_type == 'raspberry_pi' %>
       <h3>Raspberry Pi Setup</h3>
-      You can view the <%= link_to 'Raspberry Pi nodejs script', nodejs_script_device_path(@master_device) %> associated with this device.
+      You can view the <%= link_to 'Raspberry Pi Python script', python_script_device_path(@master_device) %> associated with this device.
       <br><br>
       You can also run <%= Rails.application.config_for(:limitos)['application_name'] %> again on this device by entering the following command on your Raspberry Pi:
       <br><br>

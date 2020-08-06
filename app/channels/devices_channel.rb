@@ -31,7 +31,7 @@ class DevicesChannel < ApplicationCable::Channel
 
     # update the last_active_at, without invoking callbacks
     device.update_column(:last_active_at, DateTime.now)
-    
+
     # transmit the slave_devices only to this device
     device.broadcast_device_information
   end
