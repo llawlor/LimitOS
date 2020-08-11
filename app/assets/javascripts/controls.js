@@ -39,6 +39,18 @@ $(document).ready(function() {
     stopVideo();
   });
 
+  // when the start audio button is clicked
+  $('#audio_start').on('click', function() {
+    // start the audio
+    startAudio();
+  });
+
+  // when the stop audio button is clicked
+  $('#audio_stop').on('click', function() {
+    // stop the audio
+    stopAudio();
+  });
+
   // when the embed code button is clicked
   $('#video_embed_button').on('click', function() {
     // show the embed code
@@ -154,6 +166,23 @@ function stopVideo() {
   video_player.destroy();
   // show the start button
   $('#video_start').removeClass('hidden');
+}
+
+
+// start the audio
+function startAudio() {
+  // create the message
+  var message = { command: 'start_audio' };
+  // send the message to start the audio
+  App.messaging.send_message(message);
+}
+
+// stop the audio
+function stopAudio() {
+  // create the message
+  var message = { command: 'stop_audio' };
+  // send the message to start the audio
+  App.messaging.send_message(message);
 }
 
 // new user activity is detected
