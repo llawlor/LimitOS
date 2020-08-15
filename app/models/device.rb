@@ -322,6 +322,12 @@ class Device < ApplicationRecord
       message['video_url'] = self.video_from_devices_url
     end
 
+    # if this is a start audio command
+    if message['command'].present? && message['command'] == 'start_audio'
+      # add the audio url
+      message['audio_url'] = self.video_from_devices_url
+    end
+
     # broadcast to the target device's master (since we can't broadcast directly to a slave)
     DevicesChannel.broadcast_to(
       target_device.master_device.id,
