@@ -168,6 +168,22 @@ function stopVideo() {
   $('#video_start').removeClass('hidden');
 }
 
+var context = new AudioContext();
+var soundSource;
+var chunks;
+var mtrack = 0;
+var buf;
+
+function appendBuffer(buffer1, buffer2) {
+  var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+  tmp.set(new Uint8Array(buffer1), 0);
+  tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+  return tmp.buffer;
+};
+
+function hexview(input) {
+  return Array.prototype.map.call(new Uint8Array(input), x => ('00' + x.toString(16)).slice(-2)).join('');
+}
 
 // start the audio
 function startAudio() {
@@ -175,6 +191,46 @@ function startAudio() {
   var message = { command: 'start_audio' };
   // send the message to start the audio
   App.messaging.send_message(message);
+
+
+  setTimeout(function() {
+    createSoundSource(chunks);
+  }, 4000);
+
+  var ws = new WebSocket(video_server_url);
+  ws.binaryType = "arraybuffer";
+  ws.onmessage = function(message) {
+    console.log(mtrack);
+
+    // ignore initial chunk that has arecord output info
+    if (mtrack === 0) {
+
+    } else if (mtrack === 1) {
+      console.log(hexview(message.data));
+      chunks = message.data;
+      //createSoundSource(message.data);
+    }
+    else if (mtrack < 10000) {
+
+      chunks = appendBuffer(chunks, message.data);
+      console.log(chunks);
+
+    } else if (mtrack === 10000) {
+      chunks = appendBuffer(chunks, message.data);
+      console.log(chunks);
+      //createSoundSource(chunks);
+    }
+    mtrack++;
+  }
+}
+
+function createSoundSource(audioData) {
+        context.decodeAudioData(audioData, function(soundBuffer){
+            var soundSource = context.createBufferSource();
+            soundSource.buffer = soundBuffer;
+            soundSource.connect(context.destination);
+            soundSource.start(0);
+        });
 }
 
 // stop the audio
