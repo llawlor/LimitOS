@@ -186,8 +186,13 @@ wav_header_view[1] = wav_header_array[1];
 function createWavHeader(byte_length) {
   var wav_header = new ArrayBuffer(44);
   var wav_header_view = new Uint8Array(wav_header);
+  var byte_length_hex = (byte_length).toString(16);
   // first 40
-  var wav_header_string = '5249464634b1020057415645666d7420100000000100010044ac0000885801000200100064617461';
+  var wav_header_string = '52494646';
+  var data_length_hex = (36 + byte_length).toString(16);
+  var data_length_hex_string = ('00000000' + data_length_hex).slice(-8);
+  wav_header_string += data_length_hex_string;
+  wav_header_string += '57415645666d7420100000000100010044ac0000885801000200100064617461';
 
   var byte_length_hex = (byte_length).toString(16);
   // left pad
@@ -201,6 +206,7 @@ function createWavHeader(byte_length) {
     wav_header_view[i] = wav_header_bytes[i];
   }
 
+  console.log('byte_length: ' + byte_length);
   console.log('wav_header');
   console.log(wav_header);
   console.log('hexview wav_header');
