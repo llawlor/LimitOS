@@ -173,16 +173,7 @@ var soundSource;
 var chunks;
 var mtrack = 0;
 var buf;
-var wav_header = new ArrayBuffer(40);
-var wav_header_view = new Uint8Array(wav_header);
 
-var wav_header_string = '5249464634b1020057415645666d7420100000000100010044ac0000885801000200100064617461';
-var wav_header_bytes = hexToBytes(wav_header_string);
-//console.log(hexToBytes(wav_header_string));
-
-for (var i = 0; i < 40; i++) {
-  wav_header_view[i] = wav_header_bytes[i];
-}
 
 /*
 var wav_header_array = [0x52, 0x49];
@@ -190,10 +181,33 @@ wav_header_view[0] = wav_header_array[0];
 wav_header_view[1] = wav_header_array[1];
 */
 //wav_header_view = hexToBytes(wav_header_string);
-console.log('wav_header');
-console.log(wav_header);
-console.log('hexview wav_header');
-console.log(hexview(wav_header));
+
+
+function createWavHeader(byte_length) {
+  var wav_header = new ArrayBuffer(44);
+  var wav_header_view = new Uint8Array(wav_header);
+  // first 40
+  var wav_header_string = '5249464634b1020057415645666d7420100000000100010044ac0000885801000200100064617461';
+
+  var byte_length_hex = (byte_length).toString(16);
+  // left pad
+  var byte_length_hex_string = ('00000000' + byte_length_hex).slice(-8);
+  wav_header_string += byte_length_hex_string;
+
+  var wav_header_bytes = hexToBytes(wav_header_string);
+  //console.log(hexToBytes(wav_header_string));
+
+  for (var i = 0; i < 44; i++) {
+    wav_header_view[i] = wav_header_bytes[i];
+  }
+
+  console.log('wav_header');
+  console.log(wav_header);
+  console.log('hexview wav_header');
+  console.log(hexview(wav_header));
+
+  return wav_header;
+}
 
 function hexToBytes(hex) {
     for (var bytes = [], c = 0; c < hex.length; c += 2)
@@ -238,6 +252,8 @@ function startAudio() {
       console.log(hexview(message.data));
       createSoundSource(message.data);
     } else {
+      // set the data size
+      var wav_header = createWavHeader(message.data.byteLength);
       var x = appendBuffer(wav_header, message.data);
       //console.log(hexview(x));
       createSoundSource(x);
