@@ -202,10 +202,7 @@ function startAudio() {
   ws.onmessage = function(message) {
     console.log(mtrack);
 
-    // ignore initial chunk that has arecord output info
     if (mtrack === 0) {
-
-    } else if (mtrack === 1) {
       console.log(hexview(message.data));
       chunks = message.data;
       //createSoundSource(message.data);
