@@ -173,6 +173,33 @@ var soundSource;
 var chunks;
 var mtrack = 0;
 var buf;
+var wav_header = new ArrayBuffer(40);
+var wav_header_view = new Uint8Array(wav_header);
+
+var wav_header_string = '5249464634b1020057415645666d7420100000000100010044ac0000885801000200100064617461';
+var wav_header_bytes = hexToBytes(wav_header_string);
+//console.log(hexToBytes(wav_header_string));
+
+for (var i = 0; i < 40; i++) {
+  wav_header_view[i] = wav_header_bytes[i];
+}
+
+/*
+var wav_header_array = [0x52, 0x49];
+wav_header_view[0] = wav_header_array[0];
+wav_header_view[1] = wav_header_array[1];
+*/
+//wav_header_view = hexToBytes(wav_header_string);
+console.log('wav_header');
+console.log(wav_header);
+console.log('hexview wav_header');
+console.log(hexview(wav_header));
+
+function hexToBytes(hex) {
+    for (var bytes = [], c = 0; c < hex.length; c += 2)
+    bytes.push(parseInt(hex.substr(c, 2), 16));
+    return bytes;
+}
 
 function appendBuffer(buffer1, buffer2) {
   var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
@@ -194,14 +221,29 @@ function startAudio() {
 
 
   setTimeout(function() {
-    createSoundSource(chunks);
+  //  createSoundSource(chunks);
   }, 4000);
 
   var ws = new WebSocket(video_server_url);
   ws.binaryType = "arraybuffer";
   ws.onmessage = function(message) {
-    console.log(mtrack);
+    //console.log(mtrack);
 
+    if (mtrack === 0) {
+      //var output = appendBuffer(wav_header, message.data);
+      //console.log(output);
+      console.log('message.data');
+      console.log(message.data);
+      console.log('hexview message.data');
+      console.log(hexview(message.data));
+      createSoundSource(message.data);
+    } else {
+      var x = appendBuffer(wav_header, message.data);
+      //console.log(hexview(x));
+      createSoundSource(x);
+    }
+    mtrack++;
+/*
     if (mtrack === 0) {
       console.log(hexview(message.data));
       chunks = message.data;
@@ -218,6 +260,7 @@ function startAudio() {
       //createSoundSource(chunks);
     }
     mtrack++;
+    */
   }
 }
 
