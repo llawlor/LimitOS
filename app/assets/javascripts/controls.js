@@ -190,13 +190,20 @@ function createWavHeader(byte_length) {
   // first 40
   var wav_header_string = '52494646';
   var data_length_hex = (36 + byte_length).toString(16);
-  var data_length_hex_string = ('00000000' + data_length_hex).slice(-8);
+  if ((data_length_hex.length % 2) === 1) { data_length_hex = '0' + data_length_hex; }
+  //var data_length_hex_string = ('00000000' + data_length_hex).slice(-8);
+  var data_length_hex_string = data_length_hex.match(/[a-fA-F0-9]{2}/g).reverse().join('').padEnd(8, '0');
   wav_header_string += data_length_hex_string;
   wav_header_string += '57415645666d7420100000000100010044ac0000885801000200100064617461';
 
   var byte_length_hex = (byte_length).toString(16);
+  if ((byte_length_hex.length % 2) === 1) { byte_length_hex = '0' + byte_length_hex; }
   // left pad
-  var byte_length_hex_string = ('00000000' + byte_length_hex).slice(-8);
+  //var byte_length_hex_string = ('00000000' + byte_length_hex).slice(-8);
+  // right pad
+  // reverse the string and right pad
+  var byte_length_hex_string = byte_length_hex.match(/[a-fA-F0-9]{2}/g).reverse().join('').padEnd(8, '0');
+  console.log(byte_length_hex_string);
   wav_header_string += byte_length_hex_string;
 
   var wav_header_bytes = hexToBytes(wav_header_string);
@@ -206,10 +213,11 @@ function createWavHeader(byte_length) {
     wav_header_view[i] = wav_header_bytes[i];
   }
 
-  console.log('byte_length: ' + byte_length);
-  console.log('wav_header');
+
+  console.log('new wav file, byte_length: ' + byte_length);
+  console.log('wav_header:');
   console.log(wav_header);
-  console.log('hexview wav_header');
+  console.log('hexview wav_header:');
   console.log(hexview(wav_header));
 
   return wav_header;
@@ -261,7 +269,7 @@ function startAudio() {
       // set the data size
       var wav_header = createWavHeader(message.data.byteLength);
       var x = appendBuffer(wav_header, message.data);
-      //console.log(hexview(x));
+      console.log(hexview(x));
       createSoundSource(x);
     }
     mtrack++;
