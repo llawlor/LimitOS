@@ -173,7 +173,8 @@ var soundSource;
 var chunks;
 var mtrack = 0;
 var buf;
-
+var wav_header;
+var first_chunk;
 
 /*
 var wav_header_array = [0x52, 0x49];
@@ -181,7 +182,6 @@ wav_header_view[0] = wav_header_array[0];
 wav_header_view[1] = wav_header_array[1];
 */
 //wav_header_view = hexToBytes(wav_header_string);
-
 
 function createWavHeader(byte_length) {
   var wav_header = new ArrayBuffer(44);
@@ -206,6 +206,8 @@ function createWavHeader(byte_length) {
   console.log(byte_length_hex_string);
   wav_header_string += byte_length_hex_string;
 
+  // override from linux
+  wav_header_string = '52494646ccba060057415645666d7420100000000100010044ac0000885801000200100064617461a8ba0600';
   var wav_header_bytes = hexToBytes(wav_header_string);
   //console.log(hexToBytes(wav_header_string));
 
@@ -247,10 +249,19 @@ function startAudio() {
   // send the message to start the audio
   App.messaging.send_message(message);
 
-
+// generated
+//524946467969020057415645666d7420100000000100010044ac000088580100020010006461746155690200
+// from linux
+//52494646ccba060057415645666d7420100000000100010044ac0000885801000200100064617461a8ba0600
   setTimeout(function() {
-  //  createSoundSource(chunks);
-  }, 4000);
+    // set the data size
+    //var wav_header = createWavHeader(chunks.byteLength);
+    //var x = appendBuffer(wav_header, chunks);
+    //console.log(hexview(x));
+    //console.log(hexview(chunks));
+    //createSoundSource(x);
+    //createSoundSource(x);
+  }, 5000);
 
   var ws = new WebSocket(video_server_url);
   ws.binaryType = "arraybuffer";
@@ -260,17 +271,31 @@ function startAudio() {
     if (mtrack === 0) {
       //var output = appendBuffer(wav_header, message.data);
       //console.log(output);
-      console.log('message.data');
-      console.log(message.data);
-      console.log('hexview message.data');
-      console.log(hexview(message.data));
-      createSoundSource(message.data);
-    } else {
+      //console.log('message.data');
+      //console.log(message.data);
+      //console.log('hexview message.data');
+      //console.log(hexview(message.data));
+      //chunks = message.data;
+      first_chunk = message.data; //.slice(0, -1);
+      chunks = first_chunk;
+      //createSoundSource(message.data);
+    //} else if (mtrack < 3) {
+      //first_chunk = appendBuffer(first_chunk, message.data);
+      //chunks = message.data;
+    } else if (mtrack % 30 !== 0) {
       // set the data size
-      var wav_header = createWavHeader(message.data.byteLength);
-      var x = appendBuffer(wav_header, message.data);
-      console.log(hexview(x));
+      //var wav_header = createWavHeader(message.data.byteLength);
+      //var x = appendBuffer(wav_header, message.data);
+      //console.log(hexview(x));
+      //createSoundSource(x);
+      chunks = appendBuffer(chunks, message.data);
+      //console.log(chunks);
+      //var x = appendBuffer(first_chunk, message.data);
+      //createSoundSource(x);
+    } else {
+      var x = appendBuffer(first_chunk, chunks);
       createSoundSource(x);
+      chunks = message.data;
     }
     mtrack++;
 /*
