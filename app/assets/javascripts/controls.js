@@ -175,6 +175,8 @@ var mtrack = 0;
 var buf;
 var wav_header;
 var first_chunk;
+var audio_queue = [];
+var buffer_source;
 
 /*
 var wav_header_array = [0x52, 0x49];
@@ -207,7 +209,7 @@ function createWavHeader(byte_length) {
   wav_header_string += byte_length_hex_string;
 
   // override from linux
-  wav_header_string = '52494646ccba060057415645666d7420100000000100010044ac0000885801000200100064617461a8ba0600';
+  //wav_header_string = '52494646ccba060057415645666d7420100000000100010044ac0000885801000200100064617461a8ba0600';
   var wav_header_bytes = hexToBytes(wav_header_string);
   //console.log(hexToBytes(wav_header_string));
 
@@ -242,32 +244,82 @@ function hexview(input) {
   return Array.prototype.map.call(new Uint8Array(input), x => ('00' + x.toString(16)).slice(-2)).join('');
 }
 
+var sourceBuffer;
+
 // start the audio
 function startAudio() {
-  // create the message
-  var message = { command: 'start_audio' };
-  // send the message to start the audio
-  App.messaging.send_message(message);
+
+
+  var context = new AudioContext();
+  var audioElement = document.getElementById('myAudioTag');
+  var source = context.createMediaElementSource(audioElement);
+  var mediaSource = new MediaSource();
+  audioElement.src = URL.createObjectURL(mediaSource);
+  source.connect(context.destination);
+  setTimeout(function() {
+    sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
+    audioElement.play();
+    // create the message
+    var message = { command: 'start_audio' };
+    // send the message to start the audio
+    App.messaging.send_message(message);
+  }, 1000);
+
+  setTimeout(function() {
+    //audioElement.play();
+  }, 5000);
 
 // generated
 //524946467969020057415645666d7420100000000100010044ac000088580100020010006461746155690200
 // from linux
 //52494646ccba060057415645666d7420100000000100010044ac0000885801000200100064617461a8ba0600
+/*
   setTimeout(function() {
     // set the data size
     //var wav_header = createWavHeader(chunks.byteLength);
     //var x = appendBuffer(wav_header, chunks);
     //console.log(hexview(x));
     //console.log(hexview(chunks));
+    //createSoundSource();
     //createSoundSource(x);
-    //createSoundSource(x);
-  }, 5000);
+    var whenStart = 0;
+  for (let audioBufferSourceNode of audio_queue) {
+    console.log(audioBufferSourceNode.buffer.duration);
+      whenStart = audioBufferSourceNode.buffer.duration + whenStart;
+      audioBufferSourceNode.start(when=whenStart);
+  }
+  }, 500);
+  */
 
   var ws = new WebSocket(video_server_url);
   ws.binaryType = "arraybuffer";
   ws.onmessage = function(message) {
-    //console.log(mtrack);
+    sourceBuffer.appendBuffer(message.data);
+    /*
+    if (mtrack === 0) {
+      chunks = message.data;
+      first_chunk = chunks;
+    } else if (mtrack % 10 === 0) {
 
+
+      //var wav_header = createWavHeader(chunks.byteLength);
+      var x = appendBuffer(first_chunk, chunks);
+      context.decodeAudioData(x, function(soundBuffer){
+        var buffer_source = context.createBufferSource();
+        buffer_source.buffer = soundBuffer;
+        buffer_source.connect(context.destination);
+        audio_queue.push(buffer_source);
+      })
+
+            chunks = message.data;
+    } else {
+      chunks = appendBuffer(chunks, message.data);
+    }
+    mtrack++;
+*/
+
+    //console.log(mtrack);
+/*
     if (mtrack === 0) {
       //var output = appendBuffer(wav_header, message.data);
       //console.log(output);
@@ -282,22 +334,23 @@ function startAudio() {
     //} else if (mtrack < 3) {
       //first_chunk = appendBuffer(first_chunk, message.data);
       //chunks = message.data;
-    } else if (mtrack % 30 !== 0) {
+    //} else if (mtrack % 32 !== 0) {
       // set the data size
       //var wav_header = createWavHeader(message.data.byteLength);
       //var x = appendBuffer(wav_header, message.data);
       //console.log(hexview(x));
       //createSoundSource(x);
-      chunks = appendBuffer(chunks, message.data);
+      //chunks = appendBuffer(chunks, message.data);
       //console.log(chunks);
       //var x = appendBuffer(first_chunk, message.data);
       //createSoundSource(x);
     } else {
-      var x = appendBuffer(first_chunk, chunks);
-      createSoundSource(x);
-      chunks = message.data;
+      //var x = appendBuffer(first_chunk, chunks);
+      //createSoundSource(x);
+      chunks = appendBuffer(chunks, message.data);
     }
     mtrack++;
+    */
 /*
     if (mtrack === 0) {
       console.log(hexview(message.data));
@@ -319,8 +372,8 @@ function startAudio() {
   }
 }
 
-function createSoundSource(audioData) {
-        context.decodeAudioData(audioData, function(soundBuffer){
+function createSoundSource() {
+        context.decodeAudioData(chunks, function(soundBuffer){
             var soundSource = context.createBufferSource();
             soundSource.buffer = soundBuffer;
             soundSource.connect(context.destination);
