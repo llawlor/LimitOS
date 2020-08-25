@@ -168,64 +168,60 @@ function stopVideo() {
   $('#video_start').removeClass('hidden');
 }
 
-var context = new AudioContext();
-var soundSource;
-var chunks;
-var mtrack = 0;
-var buf;
-var wav_header;
-var first_chunk;
-var audio_queue = [];
-var buffer_source;
-
-function hexToBytes(hex) {
-    for (var bytes = [], c = 0; c < hex.length; c += 2)
-    bytes.push(parseInt(hex.substr(c, 2), 16));
-    return bytes;
-}
-
-function appendBuffer(buffer1, buffer2) {
-  var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
-  tmp.set(new Uint8Array(buffer1), 0);
-  tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
-  return tmp.buffer;
-};
-
 var sourceBuffer;
+var message_number = 1;
+var audio_queue = [];
+
+audio_queue.push = function( buffer ) {
+  if ( !sourceBuffer.updating ) {
+    sourceBuffer.appendBuffer( buffer )
+  } else {
+    Array.prototype.push.call( this, buffer )
+  }
+}
 
 // start the audio
 function startAudio() {
-
-
   var context = new AudioContext();
   var audioElement = document.getElementById('myAudioTag');
   var source = context.createMediaElementSource(audioElement);
   var mediaSource = new MediaSource();
-  audioElement.src = URL.createObjectURL(mediaSource);
-  source.connect(context.destination);
-  setTimeout(function() {
+
+  mediaSource.addEventListener('sourceopen', function() {
+    console.log('sourceopen');
     sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
-    audioElement.play();
     // create the message
     var message = { command: 'start_audio' };
     // send the message to start the audio
     App.messaging.send_message(message);
+
+    sourceBuffer.addEventListener('updateend', function() {
+      console.log('updateend');
+      if ( audio_queue.length && !sourceBuffer.updating ) {
+        console.log('adding queued data');
+        sourceBuffer.appendBuffer(audio_queue.shift());
+      }
+    }, false);
+  });
+
+  audioElement.src = URL.createObjectURL(mediaSource);
+  source.connect(context.destination);
+
+  setTimeout(function() {
+    document.getElementById('myAudioTag').play();
   }, 1000);
 
   var ws = new WebSocket(video_server_url);
   ws.binaryType = "arraybuffer";
   ws.onmessage = function(message) {
-    sourceBuffer.appendBuffer(message.data);
+    //sourceBuffer.appendBuffer(message.data);
+    if (message_number === 1) {
+      sourceBuffer.appendBuffer(message.data);
+    } else {
+      audio_queue.push(message.data);
+    }
+    message_number++;
   }
-}
-
-function createSoundSource() {
-        context.decodeAudioData(chunks, function(soundBuffer){
-            var soundSource = context.createBufferSource();
-            soundSource.buffer = soundBuffer;
-            soundSource.connect(context.destination);
-            soundSource.start(0);
-        });
 }
 
 // stop the audio
