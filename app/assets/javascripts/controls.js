@@ -178,55 +178,6 @@ var first_chunk;
 var audio_queue = [];
 var buffer_source;
 
-/*
-var wav_header_array = [0x52, 0x49];
-wav_header_view[0] = wav_header_array[0];
-wav_header_view[1] = wav_header_array[1];
-*/
-//wav_header_view = hexToBytes(wav_header_string);
-
-function createWavHeader(byte_length) {
-  var wav_header = new ArrayBuffer(44);
-  var wav_header_view = new Uint8Array(wav_header);
-  var byte_length_hex = (byte_length).toString(16);
-  // first 40
-  var wav_header_string = '52494646';
-  var data_length_hex = (36 + byte_length).toString(16);
-  if ((data_length_hex.length % 2) === 1) { data_length_hex = '0' + data_length_hex; }
-  //var data_length_hex_string = ('00000000' + data_length_hex).slice(-8);
-  var data_length_hex_string = data_length_hex.match(/[a-fA-F0-9]{2}/g).reverse().join('').padEnd(8, '0');
-  wav_header_string += data_length_hex_string;
-  wav_header_string += '57415645666d7420100000000100010044ac0000885801000200100064617461';
-
-  var byte_length_hex = (byte_length).toString(16);
-  if ((byte_length_hex.length % 2) === 1) { byte_length_hex = '0' + byte_length_hex; }
-  // left pad
-  //var byte_length_hex_string = ('00000000' + byte_length_hex).slice(-8);
-  // right pad
-  // reverse the string and right pad
-  var byte_length_hex_string = byte_length_hex.match(/[a-fA-F0-9]{2}/g).reverse().join('').padEnd(8, '0');
-  console.log(byte_length_hex_string);
-  wav_header_string += byte_length_hex_string;
-
-  // override from linux
-  //wav_header_string = '52494646ccba060057415645666d7420100000000100010044ac0000885801000200100064617461a8ba0600';
-  var wav_header_bytes = hexToBytes(wav_header_string);
-  //console.log(hexToBytes(wav_header_string));
-
-  for (var i = 0; i < 44; i++) {
-    wav_header_view[i] = wav_header_bytes[i];
-  }
-
-
-  console.log('new wav file, byte_length: ' + byte_length);
-  console.log('wav_header:');
-  console.log(wav_header);
-  console.log('hexview wav_header:');
-  console.log(hexview(wav_header));
-
-  return wav_header;
-}
-
 function hexToBytes(hex) {
     for (var bytes = [], c = 0; c < hex.length; c += 2)
     bytes.push(parseInt(hex.substr(c, 2), 16));
@@ -239,10 +190,6 @@ function appendBuffer(buffer1, buffer2) {
   tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
   return tmp.buffer;
 };
-
-function hexview(input) {
-  return Array.prototype.map.call(new Uint8Array(input), x => ('00' + x.toString(16)).slice(-2)).join('');
-}
 
 var sourceBuffer;
 
@@ -265,110 +212,10 @@ function startAudio() {
     App.messaging.send_message(message);
   }, 1000);
 
-  setTimeout(function() {
-    //audioElement.play();
-  }, 5000);
-
-// generated
-//524946467969020057415645666d7420100000000100010044ac000088580100020010006461746155690200
-// from linux
-//52494646ccba060057415645666d7420100000000100010044ac0000885801000200100064617461a8ba0600
-/*
-  setTimeout(function() {
-    // set the data size
-    //var wav_header = createWavHeader(chunks.byteLength);
-    //var x = appendBuffer(wav_header, chunks);
-    //console.log(hexview(x));
-    //console.log(hexview(chunks));
-    //createSoundSource();
-    //createSoundSource(x);
-    var whenStart = 0;
-  for (let audioBufferSourceNode of audio_queue) {
-    console.log(audioBufferSourceNode.buffer.duration);
-      whenStart = audioBufferSourceNode.buffer.duration + whenStart;
-      audioBufferSourceNode.start(when=whenStart);
-  }
-  }, 500);
-  */
-
   var ws = new WebSocket(video_server_url);
   ws.binaryType = "arraybuffer";
   ws.onmessage = function(message) {
     sourceBuffer.appendBuffer(message.data);
-    /*
-    if (mtrack === 0) {
-      chunks = message.data;
-      first_chunk = chunks;
-    } else if (mtrack % 10 === 0) {
-
-
-      //var wav_header = createWavHeader(chunks.byteLength);
-      var x = appendBuffer(first_chunk, chunks);
-      context.decodeAudioData(x, function(soundBuffer){
-        var buffer_source = context.createBufferSource();
-        buffer_source.buffer = soundBuffer;
-        buffer_source.connect(context.destination);
-        audio_queue.push(buffer_source);
-      })
-
-            chunks = message.data;
-    } else {
-      chunks = appendBuffer(chunks, message.data);
-    }
-    mtrack++;
-*/
-
-    //console.log(mtrack);
-/*
-    if (mtrack === 0) {
-      //var output = appendBuffer(wav_header, message.data);
-      //console.log(output);
-      //console.log('message.data');
-      //console.log(message.data);
-      //console.log('hexview message.data');
-      //console.log(hexview(message.data));
-      //chunks = message.data;
-      first_chunk = message.data; //.slice(0, -1);
-      chunks = first_chunk;
-      //createSoundSource(message.data);
-    //} else if (mtrack < 3) {
-      //first_chunk = appendBuffer(first_chunk, message.data);
-      //chunks = message.data;
-    //} else if (mtrack % 32 !== 0) {
-      // set the data size
-      //var wav_header = createWavHeader(message.data.byteLength);
-      //var x = appendBuffer(wav_header, message.data);
-      //console.log(hexview(x));
-      //createSoundSource(x);
-      //chunks = appendBuffer(chunks, message.data);
-      //console.log(chunks);
-      //var x = appendBuffer(first_chunk, message.data);
-      //createSoundSource(x);
-    } else {
-      //var x = appendBuffer(first_chunk, chunks);
-      //createSoundSource(x);
-      chunks = appendBuffer(chunks, message.data);
-    }
-    mtrack++;
-    */
-/*
-    if (mtrack === 0) {
-      console.log(hexview(message.data));
-      chunks = message.data;
-      //createSoundSource(message.data);
-    }
-    else if (mtrack < 10000) {
-
-      chunks = appendBuffer(chunks, message.data);
-      console.log(chunks);
-
-    } else if (mtrack === 10000) {
-      chunks = appendBuffer(chunks, message.data);
-      console.log(chunks);
-      //createSoundSource(chunks);
-    }
-    mtrack++;
-    */
   }
 }
 
