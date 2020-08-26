@@ -170,15 +170,29 @@ function stopVideo() {
 
 var sourceBuffer;
 var message_number = 1;
-var audio_queue = [];
+var audio_queue;
 
-audio_queue.push = function( buffer ) {
+function audio_queue_push( buffer ) {
   if ( !sourceBuffer.updating ) {
     sourceBuffer.appendBuffer( buffer )
+    audio_queue = undefined;
   } else {
-    Array.prototype.push.call( this, buffer )
+    //Array.prototype.push.call( this, buffer )
+    if (audio_queue === undefined) {
+      console.log('audio_queue undefined');
+      audio_queue = buffer;
+    } else {
+      audio_queue = appendBuffer(audio_queue, buffer);
+    }
   }
 }
+
+function appendBuffer(buffer1, buffer2) {
+  var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+  tmp.set(new Uint8Array(buffer1), 0);
+  tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+  return tmp.buffer;
+};
 
 // start the audio
 function startAudio() {
@@ -197,9 +211,10 @@ function startAudio() {
 
     sourceBuffer.addEventListener('updateend', function() {
       console.log('updateend');
-      if ( audio_queue.length && !sourceBuffer.updating ) {
+      if ( audio_queue && !sourceBuffer.updating ) {
         console.log('adding queued data');
-        sourceBuffer.appendBuffer(audio_queue.shift());
+        sourceBuffer.appendBuffer(audio_queue);
+        audio_queue = undefined;
       }
     }, false);
   });
@@ -208,7 +223,7 @@ function startAudio() {
   source.connect(context.destination);
 
   setTimeout(function() {
-    document.getElementById('myAudioTag').play();
+  //  document.getElementById('myAudioTag').play();
   }, 1000);
 
   var ws = new WebSocket(video_server_url);
@@ -218,7 +233,7 @@ function startAudio() {
     if (message_number === 1) {
       sourceBuffer.appendBuffer(message.data);
     } else {
-      audio_queue.push(message.data);
+      audio_queue_push(message.data);
     }
     message_number++;
   }
