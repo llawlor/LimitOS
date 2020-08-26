@@ -6,6 +6,10 @@ var video_player = null;
 var video_timeout = null;
 // keep track of whether the video is currently playing
 var video_active = false;
+// keep track of the source buffer (audio chunk interface)
+var source_buffer;
+// holds the data from multiple ArrayBuffers (websocket mp3 audio data)
+var audio_queue;
 
 // when the document is ready
 $(document).ready(function() {
@@ -168,75 +172,94 @@ function stopVideo() {
   $('#video_start').removeClass('hidden');
 }
 
-var sourceBuffer;
-var message_number = 1;
-var audio_queue;
-
-function audio_queue_push( buffer ) {
+// handle the audio data
+function audioDataHandler(audio_data) {
+  // if the audio queue is empty
   if (audio_queue === undefined) {
-    console.log('audio_queue undefined');
-    audio_queue = buffer;
+    // set it to the audio data
+    audio_queue = audio_data;
+  // else queued data exists
   } else {
-    audio_queue = appendBuffer(audio_queue, buffer);
+    // append the audio data
+    audio_queue = appendArrayBuffers(audio_queue, audio_data);
   }
 
-  if ( !sourceBuffer.updating ) {
-    attachQueuedAudio();
-  }
+  // add queued audio data to the audio element
+  attachQueuedAudio();
 }
 
-// add queued audio data
+// add queued audio data to the audio element
 function attachQueuedAudio() {
-  console.log('adding queued data');
-  sourceBuffer.appendBuffer( audio_queue )
-  audio_queue = undefined;
+  // if the source isn't being updated
+  if (!source_buffer.updating) {
+    // add the queued audio data
+    source_buffer.appendBuffer(audio_queue);
+    // reset the audio queue variable
+    audio_queue = undefined;
+  }
 }
 
-function appendBuffer(buffer1, buffer2) {
+// add two array buffers together
+function appendArrayBuffers(buffer1, buffer2) {
+  // empty array with the proper byte length
   var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+  // add the first buffer
   tmp.set(new Uint8Array(buffer1), 0);
+  // add the second buffer at the appropriate position
   tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+  // return the concatenated array buffers
   return tmp.buffer;
 };
 
 // start the audio
 function startAudio() {
-  var context = new AudioContext();
-  var audioElement = document.getElementById('myAudioTag');
-  var source = context.createMediaElementSource(audioElement);
-  var mediaSource = new MediaSource();
+  // create an audio context
+  var audio_context = new AudioContext();
+  // get the audio element
+  var audio_element = document.getElementById('audio_element');
+  // attach the audio element as the source of the audio context
+  var source_node = audio_context.createMediaElementSource(audio_element);
+  // create a media source
+  var media_source = new MediaSource();
 
-  mediaSource.addEventListener('sourceopen', function() {
-    console.log('sourceopen');
-    sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
-    // create the message
+  // add an event listener for when the source is opened
+  media_source.addEventListener('sourceopen', function() {
+
+    // set the source buffer for mp3 audio
+    source_buffer = media_source.addSourceBuffer('audio/mpeg');
+    // create the message to the limitos server
     var message = { command: 'start_audio' };
     // send the message to start the audio
     App.messaging.send_message(message);
 
-    sourceBuffer.addEventListener('updateend', function() {
-      console.log('updateend');
-      if ( audio_queue && !sourceBuffer.updating ) {
+    // listen for updateened events
+    source_buffer.addEventListener('updateend', function() {
+      // if the audio queue exists
+      if (audio_queue !== undefined) {
+        // attach the queued audio
         attachQueuedAudio();
       }
-    }, false);
+    });
 
   });
 
-  audioElement.src = URL.createObjectURL(mediaSource);
-  source.connect(context.destination);
+  // set the src attribute, which will also trigger the 'sourceopen' event on the media source
+  audio_element.src = URL.createObjectURL(media_source);
+  // prepare output to speakers
+  source_node.connect(audio_context.destination);
 
-  setTimeout(function() {
-    document.getElementById('myAudioTag').play();
-  }, 200);
-
-  var ws = new WebSocket(video_server_url);
-  ws.binaryType = "arraybuffer";
-  ws.onmessage = function(message) {
-    console.log(message_number);
-    audio_queue_push(message.data);
-    message_number++;
+  // audio server websocket
+  var audio_websocket = new WebSocket(video_server_url);
+  // set the data type
+  audio_websocket.binaryType = "arraybuffer";
+  // when a message is received
+  audio_websocket.onmessage = function(message) {
+    // push the audio data on to the queue
+    audioDataHandler(message.data);
   }
+
+  // start playing audio immediately
+  document.getElementById('audio_element').play();
 }
 
 // stop the audio
