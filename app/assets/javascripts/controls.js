@@ -173,17 +173,18 @@ var message_number = 1;
 var audio_queue;
 
 function audio_queue_push( buffer ) {
-  if ( !sourceBuffer.updating ) {
-    sourceBuffer.appendBuffer( buffer )
-    audio_queue = undefined;
+  //Array.prototype.push.call( this, buffer )
+  if (audio_queue === undefined) {
+    console.log('audio_queue undefined');
+    audio_queue = buffer;
   } else {
-    //Array.prototype.push.call( this, buffer )
-    if (audio_queue === undefined) {
-      console.log('audio_queue undefined');
-      audio_queue = buffer;
-    } else {
-      audio_queue = appendBuffer(audio_queue, buffer);
-    }
+    audio_queue = appendBuffer(audio_queue, buffer);
+  }
+
+  if ( !sourceBuffer.updating ) {
+    console.log('adding queued data');
+    sourceBuffer.appendBuffer( audio_queue )
+    audio_queue = undefined;
   }
 }
 
@@ -208,7 +209,7 @@ function startAudio() {
     var message = { command: 'start_audio' };
     // send the message to start the audio
     App.messaging.send_message(message);
-
+/*
     sourceBuffer.addEventListener('updateend', function() {
       console.log('updateend');
       if ( audio_queue && !sourceBuffer.updating ) {
@@ -217,6 +218,7 @@ function startAudio() {
         audio_queue = undefined;
       }
     }, false);
+    */
   });
 
   audioElement.src = URL.createObjectURL(mediaSource);
@@ -229,6 +231,7 @@ function startAudio() {
   var ws = new WebSocket(video_server_url);
   ws.binaryType = "arraybuffer";
   ws.onmessage = function(message) {
+    console.log(message_number);
     //sourceBuffer.appendBuffer(message.data);
     if (message_number === 1) {
       sourceBuffer.appendBuffer(message.data);
