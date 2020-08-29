@@ -325,7 +325,7 @@ class Device < ApplicationRecord
     # if this is a start audio command
     if message['command'].present? && message['command'] == 'start_audio'
       # add the audio url
-      message['audio_url'] = self.video_from_devices_url
+      message['audio_url'] = target_device.video_from_devices_url
       # don't broadcast to target
       target_device = self
     end
