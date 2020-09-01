@@ -10,6 +10,7 @@ var video_active = false;
 var source_buffer;
 // holds the data from multiple ArrayBuffers (websocket mp3 audio data)
 var audio_queue;
+var audio_context;
 
 // when the document is ready
 $(document).ready(function() {
@@ -213,49 +214,58 @@ function appendArrayBuffers(buffer1, buffer2) {
 
 // start the audio
 function startAudio() {
-  // create an audio context
-  var audio_context = new AudioContext();
-  // get the audio element
-  var audio_element = document.getElementById('audio_element');
-  // attach the audio element as the source of the audio context
-  var source_node = audio_context.createMediaElementSource(audio_element);
-  // create a media source
-  var media_source = new MediaSource();
+  // if this is the first time connecting the audio context
+  if (audio_context === undefined) {
+    // create an audio context
+    audio_context = new AudioContext();
+    // get the audio element
+    var audio_element = document.getElementById('audio_element');
+    // attach the audio element as the source of the audio context
+    var source_node = audio_context.createMediaElementSource(audio_element);
+    // create a media source
+    var media_source = new MediaSource();
 
-  // add an event listener for when the source is opened
-  media_source.addEventListener('sourceopen', function() {
+    // add an event listener for when the source is opened
+    media_source.addEventListener('sourceopen', function() {
 
-    // set the source buffer for mp3 audio
-    source_buffer = media_source.addSourceBuffer('audio/mpeg');
+      // set the source buffer for mp3 audio
+      source_buffer = media_source.addSourceBuffer('audio/mpeg');
+      // create the message to the limitos server
+      var message = { command: 'start_audio' };
+      // send the message to start the audio
+      App.messaging.send_message(message);
+
+      // listen for updateened events
+      source_buffer.addEventListener('updateend', function() {
+        // if the audio queue exists
+        if (audio_queue !== undefined) {
+          // attach the queued audio
+          attachQueuedAudio();
+        }
+      });
+
+    });
+
+    // set the src attribute, which will also trigger the 'sourceopen' event on the media source
+    audio_element.src = URL.createObjectURL(media_source);
+    // prepare output to speakers
+    source_node.connect(audio_context.destination);
+
+    // audio server websocket
+    var audio_websocket = new WebSocket(video_server_url);
+    // set the data type
+    audio_websocket.binaryType = "arraybuffer";
+    // when a message is received
+    audio_websocket.onmessage = function(message) {
+      // push the audio data on to the queue
+      audioDataHandler(message.data);
+    }
+  // else setup has already occurred
+  } else {
     // create the message to the limitos server
     var message = { command: 'start_audio' };
     // send the message to start the audio
     App.messaging.send_message(message);
-
-    // listen for updateened events
-    source_buffer.addEventListener('updateend', function() {
-      // if the audio queue exists
-      if (audio_queue !== undefined) {
-        // attach the queued audio
-        attachQueuedAudio();
-      }
-    });
-
-  });
-
-  // set the src attribute, which will also trigger the 'sourceopen' event on the media source
-  audio_element.src = URL.createObjectURL(media_source);
-  // prepare output to speakers
-  source_node.connect(audio_context.destination);
-
-  // audio server websocket
-  var audio_websocket = new WebSocket(video_server_url);
-  // set the data type
-  audio_websocket.binaryType = "arraybuffer";
-  // when a message is received
-  audio_websocket.onmessage = function(message) {
-    // push the audio data on to the queue
-    audioDataHandler(message.data);
   }
 
   // start playing audio immediately
