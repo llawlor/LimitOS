@@ -10,6 +10,7 @@ var video_active = false;
 var source_buffer;
 // holds the data from multiple ArrayBuffers (websocket mp3 audio data)
 var audio_queue;
+// holds the audio context; if intially undefined, sets up the audio listeners when 'start audio' is clicked
 var audio_context;
 
 // when the document is ready
@@ -212,6 +213,14 @@ function appendArrayBuffers(buffer1, buffer2) {
   return tmp.buffer;
 };
 
+// send the websocket message to start audio
+function sendStartAudioCommand() {
+  // create the message to the limitos server
+  var message = { command: 'start_audio' };
+  // send the message to start the audio
+  App.messaging.send_message(message);
+}
+
 // start the audio
 function startAudio() {
   // if this is the first time connecting the audio context
@@ -231,9 +240,7 @@ function startAudio() {
       // set the source buffer for mp3 audio
       source_buffer = media_source.addSourceBuffer('audio/mpeg');
       // create the message to the limitos server
-      var message = { command: 'start_audio' };
-      // send the message to start the audio
-      App.messaging.send_message(message);
+      sendStartAudioCommand();
 
       // listen for updateened events
       source_buffer.addEventListener('updateend', function() {
@@ -263,9 +270,7 @@ function startAudio() {
   // else setup has already occurred
   } else {
     // create the message to the limitos server
-    var message = { command: 'start_audio' };
-    // send the message to start the audio
-    App.messaging.send_message(message);
+    sendStartAudioCommand();
   }
 
   // start playing audio immediately
