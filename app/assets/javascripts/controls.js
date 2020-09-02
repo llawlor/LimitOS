@@ -237,8 +237,8 @@ function startAudio() {
     // add an event listener for when the source is opened
     media_source.addEventListener('sourceopen', function() {
 
-      // set the source buffer for mp3 audio
-      source_buffer = media_source.addSourceBuffer('audio/mpeg');
+      // set the source buffer for webm audio
+      source_buffer = media_source.addSourceBuffer('audio/webm;codecs="opus"');
       // create the message to the limitos server
       sendStartAudioCommand();
 
