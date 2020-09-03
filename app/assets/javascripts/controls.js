@@ -57,6 +57,12 @@ $(document).ready(function() {
     stopAudio();
   });
 
+  // when the start listening button is clicked
+  $('#listening_start').on('click', function() {
+    // start listening to audio
+    startListening();
+  });
+
   // when the stop listening button is clicked
   $('#listening_stop').on('click', function() {
     // stop listening to audio
@@ -295,6 +301,14 @@ function stopAudio() {
 function stopListening() {
   // create the message
   var message = { command: 'stop_listening' };
+  // send the message to start the audio
+  App.messaging.send_message(message);
+}
+
+// start listening to audio
+function startListening() {
+  // create the message
+  var message = { command: 'start_listening' };
   // send the message to start the audio
   App.messaging.send_message(message);
 }

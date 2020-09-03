@@ -320,18 +320,18 @@ class Device < ApplicationRecord
     if message['command'].present? && message['command'] == 'start_video'
       # add the video url
       message['video_url'] = self.video_from_devices_url
-    end
-
     # if this is a start audio command
-    if message['command'].present? && message['command'] == 'start_audio'
+    elsif message['command'].present? && message['command'] == 'start_audio'
       # add the audio url
       message['audio_url'] = target_device.video_from_devices_url
       # don't broadcast to target
       target_device = self
-    end
-
+    # if this is a start listening command
+    elsif message['command'].present? && message['command'] == 'start_listening'
+      # don't broadcast to target
+      target_device = self
     # if this is a stop listening command
-    if message['command'].present? && message['command'] == 'stop_listening'
+    elsif message['command'].present? && message['command'] == 'stop_listening'
       # don't broadcast to target
       target_device = self
     end
