@@ -330,6 +330,12 @@ class Device < ApplicationRecord
       target_device = self
     end
 
+    # if this is a stop listening command
+    if message['command'].present? && message['command'] == 'stop_listening'
+      # don't broadcast to target
+      target_device = self
+    end
+
     # broadcast to the target device's master (since we can't broadcast directly to a slave)
     DevicesChannel.broadcast_to(
       target_device.master_device.id,
