@@ -12,6 +12,8 @@ var source_buffer;
 var audio_queue;
 // holds the audio context; if intially undefined, sets up the audio listeners when 'start audio' is clicked
 var audio_context;
+// websocket for sending microphone data
+var microphone_websocket;
 
 // when the document is ready
 $(document).ready(function() {
@@ -67,6 +69,12 @@ $(document).ready(function() {
   $('#listening_stop').on('click', function() {
     // stop listening to audio
     stopListening();
+  });
+
+  // when the start microphone button is clicked
+  $('#microphone_start').on('click', function() {
+    // start microphone
+    startMicrophone();
   });
 
   // when the embed code button is clicked
@@ -147,6 +155,35 @@ function sendOppositeSynchronization(synchronization_id) {
   // send the message
   App.messaging.send_message(message);
 }
+
+// start the microphone and transmit to websocket
+function startMicrophone() {
+  // audio server websocket
+  microphone_websocket = new WebSocket('ws://localhost:8081/video_from_devices/GEcozZg4eSdLoZZ5JKmFt771');
+  console.log(video_server_url);
+  // set the data type
+  microphone_websocket.binaryType = "arraybuffer";
+  setTimeout(function() {
+    // start microphone access
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+        .then(handleMicrophoneSuccess);
+  }, 500);
+}
+
+const handleMicrophoneSuccess = function(stream) {
+  const context = new AudioContext();
+  const source = context.createMediaStreamSource(stream);
+  const processor = context.createScriptProcessor(1024, 1, 1);
+
+  source.connect(processor);
+  processor.connect(context.destination);
+
+  processor.onaudioprocess = function(e) {
+    // Do something with the data, e.g. convert it to WAV
+    //console.log(e.inputBuffer);
+    microphone_websocket.send(e.inputBuffer.getChannelData(0));
+  };
+};
 
 // start the video
 function startVideo() {
@@ -254,7 +291,7 @@ function startAudio() {
       // create the message to the limitos server
       sendStartAudioCommand();
 
-      // listen for updateened events
+      // listen for updateend events
       source_buffer.addEventListener('updateend', function() {
         // if the audio queue exists
         if (audio_queue !== undefined) {
