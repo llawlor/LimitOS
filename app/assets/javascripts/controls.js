@@ -171,18 +171,28 @@ function startMicrophone() {
 }
 
 const handleMicrophoneSuccess = function(stream) {
-  const context = new AudioContext();
-  const source = context.createMediaStreamSource(stream);
-  const processor = context.createScriptProcessor(1024, 1, 1);
+  console.log('success');
+  const options = {mimeType: 'audio/webm'};
+  const mediaRecorder = new MediaRecorder(stream, options);
 
-  source.connect(processor);
-  processor.connect(context.destination);
+  mediaRecorder.addEventListener('dataavailable', function(e) {
+    if (e.data.size > 0) {
+      microphone_websocket.send(e.data);
+    }
 
-  processor.onaudioprocess = function(e) {
-    // Do something with the data, e.g. convert it to WAV
-    //console.log(e.inputBuffer);
-    microphone_websocket.send(e.inputBuffer.getChannelData(0));
-  };
+    //if(shouldStop === true && stopped === false) {
+  //    mediaRecorder.stop();
+    //  stopped = true;
+    //}
+  });
+
+  //mediaRecorder.addEventListener('stop', function() {
+  //  downloadLink.href = URL.createObjectURL(new Blob(recordedChunks));
+  //  downloadLink.download = 'acetest.wav';
+  //});
+
+  // capture media every 200 milliseconds
+  mediaRecorder.start(200);
 };
 
 // start the video
