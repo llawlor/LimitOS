@@ -34,6 +34,8 @@ last_i2c_data_received = datetime.datetime.now()
 video_active = False
 # variable for the ffmpeg process
 ffmpeg_process = None
+# variable for the ffmpeg_audio process
+ffmpeg_audio_process = None
 # variable for the remote relay server
 remote_video_websocket = None
 # variable for the i2c frequency
@@ -369,6 +371,28 @@ def send_websocket_command(i2c_address, pin_number, message_type, message_value)
         # send the websocket input
         ws.send(json.dumps(input))
 
+# start ffmpeg_audio for audio
+def start_ffmpeg_audio():
+    print("starting ffmpeg_audio...")
+    # ffmpeg options: quiet logs, no video, 1 audio channel, alsa format, input hardware device 1, webm output format, pipe to stdout
+    ffmpeg_audio_command = ['ffmpeg -loglevel quiet -vn -ac 1 -f alsa -i hw:1 -f webm -']
+    global ffmpeg_audio_process
+    # start ffmpeg_audio, and pipe to stdout with the proper buffer size
+    ffmpeg_audio_process = subprocess.Popen(ffmpeg_audio_command, shell=True, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    ffmpeg_audio_thread = threading.Thread(target=process_audio_stream)
+    ffmpeg_audio_thread.daemon = True
+    ffmpeg_audio_thread.start()
+
+# process ffmpeg_audio stream
+def process_audio_stream():
+    global ffmpeg_audio_process
+    # when ffmpeg_audio data is received
+    for chunk in ffmpeg_audio_process.stdout:
+        # if the remote connection is available
+        if remote_video_websocket.sock and remote_video_websocket.sock.connected:
+            # send data as binary
+            remote_video_websocket.send(chunk, 2)
+
 # handle a device message
 def handle_device_message(message):
     # if this is an i2c command
@@ -388,6 +412,11 @@ def handle_device_message(message):
         elif ((message['command'] == 'start_video') and (video_active == False)):
             # start the video
             start_video(message['video_url'])
+        # else if this is a command to start the audio
+        elif ((message['command'] == 'start_audio')):
+            print('start audio request received')
+            # start the audio
+            start_audio(message['audio_url'])
 
     # else if this is a message with the device information
     elif ('input_pins' in message):
@@ -440,6 +469,24 @@ def handle_direct_message(message):
     if (message.get('digital') and len(message.get('digital')) != 0):
         # output the message to the correct pin
         GPIO.setup(pin_number, GPIO.OUT, initial=pin_state)
+
+# function to start ffmpeg_audio and audio servers
+def start_audio(audio_url):
+    print('starting audio')
+
+    # connect to the remote relay server
+    connect_remote_video_relay(audio_url)
+
+    # start ffmpeg_audio
+    start_ffmpeg_audio()
+
+# function to stop ffmpeg_audio and audio servers
+def stop_audio():
+    print('stopping audio')
+    # stop ffmpeg_audio
+    ffmpeg_audio_process.kill()
+    # stop the remote relay websocket
+    remote_video_websocket.close()
 
 # function to start ffmpeg and video servers
 def start_video(video_url):
@@ -496,7 +543,7 @@ def process_video_stream():
 
 # connect to the remote video relay server
 def connect_remote_video_relay(video_url):
-    print('sending video to ' + video_url)
+    print('sending audio/video to ' + video_url)
 
     # when data is received from the relay server
     def on_video_message(remote_video_websocket, data):
@@ -508,14 +555,22 @@ def connect_remote_video_relay(video_url):
             if (((json_data.get('stop_video') == auth_token) or (json_data.get('stop_video') == device_id)) and (video_active == True)):
                 # stop the video
                 stop_video()
+        # else if there's a stop video command
+        elif (json_data.get('stop_audio')):
+            # if the auth tokens match or device_id matches
+            if (((json_data.get('stop_audio') == auth_token) or (json_data.get('stop_audio') == device_id))):
+                # stop the audio
+                stop_audio()
 
     # if there is an error, stop the video
     def on_video_error(remote_video_websocket, error):
         stop_video()
+        stop_audio()
 
     # when the remote video websocket is closed, stop the video
     def on_video_close(remote_video_websocket):
         stop_video()
+        stop_audio
 
     # start the websocket with callbacks
     global remote_video_websocket
