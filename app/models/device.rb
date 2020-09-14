@@ -326,6 +326,10 @@ class Device < ApplicationRecord
       message['audio_url'] = target_device.video_from_devices_url
       # don't broadcast to target
       target_device = self
+    # if this is a stop audio command
+    elsif message['command'].present? && message['command'] == 'stop_audio'
+      # don't broadcast to target
+      target_device = self
     # if this is a start listening command
     elsif message['command'].present? && message['command'] == 'start_listening'
       # don't broadcast to target

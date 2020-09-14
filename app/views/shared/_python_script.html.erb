@@ -417,6 +417,11 @@ def handle_device_message(message):
             print('start audio request received')
             # start the audio
             start_audio(message['audio_url'])
+        # else if this is a command to stop the audio
+        elif ((message['command'] == 'stop_audio')):
+            print('stop audio request received')
+            # stop the audio
+            stop_audio()
 
     # else if this is a message with the device information
     elif ('input_pins' in message):
@@ -484,6 +489,7 @@ def start_audio(audio_url):
 def stop_audio():
     print('stopping audio')
     # stop ffmpeg_audio
+    global ffmpeg_audio_process
     ffmpeg_audio_process.kill()
     # stop the remote relay websocket
     remote_video_websocket.close()
@@ -555,7 +561,7 @@ def connect_remote_video_relay(video_url):
             if (((json_data.get('stop_video') == auth_token) or (json_data.get('stop_video') == device_id)) and (video_active == True)):
                 # stop the video
                 stop_video()
-        # else if there's a stop video command
+        # else if there's a stop audio command
         elif (json_data.get('stop_audio')):
             # if the auth tokens match or device_id matches
             if (((json_data.get('stop_audio') == auth_token) or (json_data.get('stop_audio') == device_id))):
