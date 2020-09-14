@@ -374,8 +374,9 @@ def send_websocket_command(i2c_address, pin_number, message_type, message_value)
 # start ffmpeg_audio for audio
 def start_ffmpeg_audio():
     print("starting ffmpeg_audio...")
+    # use exec so that subprocess is not created, which enables ffmpeg_audio_process to be properly killed
     # ffmpeg options: quiet logs, no video, 1 audio channel, alsa format, input hardware device 1, webm output format, pipe to stdout
-    ffmpeg_audio_command = ['ffmpeg -loglevel quiet -vn -ac 1 -f alsa -i hw:1 -f webm -']
+    ffmpeg_audio_command = ['exec ffmpeg -loglevel quiet -vn -ac 1 -f alsa -i hw:1 -f webm -']
     global ffmpeg_audio_process
     # start ffmpeg_audio, and pipe to stdout with the proper buffer size
     ffmpeg_audio_process = subprocess.Popen(ffmpeg_audio_command, shell=True, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
