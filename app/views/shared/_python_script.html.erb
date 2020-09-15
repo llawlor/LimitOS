@@ -22,6 +22,7 @@ limitos_client_version = '<%= Rails.application.config_for(:limitos)["limitos_cl
 device_id = '<%= @device.id %>'
 # variable for the auth_token
 auth_token = '<%= @device.auth_token %>'
+media_to_clients_url = 'ws://192.168.1.174:8082/video_to_clients/GEcozZg4eSdLoZZ5JKmFt771'
 # variable for the slave device information
 slave_devices = []
 # variable for the input pins
@@ -32,12 +33,16 @@ slave_devices_ready = False
 last_i2c_data_received = datetime.datetime.now()
 # variable for the state of the video camera
 video_active = False
-# variable for the ffmpeg process
+# variable for the ffmpeg process (to send video)
 ffmpeg_process = None
-# variable for the ffmpeg_audio process
+# variable for the ffmpeg_audio process (to record audio)
 ffmpeg_audio_process = None
+# variable for the ffplay process (to play audio)
+ffplay_process = None
 # variable for the remote relay server
 remote_video_websocket = None
+# variable for the remote relay server
+remote_media_listener_websocket = None
 # variable for the i2c frequency
 i2c_frequency = 0
 
@@ -394,6 +399,11 @@ def process_audio_stream():
             # send data as binary
             remote_video_websocket.send(chunk, 2)
 
+# stop listening to audio
+def stop_listening():
+    # stop ffplay
+    ffplay_process.kill()
+
 # handle a device message
 def handle_device_message(message):
     # if this is an i2c command
@@ -423,6 +433,16 @@ def handle_device_message(message):
             print('stop audio request received')
             # stop the audio
             stop_audio()
+        # else if this is a command to start listening to audio
+        elif ((message['command'] == 'start_listening')):
+            print('start listening request received')
+            # start listening
+            start_listening()
+        # else if this is a command to stop listening to audio
+        elif ((message['command'] == 'stop_listening')):
+            print('stop listening request received')
+            # stop listening to audio
+            stop_listening()
 
     # else if this is a message with the device information
     elif ('input_pins' in message):
@@ -476,6 +496,43 @@ def handle_direct_message(message):
         # output the message to the correct pin
         GPIO.setup(pin_number, GPIO.OUT, initial=pin_state)
 
+# connect to the remote video relay server
+def connect_media_listener(media_to_clients_url):
+    print('listening to ' + media_to_clients_url)
+
+    # when data is received from the relay server
+    def on_media_message(remote_media_listener_websocket, data):
+        #print('listener message received')
+        #print(data)
+        # send the data to the audio player
+        ffplay_process.stdin.write(data)
+
+    # if there is an error, stop the video
+    def on_media_error(remote_media_listener_websocket, error):
+        print('error received')
+        #stop_video()
+        #stop_audio()
+
+    # when the remote video websocket is closed, stop the video
+    def on_media_close(remote_media_listener_websocket):
+        print('websocket closed')
+        #stop_video()
+        #stop_audio
+
+    # start the websocket with callbacks
+    global remote_media_listener_websocket
+    remote_media_listener_websocket = websocket.WebSocketApp(media_to_clients_url,
+        #on_open = on_open,
+        on_message = on_media_message,
+        on_error = on_media_error,
+        on_close = on_media_close,
+        subprotocols = ["binary", "base64"])
+
+    # continue running in a separate thread
+    websocket_listener_thread = threading.Thread(target=remote_media_listener_websocket.run_forever)
+    websocket_listener_thread.daemon = True
+    websocket_listener_thread.start()
+
 # function to start ffmpeg_audio and audio servers
 def start_audio(audio_url):
     print('starting audio')
@@ -486,11 +543,24 @@ def start_audio(audio_url):
     # start ffmpeg_audio
     start_ffmpeg_audio()
 
+# function to start listening for audio and playing it with ffplay
+def start_listening():
+    print('listening to audio')
+
+    # full command: ffmpeg -loglevel panic -f v4l2 -framerate 25 -video_size 640x480 -i /dev/video0 -f mpegts -codec:v mpeg1video -s 640x480 -b:v 1000k -bf 0 pipe:1
+    ffplay_command = ['ffplay', '-vn', '-nodisp', '-fast', '-']
+    # start ffmpeg, and pipe to stdout with the proper buffer size
+    global ffplay_process
+    ffplay_process = subprocess.Popen(ffplay_command, stdin=subprocess.PIPE)
+
+    # if there is no remote media websocket server running
+    if (remote_media_listener_websocket == None):
+        connect_media_listener(media_to_clients_url)
+
 # function to stop ffmpeg_audio and audio servers
 def stop_audio():
     print('stopping audio')
     # stop ffmpeg_audio
-    global ffmpeg_audio_process
     ffmpeg_audio_process.kill()
     # stop the remote relay websocket
     remote_video_websocket.close()
@@ -556,6 +626,8 @@ def connect_remote_video_relay(video_url):
     def on_video_message(remote_video_websocket, data):
         # parse the message
         json_data = json.loads(data)
+        #print('relay server message received')
+        #print(json_data)
         # if there's a stop video command
         if (json_data.get('stop_video')):
             # if the auth tokens match or device_id matches, and video is active
