@@ -332,6 +332,8 @@ class Device < ApplicationRecord
       target_device = self
     # if this is a start listening command
     elsif message['command'].present? && message['command'] == 'start_listening'
+      # add the url
+      message['media_url'] = self.video_to_clients_url
       # don't broadcast to target
       target_device = self
     # if this is a stop listening command

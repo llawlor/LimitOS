@@ -22,7 +22,6 @@ limitos_client_version = '<%= Rails.application.config_for(:limitos)["limitos_cl
 device_id = '<%= @device.id %>'
 # variable for the auth_token
 auth_token = '<%= @device.auth_token %>'
-media_to_clients_url = 'ws://192.168.1.174:8082/video_to_clients/GEcozZg4eSdLoZZ5JKmFt771'
 # variable for the slave device information
 slave_devices = []
 # variable for the input pins
@@ -437,7 +436,7 @@ def handle_device_message(message):
         elif ((message['command'] == 'start_listening')):
             print('start listening request received')
             # start listening
-            start_listening()
+            start_listening(message['media_url'])
         # else if this is a command to stop listening to audio
         elif ((message['command'] == 'stop_listening')):
             print('stop listening request received')
@@ -544,7 +543,7 @@ def start_audio(audio_url):
     start_ffmpeg_audio()
 
 # function to start listening for audio and playing it with ffplay
-def start_listening():
+def start_listening(media_to_clients_url):
     print('listening to audio')
 
     # full command: ffmpeg -loglevel panic -f v4l2 -framerate 25 -video_size 640x480 -i /dev/video0 -f mpegts -codec:v mpeg1video -s 640x480 -b:v 1000k -bf 0 pipe:1
