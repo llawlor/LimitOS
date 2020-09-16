@@ -390,7 +390,6 @@ def start_ffmpeg_audio():
 
 # process ffmpeg_audio stream
 def process_audio_stream():
-    global ffmpeg_audio_process
     # when ffmpeg_audio data is received
     for chunk in ffmpeg_audio_process.stdout:
         # if the remote connection is available
@@ -609,7 +608,6 @@ def start_FFMPEG():
 
 # process ffmpeg stream
 def process_video_stream():
-    global ffmpeg_process
     # when ffmpeg data is received
     for chunk in ffmpeg_process.stdout:
         # if the remote connection is available
