@@ -548,8 +548,9 @@ def start_listening(media_to_clients_url):
     # set volume to 100% via the command: amixer cset numid=1 100%
     subprocess.call(['amixer', 'cset', 'numid=1', '100%'])
 
-    # full command: ffmpeg -loglevel panic -f v4l2 -framerate 25 -video_size 640x480 -i /dev/video0 -f mpegts -codec:v mpeg1video -s 640x480 -b:v 1000k -bf 0 pipe:1
-    ffplay_command = ['ffplay', '-vn', '-nodisp', '-fast', '-']
+    # full command: ffplay -vn -nodisp -af atempo=1.05 -fast -
+    # adds a 5% speedup to audio to reduce overall lag
+    ffplay_command = ['ffplay', '-vn', '-nodisp', '-af', 'atempo=1.05', '-fast', '-']
     # start ffmpeg, and pipe to stdout with the proper buffer size
     global ffplay_process
     ffplay_process = subprocess.Popen(ffplay_command, stdin=subprocess.PIPE)
