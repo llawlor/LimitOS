@@ -546,7 +546,7 @@ def start_listening(media_to_clients_url):
     print('listening to audio')
 
     # set volume to 100% via the command: amixer cset numid=1 100%
-    subprocess.call(['amixer', 'cset', 'numid=1', '100%'])
+    #subprocess.call(['amixer', 'cset', 'numid=1', '100%'])
 
     # full command: ffplay -vn -nodisp -af atempo=1.05 -fast -
     # adds a 5% speedup to audio to reduce overall lag
