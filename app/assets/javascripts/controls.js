@@ -14,6 +14,8 @@ var audio_queue;
 var audio_context;
 // websocket for sending microphone data
 var microphone_websocket;
+// variable for the microphone recorder
+var media_recorder;
 
 // when the document is ready
 $(document).ready(function() {
@@ -75,6 +77,12 @@ $(document).ready(function() {
   $('#microphone_start').on('click', function() {
     // start microphone
     startMicrophone();
+  });
+
+  // when the stop microphone button is clicked
+  $('#microphone_stop').on('click', function() {
+    // stop microphone
+    stopMicrophone();
   });
 
   // when the embed code button is clicked
@@ -156,6 +164,11 @@ function sendOppositeSynchronization(synchronization_id) {
   App.messaging.send_message(message);
 }
 
+// stop the microphone
+function stopMicrophone() {
+  media_recorder.stop();
+}
+
 // start the microphone and transmit to websocket
 function startMicrophone() {
   // audio server websocket
@@ -173,9 +186,9 @@ function startMicrophone() {
 const handleMicrophoneSuccess = function(stream) {
   console.log('success');
   const options = {mimeType: 'audio/webm'};
-  const mediaRecorder = new MediaRecorder(stream, options);
+  media_recorder = new MediaRecorder(stream, options);
 
-  mediaRecorder.addEventListener('dataavailable', function(e) {
+  media_recorder.addEventListener('dataavailable', function(e) {
     if (e.data.size > 0) {
       microphone_websocket.send(e.data);
     }
@@ -192,7 +205,7 @@ const handleMicrophoneSuccess = function(stream) {
   //});
 
   // capture media every 200 milliseconds
-  mediaRecorder.start(200);
+  media_recorder.start(200);
 };
 
 // start the video
