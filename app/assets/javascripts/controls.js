@@ -281,6 +281,7 @@ function appendArrayBuffers(buffer1, buffer2) {
   tmp.set(new Uint8Array(buffer1), 0);
   // add the second buffer at the appropriate position
   tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+
   // return the concatenated array buffers
   return tmp.buffer;
 };
@@ -301,6 +302,8 @@ function startAudio() {
     audio_context = new AudioContext();
     // get the audio element
     var audio_element = document.getElementById('audio_element');
+    // increase playback rate to avoid accumulated lag
+    audio_element.playbackRate = 1.05;
     // attach the audio element as the source of the audio context
     var source_node = audio_context.createMediaElementSource(audio_element);
     // create a media source
