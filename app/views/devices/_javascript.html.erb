@@ -8,6 +8,8 @@
   var device_i2c_address = '<%= @device.i2c_address %>';
   // set the video url
   var video_server_url = '<%= @device.video_to_clients_url %>';
+  // set the url for browser microphone input
+  var audio_from_devices_url = '<%= @device.broadcast_to_device.video_from_devices_url(true) %>';
 
   <% @device.analog_pins.each do |pin| %>
     // initialize this slider

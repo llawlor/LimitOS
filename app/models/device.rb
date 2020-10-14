@@ -142,12 +142,18 @@ class Device < ApplicationRecord
 
   # full url for video coming from devices
   # in the future, this method can return dynamic values based on additional servers
-  def video_from_devices_url
+  def video_from_devices_url(use_localhost = false)
     # set the unique id to the auth_token, or to the id if the device is public
     unique_id = (self.private? && !self.public_video) ? self.auth_token : self.id
 
+    # get the video_from_devices_host
+    video_from_devices_host = "<%= Rails.application.config_for(:limitos)['video_from_devices_host'] %>";
+
+    # override the host if this is development and use_localhost is true
+    video_from_devices_host = 'ws://localhost:8081' if Rails.env.development? && (use_localhost == true)
+
     # return the full url
-    return "#{ Rails.application.config_for(:limitos)['video_from_devices_host'] }/video_from_devices/#{ unique_id }"
+    return "#{ video_from_devices_host }/video_from_devices/#{ unique_id }"
   end
 
   # full url for video going to clients

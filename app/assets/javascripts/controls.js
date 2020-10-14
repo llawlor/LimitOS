@@ -172,7 +172,7 @@ function stopMicrophone() {
 // start the microphone and transmit to websocket
 function startMicrophone() {
   // audio server websocket
-  microphone_websocket = new WebSocket('ws://localhost:8081/video_from_devices/GEcozZg4eSdLoZZ5JKmFt771');
+  microphone_websocket = new WebSocket(audio_from_devices_url);
   console.log(video_server_url);
   // set the data type
   microphone_websocket.binaryType = "arraybuffer";
