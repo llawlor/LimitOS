@@ -147,7 +147,7 @@ class Device < ApplicationRecord
     unique_id = (self.private? && !self.public_video) ? self.auth_token : self.id
 
     # get the video_from_devices_host
-    video_from_devices_host = "<%= Rails.application.config_for(:limitos)['video_from_devices_host'] %>";
+    video_from_devices_host = Rails.application.config_for(:limitos)['video_from_devices_host'];
 
     # override the host if this is development and use_localhost is true
     video_from_devices_host = 'ws://localhost:8081' if Rails.env.development? && (use_localhost == true)
