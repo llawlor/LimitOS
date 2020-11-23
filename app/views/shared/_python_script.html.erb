@@ -397,8 +397,8 @@ def process_audio_stream():
             # send data as binary
             remote_video_websocket.send(chunk, 2)
 
-# stop listening to audio
-def stop_listening():
+# stop rpi speakers
+def stop_rpi_speakers():
     # stop ffplay
     ffplay_process.kill()
 
@@ -431,16 +431,16 @@ def handle_device_message(message):
             print('stop audio request received')
             # stop the audio
             stop_audio()
-        # else if this is a command to start listening to audio
-        elif ((message['command'] == 'start_listening')):
-            print('start listening request received')
-            # start listening
-            start_listening(message['media_url'])
-        # else if this is a command to stop listening to audio
-        elif ((message['command'] == 'stop_listening')):
-            print('stop listening request received')
-            # stop listening to audio
-            stop_listening()
+        # else if this is a command to start rpi speakers
+        elif ((message['command'] == 'start_rpi_speakers')):
+            print('start rpi speakers request received')
+            # start rpi speakers
+            start_rpi_speakers(message['media_url'])
+        # else if this is a command to stop rpi speakers to audio
+        elif ((message['command'] == 'stop_rpi_speakers')):
+            print('stop rpi speakers request received')
+            # stop rpi speakers
+            stop_rpi_speakers()
 
     # else if this is a message with the device information
     elif ('input_pins' in message):
@@ -542,7 +542,7 @@ def start_audio(audio_url):
     start_ffmpeg_audio()
 
 # function to start listening for audio and playing it with ffplay
-def start_listening(media_to_clients_url):
+def start_rpi_speakers(media_to_clients_url):
     print('listening to audio')
 
     # set volume to 100% via the command: amixer cset numid=1 100%

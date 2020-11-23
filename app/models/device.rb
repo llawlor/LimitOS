@@ -336,14 +336,14 @@ class Device < ApplicationRecord
     elsif message['command'].present? && message['command'] == 'stop_audio'
       # don't broadcast to target
       target_device = self
-    # if this is a start listening command
-    elsif message['command'].present? && message['command'] == 'start_listening'
+    # if this is a start rpi speakers command
+    elsif message['command'].present? && message['command'] == 'start_rpi_speakers'
       # add the url
       message['media_url'] = self.video_to_clients_url
       # don't broadcast to target
       target_device = self
-    # if this is a stop listening command
-    elsif message['command'].present? && message['command'] == 'stop_listening'
+    # if this is a stop rpi speakers command
+    elsif message['command'].present? && message['command'] == 'stop_rpi_speakers'
       # don't broadcast to target
       target_device = self
     end

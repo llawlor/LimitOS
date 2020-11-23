@@ -61,16 +61,16 @@ $(document).ready(function() {
     stopAudio();
   });
 
-  // when the start listening button is clicked
-  $('#listening_start').on('click', function() {
-    // start listening to audio
-    startListening();
+  // when the start rpi speakers button is clicked
+  $('#start_rpi_speakers').on('click', function() {
+    // start rpi speakers
+    startRpiSpeakers();
   });
 
-  // when the stop listening button is clicked
-  $('#listening_stop').on('click', function() {
-    // stop listening to audio
-    stopListening();
+  // when the stop rpi speakers button is clicked
+  $('#stop_rpi_speakers').on('click', function() {
+    // stop rpi speakers
+    stopRpiSpeakers();
   });
 
   // when the start microphone button is clicked
@@ -360,18 +360,18 @@ function stopAudio() {
   App.messaging.send_message(message);
 }
 
-// stop listening to audio
-function stopListening() {
+// stop rpi speakers to audio
+function stopRpiSpeakers() {
   // create the message
-  var message = { command: 'stop_listening' };
+  var message = { command: 'stop_rpi_speakers' };
   // send the message to start the audio
   App.messaging.send_message(message);
 }
 
-// start listening to audio
-function startListening() {
+// start rpi speakers to audio
+function startRpiSpeakers() {
   // create the message
-  var message = { command: 'start_listening' };
+  var message = { command: 'start_rpi_speakers' };
   // send the message to start the audio
   App.messaging.send_message(message);
 }
