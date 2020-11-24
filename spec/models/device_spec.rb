@@ -187,6 +187,18 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#broadcast_to_device_or_self' do
+    it 'returns self' do
+      device.broadcast_to_device_or_self.should eq(device)
+    end
+
+    it 'returns another device' do
+      device_2 = FactoryBot.create(:device)
+      device.update_attributes(broadcast_to_device_id: device_2.id)
+      device.broadcast_to_device_or_self.should eq(device_2)
+    end
+  end
+
   describe '#broadcast_message' do
     before :each do
       device.save

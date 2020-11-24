@@ -67,6 +67,11 @@ class Device < ApplicationRecord
     !self.public?
   end
 
+  # device to broadcast to
+  def broadcast_to_device_or_self
+    self.broadcast_to_device.present? ? self.broadcast_to_device : self
+  end
+
   # path to the embed page
   def embed_path
     return "/embed/#{ self.slug || self.id }"
