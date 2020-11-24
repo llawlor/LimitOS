@@ -322,8 +322,12 @@ class Device < ApplicationRecord
     # remove the i2c_address if it's blank
     message.delete("i2c_address") if message["i2c_address"].blank?
 
+    # if this is a shutdown command
+    if message['command'].present? && message['command'] == 'shutdown'
+      # don't broadcast to target
+      target_device = self
     # if this is a start video command
-    if message['command'].present? && message['command'] == 'start_video'
+    elsif message['command'].present? && message['command'] == 'start_video'
       # add the video url
       message['video_url'] = self.video_from_devices_url
     # if this is a start audio command
