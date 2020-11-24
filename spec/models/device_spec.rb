@@ -189,13 +189,13 @@ RSpec.describe Device, type: :model do
 
   describe '#broadcast_to_device_or_self' do
     it 'returns self' do
-      device.broadcast_to_device_or_self.should eq(device)
+      expect(device.broadcast_to_device_or_self).to eq(device)
     end
 
     it 'returns another device' do
       device_2 = FactoryBot.create(:device)
       device.update_attributes(broadcast_to_device_id: device_2.id)
-      device.broadcast_to_device_or_self.should eq(device_2)
+      expect(device.broadcast_to_device_or_self).to eq(device_2)
     end
   end
 
@@ -236,6 +236,14 @@ RSpec.describe Device, type: :model do
       expect {
         device.broadcast_message({ "pin" => '5', "servo" => '12' })
       }.to have_broadcasted_to(device_2.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
+    end
+
+    it 'broadcasts shutdown command to self' do
+      device_2 = FactoryBot.create(:device)
+      device.update_attributes(broadcast_to_device_id: device_2.id)
+      expect {
+        device.broadcast_message({ "command" => 'shutdown' })
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ command: 'shutdown' }))
     end
 
     it 'broadcasts to another device and changes the i2c_address' do
