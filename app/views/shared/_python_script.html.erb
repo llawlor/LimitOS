@@ -395,7 +395,7 @@ def process_audio_stream():
         # if the remote connection is available
         if remote_video_websocket.sock and remote_video_websocket.sock.connected:
             # send data as binary
-            remote_video_websocket.send(chunk, 2)
+            remote_video_websocket.send(chunk, websocket.ABNF.OPCODE_BINARY)
 
 # stop rpi speakers
 def stop_rpi_speakers():
