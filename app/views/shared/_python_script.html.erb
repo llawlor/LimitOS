@@ -436,7 +436,7 @@ def handle_device_message(message):
             print('start rpi speakers request received')
             # start rpi speakers
             start_rpi_speakers(message['media_url'])
-        # else if this is a command to stop rpi speakers to audio
+        # else if this is a command to stop rpi speakers
         elif ((message['command'] == 'stop_rpi_speakers')):
             print('stop rpi speakers request received')
             # stop rpi speakers

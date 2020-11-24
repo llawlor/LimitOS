@@ -360,7 +360,7 @@ function stopAudio() {
   App.messaging.send_message(message);
 }
 
-// stop rpi speakers to audio
+// stop rpi speakers
 function stopRpiSpeakers() {
   // create the message
   var message = { command: 'stop_rpi_speakers' };
@@ -368,7 +368,7 @@ function stopRpiSpeakers() {
   App.messaging.send_message(message);
 }
 
-// start rpi speakers to audio
+// start rpi speakers
 function startRpiSpeakers() {
   // create the message
   var message = { command: 'start_rpi_speakers' };
