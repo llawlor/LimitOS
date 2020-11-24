@@ -74,15 +74,15 @@ $(document).ready(function() {
   });
 
   // when the start microphone button is clicked
-  $('#microphone_start').on('click', function() {
+  $('#start_browser_microphone').on('click', function() {
     // start microphone
     startBrowserMicrophone();
   });
 
   // when the stop microphone button is clicked
-  $('#microphone_stop').on('click', function() {
+  $('#stop_browser_microphone').on('click', function() {
     // stop microphone
-    stopMicrophone();
+    stopBrowserMicrophone();
   });
 
   // when the embed code button is clicked
@@ -165,7 +165,7 @@ function sendOppositeSynchronization(synchronization_id) {
 }
 
 // stop the microphone
-function stopMicrophone() {
+function stopBrowserMicrophone() {
   media_recorder.stop();
 }
 
