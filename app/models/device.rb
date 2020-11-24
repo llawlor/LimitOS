@@ -327,13 +327,13 @@ class Device < ApplicationRecord
       # add the video url
       message['video_url'] = self.video_from_devices_url
     # if this is a start audio command
-    elsif message['command'].present? && message['command'] == 'start_audio'
+    elsif message['command'].present? && message['command'] == 'start_rpi_microphone'
       # add the audio url
       message['audio_url'] = target_device.video_from_devices_url
       # don't broadcast to target
       target_device = self
     # if this is a stop audio command
-    elsif message['command'].present? && message['command'] == 'stop_audio'
+    elsif message['command'].present? && message['command'] == 'stop_rpi_microphone'
       # don't broadcast to target
       target_device = self
     # if this is a start rpi speakers command

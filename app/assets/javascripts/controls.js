@@ -10,7 +10,7 @@ var video_active = false;
 var source_buffer;
 // holds the data from multiple ArrayBuffers (websocket mp3 audio data)
 var audio_queue;
-// holds the audio context; if intially undefined, sets up the audio listeners when 'start audio' is clicked
+// holds the audio context; if intially undefined, sets up the audio listeners when 'start browser speakers' is clicked
 var audio_context;
 // websocket for sending microphone data
 var microphone_websocket;
@@ -49,16 +49,27 @@ $(document).ready(function() {
     stopVideo();
   });
 
-  // when the start audio button is clicked
-  $('#audio_start').on('click', function() {
-    // start the audio
-    startAudio();
+  // when the start browser speakers button is clicked
+  $('#start_browser_speakers').on('click', function() {
+    // start the browser speakers
+    startBrowserSpeakers();
   });
 
-  // when the stop audio button is clicked
-  $('#audio_stop').on('click', function() {
-    // stop the audio
-    stopAudio();
+  // when the stop browser speakers button is clicked
+  $('#stop_browser_speakers').on('click', function() {
+    // no action necessary
+  });
+
+  // when the start rpi microphone button is clicked
+  $('#start_rpi_microphone').on('click', function() {
+    // start the rpi microphone
+    sendStartRpiMicrophone();
+  });
+
+  // when the stop rpi microphone button is clicked
+  $('#stop_rpi_microphone').on('click', function() {
+    // stop the rpi microphone
+    stopRpiMicrophone();
   });
 
   // when the start rpi speakers button is clicked
@@ -280,16 +291,16 @@ function appendArrayBuffers(buffer1, buffer2) {
   return tmp.buffer;
 };
 
-// send the websocket message to start audio
-function sendStartAudioCommand() {
+// send the websocket message to start the raspberry pi microphone
+function sendStartRpiMicrophone() {
   // create the message to the limitos server
-  var message = { command: 'start_audio' };
-  // send the message to start the audio
+  var message = { command: 'start_rpi_microphone' };
+  // send the message to start the microphone
   App.messaging.send_message(message);
 }
 
-// start the audio
-function startAudio() {
+// start the browser audio
+function startBrowserSpeakers() {
   // if this is the first time connecting the audio context
   if (audio_context === undefined) {
     // create an audio context
@@ -308,8 +319,6 @@ function startAudio() {
 
       // set the source buffer for webm audio
       source_buffer = media_source.addSourceBuffer('audio/webm;codecs="opus"');
-      // create the message to the limitos server
-      sendStartAudioCommand();
 
       // listen for updateend events
       source_buffer.addEventListener('updateend', function() {
@@ -336,21 +345,17 @@ function startAudio() {
       // push the audio data on to the queue
       audioDataHandler(message.data);
     }
-  // else setup has already occurred
-  } else {
-    // create the message to the limitos server
-    sendStartAudioCommand();
   }
 
   // start playing audio immediately
   document.getElementById('audio_element').play();
 }
 
-// stop the audio
-function stopAudio() {
+// stop the raspberry pi microphone
+function stopRpiMicrophone() {
   // create the message
-  var message = { command: 'stop_audio' };
-  // send the message to start the audio
+  var message = { command: 'stop_rpi_microphone' };
+  // send the message to stop the microphone
   App.messaging.send_message(message);
 }
 
@@ -358,7 +363,7 @@ function stopAudio() {
 function stopRpiSpeakers() {
   // create the message
   var message = { command: 'stop_rpi_speakers' };
-  // send the message to start the audio
+  // send the message to stop the raspberry pi speakers
   App.messaging.send_message(message);
 }
 
@@ -366,7 +371,7 @@ function stopRpiSpeakers() {
 function startRpiSpeakers() {
   // create the message
   var message = { command: 'start_rpi_speakers' };
-  // send the message to start the audio
+  // send the message to start the raspberry pi speakers
   App.messaging.send_message(message);
 }
 

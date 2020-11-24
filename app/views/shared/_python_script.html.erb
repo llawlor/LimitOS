@@ -421,16 +421,16 @@ def handle_device_message(message):
         elif ((message['command'] == 'start_video') and (video_active == False)):
             # start the video
             start_video(message['video_url'])
-        # else if this is a command to start the audio
-        elif ((message['command'] == 'start_audio')):
+        # else if this is a command to start the microphone
+        elif ((message['command'] == 'start_rpi_microphone')):
             print('start audio request received')
-            # start the audio
-            start_audio(message['audio_url'])
-        # else if this is a command to stop the audio
-        elif ((message['command'] == 'stop_audio')):
+            # start the microphone
+            start_rpi_microphone(message['audio_url'])
+        # else if this is a command to stop the microphone
+        elif ((message['command'] == 'stop_rpi_microphone')):
             print('stop audio request received')
-            # stop the audio
-            stop_audio()
+            # stop the microphone
+            stop_rpi_microphone()
         # else if this is a command to start rpi speakers
         elif ((message['command'] == 'start_rpi_speakers')):
             print('start rpi speakers request received')
@@ -509,13 +509,13 @@ def connect_media_listener(media_to_clients_url):
     def on_media_error(remote_media_listener_websocket, error):
         print('error received')
         #stop_video()
-        #stop_audio()
+        #stop_rpi_microphone()
 
     # when the remote video websocket is closed, stop the video
     def on_media_close(remote_media_listener_websocket):
         print('websocket closed')
         #stop_video()
-        #stop_audio
+        #stop_rpi_microphone
 
     # start the websocket with callbacks
     global remote_media_listener_websocket
@@ -532,7 +532,7 @@ def connect_media_listener(media_to_clients_url):
     websocket_listener_thread.start()
 
 # function to start ffmpeg_audio and audio servers
-def start_audio(audio_url):
+def start_rpi_microphone(audio_url):
     print('starting audio')
 
     # connect to the remote relay server
@@ -560,7 +560,7 @@ def start_rpi_speakers(media_to_clients_url):
         connect_media_listener(media_to_clients_url)
 
 # function to stop ffmpeg_audio and audio servers
-def stop_audio():
+def stop_rpi_microphone():
     print('stopping audio')
     # stop ffmpeg_audio
     ffmpeg_audio_process.kill()
@@ -635,22 +635,22 @@ def connect_remote_video_relay(video_url):
             if (((json_data.get('stop_video') == auth_token) or (json_data.get('stop_video') == device_id)) and (video_active == True)):
                 # stop the video
                 stop_video()
-        # else if there's a stop audio command
-        elif (json_data.get('stop_audio')):
+        # else if there's a stop microphone command
+        elif (json_data.get('stop_rpi_microphone')):
             # if the auth tokens match or device_id matches
-            if (((json_data.get('stop_audio') == auth_token) or (json_data.get('stop_audio') == device_id))):
-                # stop the audio
-                stop_audio()
+            if (((json_data.get('stop_rpi_microphone') == auth_token) or (json_data.get('stop_rpi_microphone') == device_id))):
+                # stop the microphone
+                stop_rpi_microphone()
 
     # if there is an error, stop the video
     def on_video_error(remote_video_websocket, error):
         stop_video()
-        stop_audio()
+        stop_rpi_microphone()
 
     # when the remote video websocket is closed, stop the video
     def on_video_close(remote_video_websocket):
         stop_video()
-        stop_audio
+        stop_rpi_microphone
 
     # start the websocket with callbacks
     global remote_video_websocket
