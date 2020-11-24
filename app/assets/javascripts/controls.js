@@ -76,7 +76,7 @@ $(document).ready(function() {
   // when the start microphone button is clicked
   $('#microphone_start').on('click', function() {
     // start microphone
-    startMicrophone();
+    startBrowserMicrophone();
   });
 
   // when the stop microphone button is clicked
@@ -170,12 +170,14 @@ function stopMicrophone() {
 }
 
 // start the microphone and transmit to websocket
-function startMicrophone() {
+function startBrowserMicrophone() {
   // audio server websocket
   microphone_websocket = new WebSocket(audio_from_devices_url);
-  console.log(video_server_url);
+
   // set the data type
   microphone_websocket.binaryType = "arraybuffer";
+
+  // wait 500 ms
   setTimeout(function() {
     // start microphone access
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
@@ -183,26 +185,18 @@ function startMicrophone() {
   }, 500);
 }
 
+// handle successful microphone access
 const handleMicrophoneSuccess = function(stream) {
-  console.log('success');
   const options = {mimeType: 'audio/webm'};
   media_recorder = new MediaRecorder(stream, options);
 
+  // when there is data available
   media_recorder.addEventListener('dataavailable', function(e) {
     if (e.data.size > 0) {
+      // send the data
       microphone_websocket.send(e.data);
     }
-
-    //if(shouldStop === true && stopped === false) {
-  //    mediaRecorder.stop();
-    //  stopped = true;
-    //}
   });
-
-  //mediaRecorder.addEventListener('stop', function() {
-  //  downloadLink.href = URL.createObjectURL(new Blob(recordedChunks));
-  //  downloadLink.download = 'acetest.wav';
-  //});
 
   // capture media every 200 milliseconds
   media_recorder.start(200);
