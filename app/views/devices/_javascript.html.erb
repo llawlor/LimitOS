@@ -10,7 +10,9 @@
   var video_server_url = '<%= @device.video_to_clients_url %>';
   // set the url for browser microphone input
   var audio_input_url = '<%= @device.broadcast_to_device_or_self.audio_input_url(true) %>';
-
+  // set the audio output url
+  var audio_output_url = '<%= @device.audio_output_url %>';
+  
   <% @device.analog_pins.each do |pin| %>
     // initialize this slider
     var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {

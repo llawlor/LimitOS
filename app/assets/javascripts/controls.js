@@ -337,7 +337,7 @@ function startBrowserSpeakers() {
     source_node.connect(audio_context.destination);
 
     // audio server websocket
-    var audio_websocket = new WebSocket(video_server_url);
+    var audio_websocket = new WebSocket(audio_output_url);
     // set the data type
     audio_websocket.binaryType = "arraybuffer";
     // when a message is received

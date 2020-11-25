@@ -17,7 +17,9 @@
   var device_auth_token = '';
   // set the video url
   var video_server_url = '<%= @device.video_to_clients_url %>';
-
+  // set the audio output url
+  var audio_output_url = '<%= @device.audio_output_url %>';
+  
   // when the document is ready
   $(document).ready(function() {
 
