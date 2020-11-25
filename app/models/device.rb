@@ -364,7 +364,7 @@ class Device < ApplicationRecord
     # if this is a start audio command
     elsif message['command'].present? && message['command'] == 'start_rpi_microphone'
       # add the audio url
-      message['audio_url'] = target_device.audio_input_url
+      message['audio_input_url'] = target_device.audio_input_url
       # don't broadcast to target
       target_device = self
     # if this is a stop audio command
@@ -374,7 +374,7 @@ class Device < ApplicationRecord
     # if this is a start rpi speakers command
     elsif message['command'].present? && message['command'] == 'start_rpi_speakers'
       # add the url
-      message['media_url'] = self.audio_output_url
+      message['audio_output_url'] = self.audio_output_url
       # don't broadcast to target
       target_device = self
     # if this is a stop rpi speakers command

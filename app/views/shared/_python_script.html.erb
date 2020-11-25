@@ -425,7 +425,7 @@ def handle_device_message(message):
         elif ((message['command'] == 'start_rpi_microphone')):
             print('start audio request received')
             # start the microphone
-            start_rpi_microphone(message['audio_url'])
+            start_rpi_microphone(message['audio_input_url'])
         # else if this is a command to stop the microphone
         elif ((message['command'] == 'stop_rpi_microphone')):
             print('stop audio request received')
@@ -435,7 +435,7 @@ def handle_device_message(message):
         elif ((message['command'] == 'start_rpi_speakers')):
             print('start rpi speakers request received')
             # start rpi speakers
-            start_rpi_speakers(message['media_url'])
+            start_rpi_speakers(message['audio_output_url'])
         # else if this is a command to stop rpi speakers
         elif ((message['command'] == 'stop_rpi_speakers')):
             print('stop rpi speakers request received')
@@ -532,11 +532,11 @@ def connect_media_listener(media_to_clients_url):
     websocket_listener_thread.start()
 
 # function to start ffmpeg_audio and audio servers
-def start_rpi_microphone(audio_url):
+def start_rpi_microphone(audio_input_url):
     print('starting audio')
 
     # connect to the remote relay server
-    connect_remote_video_relay(audio_url)
+    connect_remote_video_relay(audio_input_url)
 
     # start ffmpeg_audio
     start_ffmpeg_audio()
