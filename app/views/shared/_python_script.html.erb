@@ -38,10 +38,10 @@ ffmpeg_process = None
 ffmpeg_audio_process = None
 # variable for the ffplay process (to play audio)
 ffplay_process = None
-# variable for the remote relay server
+# variables for the remote relay server
 remote_video_websocket = None
-# variable for the remote relay server
-remote_media_listener_websocket = None
+remote_audio_input_websocket = None
+remote_audio_output_websocket = None
 # variable for the i2c frequency
 i2c_frequency = 0
 
@@ -393,9 +393,9 @@ def process_audio_stream():
     # when ffmpeg_audio data is received
     for chunk in ffmpeg_audio_process.stdout:
         # if the remote connection is available
-        if remote_video_websocket.sock and remote_video_websocket.sock.connected:
+        if remote_audio_input_websocket.sock and remote_audio_input_websocket.sock.connected:
             # send data as binary
-            remote_video_websocket.send(chunk, websocket.ABNF.OPCODE_BINARY)
+            remote_audio_input_websocket.send(chunk, websocket.ABNF.OPCODE_BINARY)
 
 # stop rpi speakers
 def stop_rpi_speakers():
@@ -494,32 +494,32 @@ def handle_direct_message(message):
         # output the message to the correct pin
         GPIO.setup(pin_number, GPIO.OUT, initial=pin_state)
 
-# connect to the remote video relay server
-def connect_media_listener(media_to_clients_url):
-    print('listening to ' + media_to_clients_url)
+# connect to the remote audio output relay server
+def connect_audio_output_listener(audio_output_url):
+    print('listening to ' + audio_output_url)
 
     # when data is received from the relay server
-    def on_media_message(remote_media_listener_websocket, data):
+    def on_media_message(remote_audio_output_websocket, data):
         #print('listener message received')
         #print(data)
         # send the data to the audio player
         ffplay_process.stdin.write(data)
 
     # if there is an error, stop the video
-    def on_media_error(remote_media_listener_websocket, error):
+    def on_media_error(remote_audio_output_websocket, error):
         print('error received')
         #stop_video()
         #stop_rpi_microphone()
 
     # when the remote video websocket is closed, stop the video
-    def on_media_close(remote_media_listener_websocket):
+    def on_media_close(remote_audio_output_websocket):
         print('websocket closed')
         #stop_video()
         #stop_rpi_microphone
 
     # start the websocket with callbacks
-    global remote_media_listener_websocket
-    remote_media_listener_websocket = websocket.WebSocketApp(media_to_clients_url,
+    global remote_audio_output_websocket
+    remote_audio_output_websocket = websocket.WebSocketApp(audio_output_url,
         #on_open = on_open,
         on_message = on_media_message,
         on_error = on_media_error,
@@ -527,7 +527,7 @@ def connect_media_listener(media_to_clients_url):
         subprotocols = ["binary", "base64"])
 
     # continue running in a separate thread
-    websocket_listener_thread = threading.Thread(target=remote_media_listener_websocket.run_forever)
+    websocket_listener_thread = threading.Thread(target=remote_audio_output_websocket.run_forever)
     websocket_listener_thread.daemon = True
     websocket_listener_thread.start()
 
@@ -542,7 +542,7 @@ def start_rpi_microphone(audio_input_url):
     start_ffmpeg_audio()
 
 # function to start listening for audio and playing it with ffplay
-def start_rpi_speakers(media_to_clients_url):
+def start_rpi_speakers(audio_output_url):
     print('listening to audio')
 
     # set volume to 100% via the command: amixer cset numid=1 100%
@@ -556,8 +556,8 @@ def start_rpi_speakers(media_to_clients_url):
     ffplay_process = subprocess.Popen(ffplay_command, stdin=subprocess.PIPE)
 
     # if there is no remote media websocket server running
-    if (remote_media_listener_websocket == None):
-        connect_media_listener(media_to_clients_url)
+    if (remote_audio_output_websocket == None):
+        connect_audio_output_listener(audio_output_url)
 
 # function to stop ffmpeg_audio and audio servers
 def stop_rpi_microphone():
@@ -565,7 +565,7 @@ def stop_rpi_microphone():
     # stop ffmpeg_audio
     ffmpeg_audio_process.kill()
     # stop the remote relay websocket
-    remote_video_websocket.close()
+    remote_audio_input_websocket.close()
 
 # function to start ffmpeg and video servers
 def start_video(video_url):
@@ -621,7 +621,7 @@ def process_video_stream():
 
 # connect to the remote video relay server
 def connect_remote_video_relay(video_url):
-    print('sending audio/video to ' + video_url)
+    print('sending video to ' + video_url)
 
     # when data is received from the relay server
     def on_video_message(remote_video_websocket, data):
@@ -635,22 +635,14 @@ def connect_remote_video_relay(video_url):
             if (((json_data.get('stop_video') == auth_token) or (json_data.get('stop_video') == device_id)) and (video_active == True)):
                 # stop the video
                 stop_video()
-        # else if there's a stop microphone command
-        elif (json_data.get('stop_rpi_microphone')):
-            # if the auth tokens match or device_id matches
-            if (((json_data.get('stop_rpi_microphone') == auth_token) or (json_data.get('stop_rpi_microphone') == device_id))):
-                # stop the microphone
-                stop_rpi_microphone()
 
     # if there is an error, stop the video
     def on_video_error(remote_video_websocket, error):
         stop_video()
-        stop_rpi_microphone()
 
     # when the remote video websocket is closed, stop the video
     def on_video_close(remote_video_websocket):
         stop_video()
-        stop_rpi_microphone
 
     # start the websocket with callbacks
     global remote_video_websocket
@@ -663,6 +655,45 @@ def connect_remote_video_relay(video_url):
 
     # continue running in a separate thread
     websocket_thread = threading.Thread(target=remote_video_websocket.run_forever)
+    websocket_thread.daemon = True
+    websocket_thread.start()
+
+# connect to the remote audio relay server
+def connect_remote_audio_relay(audio_url):
+    print('sending audio to ' + audio_url)
+
+    # when data is received from the relay server
+    def on_audio_message(remote_audio_input_websocket, data):
+        # parse the message
+        json_data = json.loads(data)
+        #print('relay server message received')
+        #print(json_data)
+        # if there's a stop microphone command
+        if (json_data.get('stop_rpi_microphone')):
+            # if the auth tokens match or device_id matches
+            if (((json_data.get('stop_rpi_microphone') == auth_token) or (json_data.get('stop_rpi_microphone') == device_id))):
+                # stop the microphone
+                stop_rpi_microphone()
+
+    # if there is an error, stop the audio
+    def on_audio_error(remote_audio_input_websocket, error):
+        stop_rpi_microphone()
+
+    # when the remote audio websocket is closed, stop the audio
+    def on_audio_close(remote_audio_input_websocket):
+        stop_rpi_microphone()
+
+    # start the websocket with callbacks
+    global remote_audio_input_websocket
+    remote_audio_input_websocket = websocket.WebSocketApp(audio_url,
+        #on_open = on_open,
+        on_message = on_audio_message,
+        on_error = on_audio_error,
+        on_close = on_audio_close,
+        subprotocols = ["binary", "base64"])
+
+    # continue running in a separate thread
+    websocket_thread = threading.Thread(target=remote_audio_input_websocket.run_forever)
     websocket_thread.daemon = True
     websocket_thread.start()
 
