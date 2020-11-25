@@ -134,6 +134,32 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#audio_input_url' do
+    it 'includes the auth token' do
+      device.save
+      expect(device.audio_input_url).to eq("#{ Rails.application.config_for(:limitos)['audio_input_host'] }/audio_input/#{ device.auth_token }")
+    end
+
+    it 'should include the device id if the device is public' do
+      device.save
+      device.update(public: true)
+      expect(device.audio_input_url).to eq("#{ Rails.application.config_for(:limitos)['audio_input_host'] }/audio_input/#{ device.id }")
+    end
+  end
+
+  describe '#audio_output_url' do
+    it 'includes the auth token' do
+      device.save
+      expect(device.audio_output_url).to eq("#{ Rails.application.config_for(:limitos)['audio_output_host'] }/audio_output/#{ device.auth_token }")
+    end
+
+    it 'should include the device id if the device is public' do
+      device.save
+      device.update(public: true)
+      expect(device.audio_output_url).to eq("#{ Rails.application.config_for(:limitos)['audio_output_host'] }/audio_output/#{ device.id }")
+    end
+  end
+
   describe '#broadcast_device_information on create/update/destroy' do
     it 'sends on create' do
       expect_any_instance_of(Device).to receive(:broadcast_device_information).once

@@ -183,7 +183,7 @@ function stopBrowserMicrophone() {
 // start the microphone and transmit to websocket
 function startBrowserMicrophone() {
   // audio server websocket
-  microphone_websocket = new WebSocket(audio_from_devices_url);
+  microphone_websocket = new WebSocket(audio_input_url);
 
   // set the data type
   microphone_websocket.binaryType = "arraybuffer";

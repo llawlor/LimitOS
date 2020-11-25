@@ -171,6 +171,32 @@ class Device < ApplicationRecord
     return "#{ Rails.application.config_for(:limitos)['video_to_clients_host'] }/video_to_clients/#{ unique_id }"
   end
 
+  # full url for audio input
+  # in the future, this method can return dynamic values based on additional servers
+  def audio_input_url(use_localhost = false)
+    # set the unique id to the auth_token, or to the id if the device is public
+    unique_id = (self.private? && !self.public_video) ? self.auth_token : self.id
+
+    # get the host
+    audio_input_host = Rails.application.config_for(:limitos)['audio_input_host'];
+
+    # override the host if this is development and use_localhost is true
+    audio_input_host = 'ws://localhost:8083' if Rails.env.development? && (use_localhost == true)
+
+    # return the full url
+    return "#{ audio_input_host }/audio_input/#{ unique_id }"
+  end
+
+  # full url for audio output
+  # in the future, this method can return dynamic values based on additional servers
+  def audio_output_url
+    # set the unique id to the auth_token, or to the id if the device is public
+    unique_id = (self.private? && !self.public_video) ? self.auth_token : self.id
+
+    # return the full url
+    return "#{ Rails.application.config_for(:limitos)['audio_output_host'] }/audio_output/#{ unique_id }"
+  end
+
   # digital pins
   def digital_pins
     # if this is a raspberry pi
