@@ -36,6 +36,8 @@ video_active = False
 # variable for the ffmpeg process (to send video)
 ffmpeg_process = None
 
+# variable for the state of the microphone (using ffmpeg_audio_process)
+microphone_active = False
 # variable for the ffmpeg_audio process (to record audio)
 ffmpeg_audio_process = None
 
@@ -384,6 +386,11 @@ def send_websocket_command(i2c_address, pin_number, message_type, message_value)
 # start ffmpeg_audio for audio
 def start_ffmpeg_audio():
     print("starting ffmpeg_audio...")
+
+    # mark the microphone as active
+    global microphone_active
+    microphone_active = True
+
     # use exec so that subprocess is not created, which enables ffmpeg_audio_process to be properly killed
     # ffmpeg options: quiet logs, no video, 1 audio channel, alsa format, input hardware device 1, webm output format, pipe to stdout
     ffmpeg_audio_command = ['exec ffmpeg -loglevel quiet -vn -ac 1 -f alsa -i hw:1 -f webm -']
@@ -430,7 +437,7 @@ def handle_device_message(message):
             # start the video
             start_video(message['video_url'])
         # else if this is a command to start the microphone
-        elif ((message['command'] == 'start_rpi_microphone')):
+        elif ((message['command'] == 'start_rpi_microphone') and (microphone_active == False)):
             print('start audio request received')
             # start the microphone
             start_rpi_microphone(message['audio_input_url'])
@@ -578,6 +585,9 @@ def stop_rpi_microphone():
     ffmpeg_audio_process.kill()
     # stop the remote relay websocket
     remote_audio_input_websocket.close()
+    # mark the microphone as inactive
+    global microphone_active
+    microphone_active = False
 
 # function to start ffmpeg and video servers
 def start_video(video_url):
