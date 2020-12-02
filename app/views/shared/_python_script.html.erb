@@ -30,14 +30,20 @@ input_pins = []
 slave_devices_ready = False
 # time of last successful request for i2c data
 last_i2c_data_received = datetime.datetime.now()
+
 # variable for the state of the video camera
 video_active = False
 # variable for the ffmpeg process (to send video)
 ffmpeg_process = None
+
 # variable for the ffmpeg_audio process (to record audio)
 ffmpeg_audio_process = None
+
+# variable for the state of the speakers (using ffplay_process)
+speakers_active = False
 # variable for the ffplay process (to play audio)
 ffplay_process = None
+
 # variables for the remote relay server
 remote_video_websocket = None
 remote_audio_input_websocket = None
@@ -401,6 +407,8 @@ def process_audio_stream():
 def stop_rpi_speakers():
     # stop ffplay
     ffplay_process.kill()
+    global speakers_active
+    speakers_active = False
 
 # handle a device message
 def handle_device_message(message):
@@ -432,7 +440,7 @@ def handle_device_message(message):
             # stop the microphone
             stop_rpi_microphone()
         # else if this is a command to start rpi speakers
-        elif ((message['command'] == 'start_rpi_speakers')):
+        elif ((message['command'] == 'start_rpi_speakers') and (speakers_active == False)):
             print('start rpi speakers request received')
             # start rpi speakers
             start_rpi_speakers(message['audio_output_url'])
@@ -536,7 +544,7 @@ def start_rpi_microphone(audio_input_url):
     print('starting audio')
 
     # connect to the remote relay server
-    connect_remote_video_relay(audio_input_url)
+    connect_remote_audio_relay(audio_input_url)
 
     # start ffmpeg_audio
     start_ffmpeg_audio()
@@ -547,6 +555,10 @@ def start_rpi_speakers(audio_output_url):
 
     # set volume to 100% via the command: amixer cset numid=1 100%
     #subprocess.call(['amixer', 'cset', 'numid=1', '100%'])
+
+    # mark the speakers as active
+    global speakers_active
+    speakers_active = True
 
     # full command: ffplay -vn -nodisp -af atempo=1.05 -fast -
     # adds a 5% speedup to audio to reduce overall lag
