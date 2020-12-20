@@ -354,8 +354,8 @@ def initialize_input_pins(pin_numbers):
     for pin_number in pin_numbers:
         # initialize the pin as an input
         GPIO.setup(pin_number, GPIO.IN)
-        # poll the pin and add a callback
-        GPIO.add_event_detect(pin_number, GPIO.BOTH, callback=poll_callback)
+        # poll the pin and add a callback, and ignore bounces for 50ms
+        GPIO.add_event_detect(pin_number, GPIO.BOTH, callback=poll_callback, bouncetime=50)
 
 # callback for the polled pin
 def poll_callback(pin_number):
