@@ -359,6 +359,8 @@ def initialize_input_pins(pin_numbers):
 
 # callback for the polled pin
 def poll_callback(pin_number):
+    # wait 50ms to get the correct state of the pin (since callback starts immediately on rising/falling edge detection)
+    time.sleep(0.05)
     # read the message value
     message_value = 'on' if (GPIO.input(pin_number) == GPIO.HIGH) else 'off'
     # send the command via websockets
