@@ -53,9 +53,9 @@ remote_audio_output_websocket = None
 # variable for the i2c frequency
 i2c_frequency = 0
 
-# keep track of the last value; key is (i2c_address + '_' + pin_number)
-# for example to access the value for i2c_address '0x04' and pin #8: last_values['0x04_8']
-last_values = {}
+# keep track of the last values; key format is (i2c_address + '_' + pin_number)
+# for example to access the value for i2c_address '0x04' and pin #8: last_i2c_pin_values['0x04_8']
+last_i2c_pin_values = {}
 
 # use Broadcom GPIO pin naming
 GPIO.setmode(GPIO.BCM)
@@ -210,10 +210,10 @@ def request_i2c_pin_value(i2c_address, pin_number):
                     send_i2c_command(slave_device)
 
         # if the last value for this pin is different than the current value
-        if (last_values.get(i2c_address + '_' + str(pin_number)) != message):
+        if (last_i2c_pin_values.get(i2c_address + '_' + str(pin_number)) != message):
             # print(message)
             # remember this value
-            last_values[i2c_address + '_' + str(pin_number)] = message
+            last_i2c_pin_values[i2c_address + '_' + str(pin_number)] = message
             # send the websocket command
             send_websocket_command(i2c_address, pin_number, 'servo', message)
 
