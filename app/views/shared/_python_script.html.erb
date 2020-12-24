@@ -53,7 +53,11 @@ remote_audio_output_websocket = None
 # variable for the i2c frequency
 i2c_frequency = 0
 
-# keep track of the last values; key format is (i2c_address + '_' + pin_number)
+# keep track of the last input values; key format is ('pin_' + pin_number)
+# for example to access the value for pin #17: last_pin_values['pin_17']
+last_pin_values = {}
+
+# keep track of the last i2c pin values; key format is (i2c_address + '_' + pin_number)
 # for example to access the value for i2c_address '0x04' and pin #8: last_i2c_pin_values['0x04_8']
 last_i2c_pin_values = {}
 
@@ -361,10 +365,16 @@ def initialize_input_pins(pin_numbers):
 def poll_callback(pin_number):
     # wait 50ms to get the correct state of the pin (since callback starts immediately on rising/falling edge detection)
     time.sleep(0.05)
+
     # read the message value
     message_value = 'on' if (GPIO.input(pin_number) == GPIO.HIGH) else 'off'
-    # send the command via websockets
-    send_websocket_command('', pin_number, 'digital', message_value)
+
+    # if the last value for this pin is different than the current value
+    if (last_pin_values.get('pin_' + str(pin_number)) != message_value):
+        # remember this value
+        last_pin_values['pin_' + str(pin_number)] = message_value
+        # send the command via websockets
+        send_websocket_command('', pin_number, 'digital', message_value)
 
 # send websocket command with the correct value
 def send_websocket_command(i2c_address, pin_number, message_type, message_value):
