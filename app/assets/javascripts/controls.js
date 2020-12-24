@@ -365,7 +365,7 @@ function addSourceBuffer() {
 // stop browser speakers
 function stopBrowserSpeakers() {
   // close the websocket
-  audio_websocket.close();
+  if (audio_websocket) { audio_websocket.close(); }
 
   // remove the audio element's src
   $('#audio_element')[0].src = undefined;
@@ -388,6 +388,12 @@ function stopRpiMicrophone() {
   var message = { command: 'stop_rpi_microphone' };
   // send the message to stop the microphone
   App.messaging.send_message(message);
+  // reset the browser speakers
+  resetBrowserSpeakers();
+}
+
+// reset browser speakers
+function resetBrowserSpeakers() {
   // stop the speakers
   stopBrowserSpeakers();
   // start the speakers again after waiting for elements to complete

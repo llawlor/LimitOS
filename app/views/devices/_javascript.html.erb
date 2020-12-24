@@ -12,7 +12,7 @@
   var audio_input_url = '<%= @device.broadcast_to_device_or_self.audio_input_url(true) %>';
   // set the audio output url
   var audio_output_url = '<%= @device.audio_output_url %>';
-  
+
   <% @device.analog_pins.each do |pin| %>
     // initialize this slider
     var slider_<%= pin.pin_number %> = new Slider("#slider_<%= pin.pin_number %>", {
@@ -88,6 +88,12 @@
       window['slider_' + data.pin].setValue(data.servo);
       // update the text input
       $('#servo_input_' + data.pin).val(data.servo);
+    }
+
+    // if this is a command to stop the rpi microphone
+    if (data.digital && data.pin == 17 && data.digital === 'off') {
+      // reset the browser speakers
+      resetBrowserSpeakers();
     }
   }
 
