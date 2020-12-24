@@ -364,11 +364,13 @@ function addSourceBuffer() {
 
 // stop browser speakers
 function stopBrowserSpeakers() {
+  // close the websocket
+  audio_websocket.close();
+
   // reset the audio element so that we can add mediaelement sourcenode again
   $('#audio_element').replaceWith($('#audio_element').clone());
 
-  // close the websocket and reset variables
-  audio_websocket.close();
+  // reset variables
   source_node = undefined;
   source_buffer = undefined;
   audio_websocket = undefined;
