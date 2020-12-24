@@ -12,6 +12,10 @@ var source_buffer;
 var audio_queue;
 // holds the audio context; if intially undefined, sets up the audio listeners when 'start browser speakers' is clicked
 var audio_context;
+// other audio variables that need to be reset for media to start/stop correctly
+var media_source;
+var audio_websocket;
+var source_node;
 // websocket for sending microphone data
 var microphone_websocket;
 // variable for the microphone recorder
@@ -310,25 +314,14 @@ function startBrowserSpeakers() {
     // increase playback rate to avoid accumulated lag
     audio_element.playbackRate = 1.05;
     // attach the audio element as the source of the audio context
-    var source_node = audio_context.createMediaElementSource(audio_element);
+    source_node = audio_context.createMediaElementSource(audio_element);
     // create a media source
-    var media_source = new MediaSource();
+    media_source = new MediaSource();
 
     // add an event listener for when the source is opened
     media_source.addEventListener('sourceopen', function() {
-
-      // set the source buffer for webm audio
-      source_buffer = media_source.addSourceBuffer('audio/webm;codecs="opus"');
-
-      // listen for updateend events
-      source_buffer.addEventListener('updateend', function() {
-        // if the audio queue exists
-        if (audio_queue !== undefined) {
-          // attach the queued audio
-          attachQueuedAudio();
-        }
-      });
-
+      // add the source buffer
+      addSourceBuffer();
     });
 
     // set the src attribute, which will also trigger the 'sourceopen' event on the media source
@@ -337,7 +330,7 @@ function startBrowserSpeakers() {
     source_node.connect(audio_context.destination);
 
     // audio server websocket
-    var audio_websocket = new WebSocket(audio_output_url);
+    audio_websocket = new WebSocket(audio_output_url);
     // set the data type
     audio_websocket.binaryType = "arraybuffer";
     // when a message is received
@@ -351,12 +344,50 @@ function startBrowserSpeakers() {
   document.getElementById('audio_element').play();
 }
 
+// add the source buffer
+function addSourceBuffer() {
+  // if the source buffer doesn't already exist
+  if (source_buffer === undefined) {
+    // set the source buffer for webm audio
+    source_buffer = media_source.addSourceBuffer('audio/webm;codecs="opus"');
+
+    // listen for updateend events
+    source_buffer.addEventListener('updateend', function() {
+      // if the audio queue exists
+      if (audio_queue !== undefined) {
+        // attach the queued audio
+        attachQueuedAudio();
+      }
+    });
+  }
+}
+
+// stop browser speakers
+function stopBrowserSpeakers() {
+  // reset the audio element so that we can add mediaelement sourcenode again
+  $('#audio_element').replaceWith($('#audio_element').clone());
+
+  // close the websocket and reset variables
+  audio_websocket.close();
+  source_node = undefined;
+  source_buffer = undefined;
+  audio_websocket = undefined;
+  audio_queue = undefined;
+  audio_context = undefined;
+}
+
 // stop the raspberry pi microphone
 function stopRpiMicrophone() {
   // create the message
   var message = { command: 'stop_rpi_microphone' };
   // send the message to stop the microphone
   App.messaging.send_message(message);
+  // stop the speakers
+  stopBrowserSpeakers();
+  // start the speakers again after waiting for elements to complete
+  setTimeout(function() {
+    startBrowserSpeakers();
+  }, 200);
 }
 
 // stop rpi speakers
