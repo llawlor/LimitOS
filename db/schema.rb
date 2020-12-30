@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_20_191936) do
+ActiveRecord::Schema.define(version: 2020_12_30_043001) do
 
   create_table "devices", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -29,6 +29,8 @@ ActiveRecord::Schema.define(version: 2019_04_20_191936) do
     t.string "slug"
     t.datetime "last_active_at"
     t.boolean "public_video", default: false
+    t.boolean "audio_enabled", default: false
+    t.integer "audio_start_pin"
     t.index ["auth_token"], name: "index_devices_on_auth_token", unique: true
     t.index ["broadcast_to_device_id"], name: "index_devices_on_broadcast_to_device_id"
     t.index ["device_id"], name: "index_devices_on_device_id"
