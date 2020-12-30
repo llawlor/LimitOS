@@ -76,4 +76,5 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-passenger'
+  gem 'annotate'
 end
