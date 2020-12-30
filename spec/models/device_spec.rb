@@ -19,6 +19,8 @@
 #  slug                   :string(255)
 #  last_active_at         :datetime
 #  public_video           :boolean          default(FALSE)
+#  audio_enabled          :boolean          default(FALSE)
+#  audio_start_pin        :integer
 #
 
 require 'rails_helper'
