@@ -95,6 +95,27 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
+        <label>
+          <%= f.check_box :audio_enabled %>
+          Enable two-way audio?
+          <span class="small" style="margin-left: 5px;">(work in progress)</span>
+        </label>
+      </div>
+    </div>
+
+    <div id="audio-start-pin-div" class="form-group <%= 'hidden' if !@device.audio_enabled? %>">
+      <label for="device_audio_start_pin" class="control-label col-lg-4">
+        Audio start pin
+        <span class="glyphicon glyphicon-question-sign tooltip-trigger" aria-hidden="true" ata-toggle="tooltip" data-placement="top" title="When digital input 'on' is detected, Raspberry Pi microphone will start."></span>
+      </label>
+      <div class="col-lg-8">
+        <%= f.text_field :audio_start_pin, class: 'form-control' %>
+      </div>
+      <%= f.error_span(:audio_start_pin) %>
+    </div>
+
     <div id="custom-url-div" class="form-group <%= 'hidden' if !@device.public_video? %>">
       <label for="device_slug" class="control-label col-lg-4">
         Custom URL
@@ -148,6 +169,20 @@
         $('#invert-video-div').addClass('hidden');
         // hide the public video option
         $('#public-video-div').addClass('hidden');
+      }
+    });
+
+    // when the 'audio enabled' checkbox is changed
+    $('#device_audio_enabled').on('change', function() {
+      // if the checkbox is checked
+      if ($(this).is(':checked')) {
+        // show the audio-start-pin option
+        $('#audio-start-pin-div').removeClass('hidden');
+      // else the checkbox is not checked
+      } else {
+        // hide the audio-start-pin option
+        $('#audio-start-pin-div').addClass('hidden');
+
       }
     });
 
