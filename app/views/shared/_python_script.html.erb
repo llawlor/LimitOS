@@ -26,6 +26,10 @@ auth_token = '<%= @device.auth_token %>'
 slave_devices = []
 # variable for the input pins
 input_pins = []
+# variable for the audio input url (audio from microphone)
+audio_input_url = None
+# variable for the audio start (microphone)
+audio_start_pin = None
 # variable to keep track of whether slaves have been set up
 slave_devices_ready = False
 # time of last successful request for i2c data
@@ -376,6 +380,16 @@ def poll_callback(pin_number):
         # send the command via websockets
         send_websocket_command('', pin_number, 'digital', message_value)
 
+        # if this is an audio pin
+        if (audio_start_pin == pin_number):
+            # if the microphone should be on
+            if (message_value == 'on'):
+                # start sending audio data to the correct endpoint
+                start_rpi_microphone(audio_input_url)
+            # else the microphone should be off
+            else:
+                stop_rpi_microphone()
+
 # send websocket command with the correct value
 def send_websocket_command(i2c_address, pin_number, message_type, message_value):
     # if the websocket is ready
@@ -475,6 +489,16 @@ def handle_device_message(message):
         # set the input pins
         print("input pins: " + str(message['input_pins']))
         initialize_input_pins(message['input_pins'])
+
+        # set the audio input url
+        if ('audio_input_url' in message):
+            global audio_input_url
+            audio_input_url = message['audio_input_url']
+
+        # set the audio start pin
+        if ('audio_start_pin' in message):
+            global audio_start_pin
+            audio_start_pin = message['audio_start_pin']
 
         # set the slave device information
         global slave_devices
