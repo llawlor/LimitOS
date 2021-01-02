@@ -231,22 +231,35 @@ class Device < ApplicationRecord
     # for each slave device
     self.devices.each do |device|
       # append the data to the array
-      output << { i2c_address: device.i2c_address, input_pins: device.input_pins.collect(&:pin_number) }
+      output << { i2c_address: device.i2c_address, input_pins: device.input_pins }
     end
 
     # return the array
     return output
   end
 
-  # get only the input pins
+  # returns an array of the input pin numbers
   def input_pins
-    self.pins.where(pin_type: 'input')
+    output = []
+
+    # get input pins by default
+    output = self.pins.where(pin_type: 'input').collect(&:pin_number)
+
+    # add the audio_start_pin if necessary
+    output << self.audio_start_pin if self.audio_enabled? && self.audio_start_pin.present?
+
+    # return the output
+    return output
   end
 
   # send device information
   def broadcast_device_information
+    # construct the message
+    message = { input_pins: self.master_device.input_pins, slave_devices: self.master_device.slave_device_information }
+    # merge additional parameters if there is an audio pin
+    message.merge!({ audio_start_pin: self.audio_start_pin, audio_input_url: self.broadcast_to_device_or_self.audio_input_url  }) if self.audio_enabled? && self.audio_start_pin.present?
     # broadcast the message to the master device
-    self.master_device.broadcast_raw_message({ input_pins: self.master_device.input_pins.collect(&:pin_number), slave_devices: self.master_device.slave_device_information })
+    self.master_device.broadcast_raw_message(message)
   end
 
   # send a raw message to the device, without any additional message manipulation

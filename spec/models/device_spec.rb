@@ -380,12 +380,30 @@ RSpec.describe Device, type: :model do
   end
 
   describe '#input_pins' do
-    it 'gets input pins' do
+    before :each do
       device.save
+    end
+
+    it 'gets input pins' do
       pin_3 = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input')
       pin_5 = FactoryBot.create(:pin, pin_number: 5, device: device, pin_type: 'input')
       pin_7 = FactoryBot.create(:pin, pin_number: 7, device: device, pin_type: 'servo')
-      expect(device.input_pins.collect(&:pin_number)).to eq([3, 5])
+      expect(device.input_pins).to eq([3, 5])
+    end
+
+    it 'returns an empty array' do
+      expect(device.input_pins).to eq([])
+    end
+
+    it 'returns only the audio_start_pin' do
+      device.update(audio_enabled: true, audio_start_pin: 9)
+      expect(device.input_pins).to eq([9])
+    end
+
+    it 'adds the audio_start_pin' do
+      pin_3 = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input')
+      device.update(audio_enabled: true, audio_start_pin: 9)
+      expect(device.input_pins).to eq([3, 9])
     end
   end
 
