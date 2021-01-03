@@ -388,10 +388,20 @@ class Device < ApplicationRecord
       target_device = self
     # if this is a start rpi speakers command
     elsif message['command'].present? && message['command'] == 'start_rpi_speakers'
+      # if this message should be sent to the target device (when start_rpi_microphone occurs on sending device)
+      if (message['send_to_target_device'] == true)
+        message['audio_output_url'] = target_device.audio_output_url
+      # else command is from the webpage and intended for self
+      else
+        # add the url
+        message['audio_output_url'] = self.audio_output_url
+        # don't broadcast to target
+        target_device = self
+      end
+    # if this is a start rpi speakers command for the target device
+  elsif message['command'].present? && message['command'] == 'start_rpi_speakers_on_target_device'
       # add the url
-      message['audio_output_url'] = self.audio_output_url
-      # don't broadcast to target
-      target_device = self
+      message['audio_output_url'] = target_device.audio_output_url
     # if this is a stop rpi speakers command
     elsif message['command'].present? && message['command'] == 'stop_rpi_speakers'
       # don't broadcast to target

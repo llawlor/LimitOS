@@ -586,6 +586,18 @@ def connect_audio_output_listener(audio_output_url):
 def start_rpi_microphone(audio_input_url):
     print('starting audio')
 
+    # create the command to send
+    input = {
+        'command': 'message',
+        'identifier': channel_json,
+        'data': json.dumps({ 'command': 'start_rpi_speakers', 'send_to_target_device': True })
+    }
+
+    # if the websocket is ready
+    if ws.sock and ws.sock.connected:
+        # send the websocket command to start the speakers on the listening device
+        ws.send(json.dumps(input))
+
     # connect to the remote relay server
     connect_remote_audio_relay(audio_input_url)
 
