@@ -398,10 +398,6 @@ class Device < ApplicationRecord
         # don't broadcast to target
         target_device = self
       end
-    # if this is a start rpi speakers command for the target device
-  elsif message['command'].present? && message['command'] == 'start_rpi_speakers_on_target_device'
-      # add the url
-      message['audio_output_url'] = target_device.audio_output_url
     # if this is a stop rpi speakers command
     elsif message['command'].present? && message['command'] == 'stop_rpi_speakers'
       # don't broadcast to target
