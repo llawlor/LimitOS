@@ -628,16 +628,24 @@ def start_rpi_speakers(audio_output_url):
 
 # function to stop ffmpeg_audio and audio servers
 def stop_rpi_microphone():
-    print('stopping audio after 1 second')
-    # wait 1 second so that the audio stream has a chance to finish
-    time.sleep(1)
-    # stop ffmpeg_audio
-    ffmpeg_audio_process.kill()
-    # stop the remote relay websocket
-    remote_audio_input_websocket.close()
-    # mark the microphone as inactive
     global microphone_active
-    microphone_active = False
+
+    # if the microphone is active
+    if (microphone_active == True):
+      # mark the microphone as inactive
+      microphone_active = False
+
+      print('stopping audio after 1 second')
+
+      # wait 1 second so that the audio stream has a chance to finish
+      time.sleep(1)
+
+      # stop ffmpeg_audio
+      ffmpeg_audio_process.kill()
+      
+      # stop the remote relay websocket
+      remote_audio_input_websocket.close()
+
 
 # function to start ffmpeg and video servers
 def start_video(video_url):
