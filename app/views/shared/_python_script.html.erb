@@ -632,19 +632,31 @@ def stop_rpi_microphone():
 
     # if the microphone is active
     if (microphone_active == True):
-      # mark the microphone as inactive
-      microphone_active = False
+        # mark the microphone as inactive
+        microphone_active = False
 
-      print('stopping audio after 1 second')
+        print('stopping audio after 1 second')
 
-      # wait 1 second so that the audio stream has a chance to finish
-      time.sleep(1)
+        # wait 1 second so that the audio stream has a chance to finish
+        time.sleep(1)
 
-      # stop ffmpeg_audio
-      ffmpeg_audio_process.kill()
-      
-      # stop the remote relay websocket
-      remote_audio_input_websocket.close()
+        # create the command to send
+        input = {
+            'command': 'message',
+            'identifier': channel_json,
+            'data': json.dumps({ 'command': 'stop_rpi_speakers', 'send_to_target_device': True })
+        }
+
+        # if the websocket is ready
+        if ws.sock and ws.sock.connected:
+            # send the websocket command to stop the speakers on the listening device
+            ws.send(json.dumps(input))
+
+        # stop ffmpeg_audio
+        ffmpeg_audio_process.kill()
+
+        # stop the remote relay websocket
+        remote_audio_input_websocket.close()
 
 
 # function to start ffmpeg and video servers

@@ -400,8 +400,11 @@ class Device < ApplicationRecord
       end
     # if this is a stop rpi speakers command
     elsif message['command'].present? && message['command'] == 'stop_rpi_speakers'
-      # don't broadcast to target
-      target_device = self
+      # if this message should not be sent to the target device (when stop_rpi_microphone occurs on sending device)
+      if (message['send_to_target_device'] != true)
+        # don't broadcast to target
+        target_device = self
+      end
     end
 
     # broadcast to the target device's master (since we can't broadcast directly to a slave)
