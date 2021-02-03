@@ -399,7 +399,7 @@ function resetBrowserSpeakers() {
   // start the speakers again after waiting for elements to complete
   setTimeout(function() {
     startBrowserSpeakers();
-  }, 200);
+  }, 1000);
 }
 
 // stop rpi speakers
