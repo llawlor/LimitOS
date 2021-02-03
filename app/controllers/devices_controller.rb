@@ -226,6 +226,9 @@ class DevicesController < ApplicationController
       # allow slug to be used instead of id
       params[:id] = params[:slug] if params[:slug].present?
 
+      # blank response if the id is literally "undefined" due to javascript range requests when stopping speakers
+      head :ok and return if (params[:id] == 'undefined')
+
       # if the user is logged in
       if current_user.present?
         @device = current_user.devices.find_by(id: params[:id])
