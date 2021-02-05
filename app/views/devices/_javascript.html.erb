@@ -91,7 +91,7 @@
     }
 
     // if this is a command to stop the rpi microphone
-    if (data.digital && data.pin == 17 && data.digital === 'off') {
+    if (data.digital && (data.pin == <%= @device.audio_start_pin || 0 %>) && (data.digital === 'off')) {
       // reset the browser speakers
       resetBrowserSpeakers();
     }
