@@ -608,8 +608,8 @@ def start_rpi_microphone(audio_input_url):
 def start_rpi_speakers(audio_output_url):
     print('listening to audio')
 
-    # set volume to 100% via the command: amixer cset numid=1 100%
-    #subprocess.call(['amixer', 'cset', 'numid=1', '100%'])
+    # set volume to 100% via the command: amixer cset numid=3 100%
+    subprocess.call(['amixer', 'cset', 'numid=3', '100%'])
 
     # mark the speakers as active
     global speakers_active
