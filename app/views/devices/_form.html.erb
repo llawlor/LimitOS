@@ -95,15 +95,17 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
-        <label>
-          <%= f.check_box :audio_enabled %>
-          Enable two-way audio?
-          <span class="small" style="margin-left: 5px;">(work in progress)</span>
-        </label>
+    <% if current_user.present? && current_user.admin? %>
+      <div class="form-group">
+        <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
+          <label>
+            <%= f.check_box :audio_enabled %>
+            Enable two-way audio?
+            <span class="small" style="margin-left: 5px;">(work in progress)</span>
+          </label>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <div id="audio-start-pin-div" class="form-group <%= 'hidden' if !@device.audio_enabled? %>">
       <label for="device_audio_start_pin" class="control-label col-lg-4">
