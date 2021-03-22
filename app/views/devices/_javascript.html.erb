@@ -8,6 +8,10 @@
   var device_i2c_address = '<%= @device.i2c_address %>';
   // set the video url
   var video_server_url = '<%= @device.video_to_clients_url %>';
+  // set the url for browser microphone input
+  var audio_input_url = '<%= @device.broadcast_to_device_or_self.audio_input_url(true) %>';
+  // set the audio output url
+  var audio_output_url = '<%= @device.audio_output_url %>';
 
   <% @device.analog_pins.each do |pin| %>
     // initialize this slider
@@ -84,6 +88,12 @@
       window['slider_' + data.pin].setValue(data.servo);
       // update the text input
       $('#servo_input_' + data.pin).val(data.servo);
+    }
+
+    // if this is a command to stop the rpi microphone
+    if (data.digital && (data.pin == <%= @device.audio_start_pin || 0 %>) && (data.digital === 'off')) {
+      // reset the browser speakers
+      resetBrowserSpeakers();
     }
   }
 

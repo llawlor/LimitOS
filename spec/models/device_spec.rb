@@ -136,6 +136,32 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#audio_input_url' do
+    it 'includes the auth token' do
+      device.save
+      expect(device.audio_input_url).to eq("#{ Rails.application.config_for(:limitos)['audio_input_host'] }/audio_input/#{ device.auth_token }")
+    end
+
+    it 'should include the device id if the device is public' do
+      device.save
+      device.update(public: true)
+      expect(device.audio_input_url).to eq("#{ Rails.application.config_for(:limitos)['audio_input_host'] }/audio_input/#{ device.id }")
+    end
+  end
+
+  describe '#audio_output_url' do
+    it 'includes the auth token' do
+      device.save
+      expect(device.audio_output_url).to eq("#{ Rails.application.config_for(:limitos)['audio_output_host'] }/audio_output/#{ device.auth_token }")
+    end
+
+    it 'should include the device id if the device is public' do
+      device.save
+      device.update(public: true)
+      expect(device.audio_output_url).to eq("#{ Rails.application.config_for(:limitos)['audio_output_host'] }/audio_output/#{ device.id }")
+    end
+  end
+
   describe '#broadcast_device_information on create/update/destroy' do
     it 'sends on create' do
       expect_any_instance_of(Device).to receive(:broadcast_device_information).once
@@ -189,6 +215,18 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#broadcast_to_device_or_self' do
+    it 'returns self' do
+      expect(device.broadcast_to_device_or_self).to eq(device)
+    end
+
+    it 'returns another device' do
+      device_2 = FactoryBot.create(:device)
+      device.update_attributes(broadcast_to_device_id: device_2.id)
+      expect(device.broadcast_to_device_or_self).to eq(device_2)
+    end
+  end
+
   describe '#broadcast_message' do
     before :each do
       device.save
@@ -226,6 +264,14 @@ RSpec.describe Device, type: :model do
       expect {
         device.broadcast_message({ "pin" => '5', "servo" => '12' })
       }.to have_broadcasted_to(device_2.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
+    end
+
+    it 'broadcasts shutdown command to self' do
+      device_2 = FactoryBot.create(:device)
+      device.update_attributes(broadcast_to_device_id: device_2.id)
+      expect {
+        device.broadcast_message({ "command" => 'shutdown' })
+      }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ command: 'shutdown' }))
     end
 
     it 'broadcasts to another device and changes the i2c_address' do
@@ -334,12 +380,30 @@ RSpec.describe Device, type: :model do
   end
 
   describe '#input_pins' do
-    it 'gets input pins' do
+    before :each do
       device.save
+    end
+
+    it 'gets input pins' do
       pin_3 = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input')
       pin_5 = FactoryBot.create(:pin, pin_number: 5, device: device, pin_type: 'input')
       pin_7 = FactoryBot.create(:pin, pin_number: 7, device: device, pin_type: 'servo')
-      expect(device.input_pins.collect(&:pin_number)).to eq([3, 5])
+      expect(device.input_pins).to eq([3, 5])
+    end
+
+    it 'returns an empty array' do
+      expect(device.input_pins).to eq([])
+    end
+
+    it 'returns only the audio_start_pin' do
+      device.update(audio_enabled: true, audio_start_pin: 9)
+      expect(device.input_pins).to eq([9])
+    end
+
+    it 'adds the audio_start_pin' do
+      pin_3 = FactoryBot.create(:pin, pin_number: 3, device: device, pin_type: 'input')
+      device.update(audio_enabled: true, audio_start_pin: 9)
+      expect(device.input_pins).to eq([3, 9])
     end
   end
 

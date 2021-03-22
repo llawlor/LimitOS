@@ -69,6 +69,11 @@ class Device < ApplicationRecord
     !self.public?
   end
 
+  # device to broadcast to
+  def broadcast_to_device_or_self
+    self.broadcast_to_device.present? ? self.broadcast_to_device : self
+  end
+
   # path to the embed page
   def embed_path
     return "/embed/#{ self.slug || self.id }"
@@ -144,12 +149,18 @@ class Device < ApplicationRecord
 
   # full url for video coming from devices
   # in the future, this method can return dynamic values based on additional servers
-  def video_from_devices_url
+  def video_from_devices_url(use_localhost = false)
     # set the unique id to the auth_token, or to the id if the device is public
     unique_id = (self.private? && !self.public_video) ? self.auth_token : self.id
 
+    # get the video_from_devices_host
+    video_from_devices_host = Rails.application.config_for(:limitos)['video_from_devices_host'];
+
+    # override the host if this is development and use_localhost is true
+    video_from_devices_host = 'ws://localhost:8081' if Rails.env.development? && (use_localhost == true)
+
     # return the full url
-    return "#{ Rails.application.config_for(:limitos)['video_from_devices_host'] }/video_from_devices/#{ unique_id }"
+    return "#{ video_from_devices_host }/video_from_devices/#{ unique_id }"
   end
 
   # full url for video going to clients
@@ -160,6 +171,32 @@ class Device < ApplicationRecord
 
     # return the full url
     return "#{ Rails.application.config_for(:limitos)['video_to_clients_host'] }/video_to_clients/#{ unique_id }"
+  end
+
+  # full url for audio input
+  # in the future, this method can return dynamic values based on additional servers
+  def audio_input_url(use_localhost = false)
+    # set the unique id to the auth_token, or to the id if the device is public
+    unique_id = (self.private? && !self.public_video) ? self.auth_token : self.id
+
+    # get the host
+    audio_input_host = Rails.application.config_for(:limitos)['audio_input_host'];
+
+    # override the host if this is development and use_localhost is true
+    audio_input_host = 'ws://localhost:8083' if Rails.env.development? && (use_localhost == true)
+
+    # return the full url
+    return "#{ audio_input_host }/audio_input/#{ unique_id }"
+  end
+
+  # full url for audio output
+  # in the future, this method can return dynamic values based on additional servers
+  def audio_output_url
+    # set the unique id to the auth_token, or to the id if the device is public
+    unique_id = (self.private? && !self.public_video) ? self.auth_token : self.id
+
+    # return the full url
+    return "#{ Rails.application.config_for(:limitos)['audio_output_host'] }/audio_output/#{ unique_id }"
   end
 
   # digital pins
@@ -194,22 +231,35 @@ class Device < ApplicationRecord
     # for each slave device
     self.devices.each do |device|
       # append the data to the array
-      output << { i2c_address: device.i2c_address, input_pins: device.input_pins.collect(&:pin_number) }
+      output << { i2c_address: device.i2c_address, input_pins: device.input_pins }
     end
 
     # return the array
     return output
   end
 
-  # get only the input pins
+  # returns an array of the input pin numbers
   def input_pins
-    self.pins.where(pin_type: 'input')
+    output = []
+
+    # get input pins by default
+    output = self.pins.where(pin_type: 'input').collect(&:pin_number)
+
+    # add the audio_start_pin if necessary
+    output << self.audio_start_pin if self.audio_enabled? && self.audio_start_pin.present?
+
+    # return the output
+    return output
   end
 
   # send device information
   def broadcast_device_information
+    # construct the message
+    message = { input_pins: self.master_device.input_pins, slave_devices: self.master_device.slave_device_information }
+    # merge additional parameters if there is an audio pin
+    message.merge!({ audio_start_pin: self.audio_start_pin, audio_input_url: self.broadcast_to_device_or_self.audio_input_url  }) if self.audio_enabled? && self.audio_start_pin.present?
     # broadcast the message to the master device
-    self.master_device.broadcast_raw_message({ input_pins: self.master_device.input_pins.collect(&:pin_number), slave_devices: self.master_device.slave_device_information })
+    self.master_device.broadcast_raw_message(message)
   end
 
   # send a raw message to the device, without any additional message manipulation
@@ -318,10 +368,43 @@ class Device < ApplicationRecord
     # remove the i2c_address if it's blank
     message.delete("i2c_address") if message["i2c_address"].blank?
 
+    # if this is a shutdown command
+    if message['command'].present? && message['command'] == 'shutdown'
+      # don't broadcast to target
+      target_device = self
     # if this is a start video command
-    if message['command'].present? && message['command'] == 'start_video'
+    elsif message['command'].present? && message['command'] == 'start_video'
       # add the video url
       message['video_url'] = self.video_from_devices_url
+    # if this is a start audio command
+    elsif message['command'].present? && message['command'] == 'start_rpi_microphone'
+      # add the audio url
+      message['audio_input_url'] = target_device.audio_input_url
+      # don't broadcast to target
+      target_device = self
+    # if this is a stop audio command
+    elsif message['command'].present? && message['command'] == 'stop_rpi_microphone'
+      # don't broadcast to target
+      target_device = self
+    # if this is a start rpi speakers command
+    elsif message['command'].present? && message['command'] == 'start_rpi_speakers'
+      # if this message should be sent to the target device (when start_rpi_microphone occurs on sending device)
+      if (message['send_to_target_device'] == true)
+        message['audio_output_url'] = target_device.audio_output_url
+      # else command is from the webpage and intended for self
+      else
+        # add the url
+        message['audio_output_url'] = self.audio_output_url
+        # don't broadcast to target
+        target_device = self
+      end
+    # if this is a stop rpi speakers command
+    elsif message['command'].present? && message['command'] == 'stop_rpi_speakers'
+      # if this message should not be sent to the target device (when stop_rpi_microphone occurs on sending device)
+      if (message['send_to_target_device'] != true)
+        # don't broadcast to target
+        target_device = self
+      end
     end
 
     # broadcast to the target device's master (since we can't broadcast directly to a slave)

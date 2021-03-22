@@ -26,22 +26,44 @@ auth_token = '<%= @device.auth_token %>'
 slave_devices = []
 # variable for the input pins
 input_pins = []
+# variable for the audio input url (audio from microphone)
+audio_input_url = None
+# variable for the audio start (microphone)
+audio_start_pin = None
 # variable to keep track of whether slaves have been set up
 slave_devices_ready = False
 # time of last successful request for i2c data
 last_i2c_data_received = datetime.datetime.now()
+
 # variable for the state of the video camera
 video_active = False
-# variable for the ffmpeg process
+# variable for the ffmpeg process (to send video)
 ffmpeg_process = None
-# variable for the remote relay server
+
+# variable for the state of the microphone (using ffmpeg_audio_process)
+microphone_active = False
+# variable for the ffmpeg_audio process (to record audio)
+ffmpeg_audio_process = None
+
+# variable for the state of the speakers (using ffplay_process)
+speakers_active = False
+# variable for the ffplay process (to play audio)
+ffplay_process = None
+
+# variables for the remote relay server
 remote_video_websocket = None
+remote_audio_input_websocket = None
+remote_audio_output_websocket = None
 # variable for the i2c frequency
 i2c_frequency = 0
 
-# keep track of the last value; key is (i2c_address + '_' + pin_number)
-# for example to access the value for i2c_address '0x04' and pin #8: last_values['0x04_8']
-last_values = {}
+# keep track of the last input values; key format is ('pin_' + pin_number)
+# for example to access the value for pin #17: last_pin_values['pin_17']
+last_pin_values = {}
+
+# keep track of the last i2c pin values; key format is (i2c_address + '_' + pin_number)
+# for example to access the value for i2c_address '0x04' and pin #8: last_i2c_pin_values['0x04_8']
+last_i2c_pin_values = {}
 
 # use Broadcom GPIO pin naming
 GPIO.setmode(GPIO.BCM)
@@ -196,10 +218,10 @@ def request_i2c_pin_value(i2c_address, pin_number):
                     send_i2c_command(slave_device)
 
         # if the last value for this pin is different than the current value
-        if (last_values.get(i2c_address + '_' + str(pin_number)) != message):
+        if (last_i2c_pin_values.get(i2c_address + '_' + str(pin_number)) != message):
             # print(message)
             # remember this value
-            last_values[i2c_address + '_' + str(pin_number)] = message
+            last_i2c_pin_values[i2c_address + '_' + str(pin_number)] = message
             # send the websocket command
             send_websocket_command(i2c_address, pin_number, 'servo', message)
 
@@ -340,15 +362,33 @@ def initialize_input_pins(pin_numbers):
     for pin_number in pin_numbers:
         # initialize the pin as an input
         GPIO.setup(pin_number, GPIO.IN)
-        # poll the pin and add a callback
-        GPIO.add_event_detect(pin_number, GPIO.BOTH, callback=poll_callback)
+        # poll the pin and add a callback, and ignore bounces for 50ms
+        GPIO.add_event_detect(pin_number, GPIO.BOTH, callback=poll_callback, bouncetime=50)
 
 # callback for the polled pin
 def poll_callback(pin_number):
+    # wait 50ms to get the correct state of the pin (since callback starts immediately on rising/falling edge detection)
+    time.sleep(0.05)
+
     # read the message value
     message_value = 'on' if (GPIO.input(pin_number) == GPIO.HIGH) else 'off'
-    # send the command via websockets
-    send_websocket_command('', pin_number, 'digital', message_value)
+
+    # if the last value for this pin is different than the current value
+    if (last_pin_values.get('pin_' + str(pin_number)) != message_value):
+        # remember this value
+        last_pin_values['pin_' + str(pin_number)] = message_value
+        # send the command via websockets
+        send_websocket_command('', pin_number, 'digital', message_value)
+
+        # if this is an audio pin
+        if (audio_start_pin == pin_number):
+            # if the microphone should be on
+            if (message_value == 'on'):
+                # start sending audio data to the correct endpoint
+                start_rpi_microphone(audio_input_url)
+            # else the microphone should be off
+            else:
+                stop_rpi_microphone()
 
 # send websocket command with the correct value
 def send_websocket_command(i2c_address, pin_number, message_type, message_value):
@@ -369,6 +409,41 @@ def send_websocket_command(i2c_address, pin_number, message_type, message_value)
         # send the websocket input
         ws.send(json.dumps(input))
 
+# start ffmpeg_audio for audio
+def start_ffmpeg_audio():
+    print("starting ffmpeg_audio...")
+
+    # mark the microphone as active
+    global microphone_active
+    microphone_active = True
+
+    # use exec so that subprocess is not created, which enables ffmpeg_audio_process to be properly killed
+    # ffmpeg options: quiet logs, no video, 1 audio channel, alsa format, input hardware device 1, webm output format, pipe to stdout
+    ffmpeg_audio_command = ['exec ffmpeg -loglevel quiet -vn -ac 1 -f alsa -i hw:1 -f webm -']
+    global ffmpeg_audio_process
+    # start ffmpeg_audio, and pipe to stdout with the proper buffer size
+    ffmpeg_audio_process = subprocess.Popen(ffmpeg_audio_command, shell=True, bufsize=-1, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    ffmpeg_audio_thread = threading.Thread(target=process_audio_stream)
+    ffmpeg_audio_thread.daemon = True
+    ffmpeg_audio_thread.start()
+
+# process ffmpeg_audio stream
+def process_audio_stream():
+    # when ffmpeg_audio data is received
+    for chunk in ffmpeg_audio_process.stdout:
+        # if the remote connection is available
+        if remote_audio_input_websocket.sock and remote_audio_input_websocket.sock.connected:
+            # send data as binary
+            remote_audio_input_websocket.send(chunk, websocket.ABNF.OPCODE_BINARY)
+
+# stop rpi speakers
+def stop_rpi_speakers():
+    # stop ffplay
+    ffplay_process.kill()
+    # mark the speakers as inactive
+    global speakers_active
+    speakers_active = False
+
 # handle a device message
 def handle_device_message(message):
     # if this is an i2c command
@@ -388,6 +463,26 @@ def handle_device_message(message):
         elif ((message['command'] == 'start_video') and (video_active == False)):
             # start the video
             start_video(message['video_url'])
+        # else if this is a command to start the microphone
+        elif ((message['command'] == 'start_rpi_microphone') and (microphone_active == False)):
+            print('start audio request received')
+            # start the microphone
+            start_rpi_microphone(message['audio_input_url'])
+        # else if this is a command to stop the microphone
+        elif ((message['command'] == 'stop_rpi_microphone')):
+            print('stop audio request received')
+            # stop the microphone
+            stop_rpi_microphone()
+        # else if this is a command to start rpi speakers
+        elif ((message['command'] == 'start_rpi_speakers') and (speakers_active == False)):
+            print('start rpi speakers request received')
+            # start rpi speakers
+            start_rpi_speakers(message['audio_output_url'])
+        # else if this is a command to stop rpi speakers
+        elif ((message['command'] == 'stop_rpi_speakers')):
+            print('stop rpi speakers request received')
+            # stop rpi speakers
+            stop_rpi_speakers()
 
     # else if this is a message with the device information
     elif ('input_pins' in message):
@@ -395,6 +490,16 @@ def handle_device_message(message):
         # set the input pins
         print("input pins: " + str(message['input_pins']))
         initialize_input_pins(message['input_pins'])
+
+        # set the audio input url
+        if ('audio_input_url' in message):
+            global audio_input_url
+            audio_input_url = message['audio_input_url']
+
+        # set the audio start pin
+        if ('audio_start_pin' in message):
+            global audio_start_pin
+            audio_start_pin = message['audio_start_pin']
 
         # set the slave device information
         global slave_devices
@@ -441,6 +546,119 @@ def handle_direct_message(message):
         # output the message to the correct pin
         GPIO.setup(pin_number, GPIO.OUT, initial=pin_state)
 
+# connect to the remote audio output relay server
+def connect_audio_output_listener(audio_output_url):
+    print('listening to ' + audio_output_url)
+
+    # when data is received from the relay server
+    def on_media_message(remote_audio_output_websocket, data):
+        #print('listener message received')
+        #print(data)
+        # send the data to the audio player
+        ffplay_process.stdin.write(data)
+
+    # if there is an error, do nothing
+    def on_media_error(remote_audio_output_websocket, error):
+        print('error received')
+        #stop_rpi_microphone()
+
+    # when the remote video websocket is closed, stop the video
+    def on_media_close(remote_audio_output_websocket):
+        print('websocket closed')
+        #stop_video()
+        #stop_rpi_microphone
+
+    # start the websocket with callbacks
+    global remote_audio_output_websocket
+    remote_audio_output_websocket = websocket.WebSocketApp(audio_output_url,
+        #on_open = on_open,
+        on_message = on_media_message,
+        on_error = on_media_error,
+        on_close = on_media_close,
+        subprotocols = ["binary", "base64"])
+
+    # continue running in a separate thread
+    websocket_listener_thread = threading.Thread(target=remote_audio_output_websocket.run_forever)
+    websocket_listener_thread.daemon = True
+    websocket_listener_thread.start()
+
+# function to start ffmpeg_audio and audio servers
+def start_rpi_microphone(audio_input_url):
+    print('starting audio')
+
+    # create the command to send
+    input = {
+        'command': 'message',
+        'identifier': channel_json,
+        'data': json.dumps({ 'command': 'start_rpi_speakers', 'send_to_target_device': True })
+    }
+
+    # if the websocket is ready
+    if ws.sock and ws.sock.connected:
+        # send the websocket command to start the speakers on the listening device
+        ws.send(json.dumps(input))
+
+    # connect to the remote relay server
+    connect_remote_audio_relay(audio_input_url)
+
+    # start ffmpeg_audio
+    start_ffmpeg_audio()
+
+# function to start listening for audio and playing it with ffplay
+def start_rpi_speakers(audio_output_url):
+    print('listening to audio')
+
+    # set volume to 100% via the command: amixer cset numid=3 100%
+    subprocess.call(['amixer', 'cset', 'numid=3', '100%'])
+
+    # mark the speakers as active
+    global speakers_active
+    speakers_active = True
+
+    # full command: ffplay -vn -nodisp -af atempo=1.05 -fast -
+    # adds a 5% speedup to audio to reduce overall lag
+    ffplay_command = ['ffplay', '-vn', '-nodisp', '-af', 'atempo=1.05', '-fast', '-']
+    # start ffmpeg, and pipe to stdout with the proper buffer size
+    global ffplay_process
+    ffplay_process = subprocess.Popen(ffplay_command, stdin=subprocess.PIPE)
+
+    # if there is no remote media websocket server running
+    if (remote_audio_output_websocket == None):
+        connect_audio_output_listener(audio_output_url)
+
+# function to stop ffmpeg_audio and audio servers
+def stop_rpi_microphone():
+    global microphone_active
+
+    # if the microphone is active
+    if (microphone_active == True):
+        # mark the microphone as inactive
+        microphone_active = False
+
+        print('stopping audio after 1 second')
+
+        # wait 1 second so that the audio stream has a chance to finish
+        time.sleep(1)
+
+        # create the command to send
+        input = {
+            'command': 'message',
+            'identifier': channel_json,
+            'data': json.dumps({ 'command': 'stop_rpi_speakers', 'send_to_target_device': True })
+        }
+
+        # if the websocket is ready
+        if ws.sock and ws.sock.connected:
+            # send the websocket command to stop the speakers on the listening device
+            ws.send(json.dumps(input))
+
+        # stop ffmpeg_audio
+        ffmpeg_audio_process.kill()
+
+        # stop the remote relay websocket
+        remote_audio_input_websocket.close()
+
+
 # function to start ffmpeg and video servers
 def start_video(video_url):
     print('starting video')
@@ -486,7 +704,6 @@ def start_FFMPEG():
 
 # process ffmpeg stream
 def process_video_stream():
-    global ffmpeg_process
     # when ffmpeg data is received
     for chunk in ffmpeg_process.stdout:
         # if the remote connection is available
@@ -502,6 +719,8 @@ def connect_remote_video_relay(video_url):
     def on_video_message(remote_video_websocket, data):
         # parse the message
         json_data = json.loads(data)
+        #print('relay server message received')
+        #print(json_data)
         # if there's a stop video command
         if (json_data.get('stop_video')):
             # if the auth tokens match or device_id matches, and video is active
@@ -528,6 +747,45 @@ def connect_remote_video_relay(video_url):
 
     # continue running in a separate thread
     websocket_thread = threading.Thread(target=remote_video_websocket.run_forever)
+    websocket_thread.daemon = True
+    websocket_thread.start()
+
+# connect to the remote audio relay server to send microphone data
+def connect_remote_audio_relay(audio_url):
+    print('sending audio to ' + audio_url)
+
+    # when data is received from the relay server
+    def on_audio_message(remote_audio_input_websocket, data):
+        # parse the message
+        json_data = json.loads(data)
+        #print('relay server message received')
+        #print(json_data)
+        # if there's a stop microphone command
+        if (json_data.get('stop_rpi_microphone')):
+            # if the auth tokens match or device_id matches
+            if (((json_data.get('stop_rpi_microphone') == auth_token) or (json_data.get('stop_rpi_microphone') == device_id))):
+                # stop the microphone
+                stop_rpi_microphone()
+
+    # if there is an error, stop the audio
+    def on_audio_error(remote_audio_input_websocket, error):
+        stop_rpi_microphone()
+
+    # when the remote audio websocket is closed, stop the audio
+    def on_audio_close(remote_audio_input_websocket):
+        stop_rpi_microphone()
+
+    # start the websocket with callbacks
+    global remote_audio_input_websocket
+    remote_audio_input_websocket = websocket.WebSocketApp(audio_url,
+        #on_open = on_open,
+        on_message = on_audio_message,
+        on_error = on_audio_error,
+        on_close = on_audio_close,
+        subprotocols = ["binary", "base64"])
+
+    # continue running in a separate thread
+    websocket_thread = threading.Thread(target=remote_audio_input_websocket.run_forever)
     websocket_thread.daemon = True
     websocket_thread.start()
 

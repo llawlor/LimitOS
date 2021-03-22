@@ -168,7 +168,27 @@
   </div>
 
   <br><br>
+<% end %>
 
+<% if @device.audio_enabled? %>
+  <div class="row">
+    <div class="col-xs-12">
+      <h3>Audio</h3>
+      <audio id="audio_element" style="display: none;">
+        <source src="" />
+      </audio>
+      <button class="btn btn-primary btn-sm" id="start_browser_speakers">Start Browser Speakers</button>
+      <button class="btn btn-primary btn-sm" id="stop_browser_speakers">Stop Browser Speakers</button>
+      <button class="btn btn-primary btn-sm" id="start_rpi_microphone">Start RPi Mic</button>
+      <button class="btn btn-primary btn-sm" id="stop_rpi_microphone">Stop RPi Mic</button>
+      <button class="btn btn-primary btn-sm" id="start_rpi_speakers">Start RPi Speakers</button>
+      <button class="btn btn-primary btn-sm" id="stop_rpi_speakers">Stop RPi Speakers</button>
+      <button class="btn btn-primary btn-sm" id="start_browser_microphone">Start Browser Mic</button>
+      <button class="btn btn-primary btn-sm" id="stop_browser_microphone">Stop Browser Mic</button>
+    </div>
+  </div>
+
+  <br><br>
 <% end %>
 
 <% if @device.pins.present? %>

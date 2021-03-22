@@ -226,6 +226,9 @@ class DevicesController < ApplicationController
       # allow slug to be used instead of id
       params[:id] = params[:slug] if params[:slug].present?
 
+      # blank response if the id is literally "undefined" due to javascript range requests when stopping speakers
+      head :ok and return if (params[:id] == 'undefined')
+
       # if the user is logged in
       if current_user.present?
         @device = current_user.devices.find_by(id: params[:id])
@@ -254,7 +257,7 @@ class DevicesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def device_params
-      params.fetch(:device, {}).permit(:name, :device_type, :i2c_address, :broadcast_to_device_id, :video_enabled, :invert_video, :public_video, :slug)
+      params.fetch(:device, {}).permit(:name, :device_type, :i2c_address, :broadcast_to_device_id, :video_enabled, :invert_video, :public_video, :slug, :audio_enabled, :audio_start_pin)
     end
 
     # save this device to the logged out user
