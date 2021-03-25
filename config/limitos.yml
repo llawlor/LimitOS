@@ -3,7 +3,7 @@ defaults: &defaults
   application_name_part_1: 'Limit' # homepage header blue text
   application_name_part_2: 'OS' # homepage header yellow text
   domain: 'limitos.com' # domain for the application
-  limitos_client_version: '2021-02-27'  # version of the nodejs script, updating this will cause connected clients to update their scripts
+  limitos_client_version: '2021-03-24'  # version of the nodejs script, updating this will cause connected clients to update their scripts
   status_interval: 10 # number of seconds between status updates sent from the device, must be greater than 0
   video_from_devices_host: 'ws://localhost:8081' # host for video requests originating from devices (cameras)
   video_to_clients_host: 'ws://localhost:8082' # host for video requests going to clients (browsers)
