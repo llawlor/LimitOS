@@ -72,6 +72,7 @@ GEM
     autoprefixer-rails (9.7.6)
       execjs
     bcrypt (3.1.13)
+    bcrypt_pbkdf (1.1.0)
     bindex (0.8.1)
     builder (3.2.4)
     byebug (11.0.1)
@@ -103,6 +104,7 @@ GEM
       warden (~> 1.2.3)
     devise-bootstrap-views (1.1.0)
     diff-lcs (1.3)
+    ed25519 (1.2.4)
     erubi (1.10.0)
     exception_notification (4.4.0)
       actionmailer (>= 4.0, < 7)
@@ -318,6 +320,7 @@ DEPENDENCIES
   actionview (>= 5.2.4.2)
   administrate
   annotate
+  bcrypt_pbkdf (< 2.0)
   byebug
   capistrano (~> 3.8)
   capistrano-bundler
@@ -326,6 +329,7 @@ DEPENDENCIES
   dentaku
   devise (>= 4.7.0)
   devise-bootstrap-views
+  ed25519 (< 2.0)
   exception_notification
   factory_bot_rails
   guard-rspec

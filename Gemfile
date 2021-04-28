@@ -25,6 +25,10 @@ gem 'actionview', '>= 5.2.4.2'
 # fix websocket error, see https://github.com/faye/websocket-driver-ruby/issues/58
 gem 'websocket-driver', git: 'https://github.com/faye/websocket-driver-ruby', ref: 'ee39af83d03ae3059c775583e4c4b291641257b8'
 
+# for ssh keys / deployment
+gem 'ed25519', '< 2.0'
+gem 'bcrypt_pbkdf', '< 2.0'
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
