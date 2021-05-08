@@ -19,9 +19,9 @@
 
 #role :app, %w{limitos@52.2.50.170 limitos@18.207.79.104}
 #role :web, %w{limitos@52.2.50.170 limitos@18.207.79.104}
-role :app, %w{limitos@52.2.50.170}
-role :web, %w{limitos@52.2.50.170}
-role :db,  %w{limitos@52.2.50.170}
+role :app, %w{limitos@34.205.243.70 }
+role :web, %w{limitos@34.205.243.70 }
+role :db,  %w{limitos@34.205.243.70 }
 
 
 
