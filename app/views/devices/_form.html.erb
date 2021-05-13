@@ -66,6 +66,16 @@
     </div>
   <% end %>
 
+  <% if current_user.present? && current_user.admin? %>
+    <div class="form-group">
+      <%= f.label :time_zone, :class => 'control-label col-lg-4' %>
+      <div class="col-lg-8">
+        <%= f.time_zone_select :time_zone, nil, include_blank: true, class: 'form-control' %>
+      </div>
+      <%= f.error_span(:time_zone) %>
+    </div>
+  <% end %>
+
   <% if @device.device_type == 'raspberry_pi' %>
     <div class="form-group">
       <div class="checkbox col-lg-offset-4" style="padding-left: 15px;">
