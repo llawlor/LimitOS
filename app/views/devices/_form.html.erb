@@ -70,7 +70,7 @@
     <div class="form-group">
       <%= f.label :time_zone, :class => 'control-label col-lg-4' %>
       <div class="col-lg-8">
-        <%= f.time_zone_select :time_zone, nil, include_blank: true, class: 'form-control' %>
+        <%= f.time_zone_select :time_zone, nil, { include_blank: true }, { class: 'form-control' } %>
       </div>
       <%= f.error_span(:time_zone) %>
     </div>
@@ -78,7 +78,7 @@
     <div class="form-group">
       <%= f.label :sleeptime_start, :class => 'control-label col-lg-4' %>
       <div class="col-lg-8">
-        <%= f.time_select :sleeptime_start, ampm: true, class: 'form-control' %>
+        <%= f.time_select :sleeptime_start, { ampm: true }, { class: 'form-control', style: 'width: 100px; display: inline-block;' } %>
       </div>
       <%= f.error_span(:sleeptime_start) %>
     </div>
@@ -86,7 +86,7 @@
     <div class="form-group">
       <%= f.label :sleeptime_end, :class => 'control-label col-lg-4' %>
       <div class="col-lg-8">
-        <%= f.time_select :sleeptime_end, ampm: true, class: 'form-control' %>
+        <%= f.time_select :sleeptime_end, { ampm: true }, { class: 'form-control', style: 'width: 100px; display: inline-block;' } %>
       </div>
       <%= f.error_span(:sleeptime_end) %>
     </div>
