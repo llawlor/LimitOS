@@ -21,6 +21,9 @@
 #  public_video           :boolean          default(FALSE)
 #  audio_enabled          :boolean          default(FALSE)
 #  audio_start_pin        :integer
+#  time_zone              :string(50)
+#  sleeptime_start        :time
+#  sleeptime_end          :time
 #
 
 require 'rails_helper'
