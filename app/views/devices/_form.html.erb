@@ -74,6 +74,22 @@
       </div>
       <%= f.error_span(:time_zone) %>
     </div>
+
+    <div class="form-group">
+      <%= f.label :sleeptime_start, :class => 'control-label col-lg-4' %>
+      <div class="col-lg-8">
+        <%= f.time_select :sleeptime_start, class: 'form-control' %>
+      </div>
+      <%= f.error_span(:sleeptime_start) %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :sleeptime_end, :class => 'control-label col-lg-4' %>
+      <div class="col-lg-8">
+        <%= f.time_select :sleeptime_end, class: 'form-control' %>
+      </div>
+      <%= f.error_span(:sleeptime_end) %>
+    </div>
   <% end %>
 
   <% if @device.device_type == 'raspberry_pi' %>
