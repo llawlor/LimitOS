@@ -56,6 +56,18 @@ RSpec.describe Device, type: :model do
     end
   end
 
+  describe '#sleeptime_active?' do
+    it 'is active' do
+      device.update(time_zone: "Eastern Time (US & Canada)", sleeptime_start: '00:00', sleeptime_end: '23:59')
+      expect(device.sleeptime_active?).to eq(true)
+    end
+
+    it 'is inactive if no timezone' do
+      device.update(time_zone: nil, sleeptime_start: '01:00', sleeptime_end: '06:00')
+      expect(device.sleeptime_active?).to eq(false)
+    end
+  end
+
   describe '#online? and #offline?' do
     it 'is online' do
       device.update(last_active_at: (Rails.application.config_for(:limitos)["status_interval"].to_i).seconds.ago)

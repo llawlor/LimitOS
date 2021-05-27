@@ -74,14 +74,16 @@ class Device < ApplicationRecord
   # determine if sleeptime is active
   def sleeptime_active?
     # false if timezone, start, or end is missing
-    return false if timezone.blank? || sleeptime_start.blank? || sleeptime_end.blank? || (sleeptime_start == sleeptime_end)
+    return false if time_zone.blank? || sleeptime_start.blank? || sleeptime_end.blank? || (sleeptime_start == sleeptime_end)
 
     # if start is before end
     if sleeptime_start < sleeptime_end
-      return (Time.now > sleeptime_start) && (Time.now < sleeptime_end)
+      # compare time portions only (ignoring dates)
+      return (Time.now.strftime("%H%M%S") > sleeptime_start.strftime("%H%M%S")) && (Time.now.strftime("%H%M%S") < sleeptime_end.strftime("%H%M%S"))
     # else start should go past midnight until end
     else
-      return (Time.now > sleeptime_start) || (Time.now < sleeptime_end)
+      # compare time portions only (ignoring dates)
+      return (Time.now.strftime("%H%M%S") > sleeptime_start.strftime("%H%M%S")) || (Time.now.strftime("%H%M%S") < sleeptime_end.strftime("%H%M%S"))
     end
   end
 
