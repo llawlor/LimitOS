@@ -71,6 +71,12 @@ class Device < ApplicationRecord
     !self.public?
   end
 
+  # determine if sleeptime is active
+  def sleeptime_active?
+    # timezone, start, and end must be present
+    return timezone.present? && sleeptime_start.present? && sleeptime_end.present? && (sleeptime_start != sleeptime_end)
+  end
+
   # device to broadcast to
   def broadcast_to_device_or_self
     self.broadcast_to_device.present? ? self.broadcast_to_device : self
