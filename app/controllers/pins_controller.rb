@@ -4,6 +4,10 @@ class PinsController < ApplicationController
 
   # new pin
   def new
+    # return false if no device
+    render plain: 'Unauthorized' and return if @device.blank?
+
+    # initialize new pin
     @pin = @device.pins.new
   end
 
