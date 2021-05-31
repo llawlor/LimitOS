@@ -66,6 +66,48 @@ RSpec.describe Device, type: :model do
       device.update(time_zone: nil, sleeptime_start: '01:00', sleeptime_end: '06:00')
       expect(device.sleeptime_active?).to eq(false)
     end
+
+    it 'is active between start/end times' do
+      Timecop.freeze(Time.utc(2020, 01, 01, 17, 00)) do
+        device.update(time_zone: "Eastern Time (US & Canada)", sleeptime_start: '11:00', sleeptime_end: '13:00')
+        expect(device.sleeptime_active?).to eq(true)
+      end
+    end
+
+    it 'is inactive before start time' do
+      Timecop.freeze(Time.utc(2020, 01, 01, 15, 00)) do
+        device.update(time_zone: "Eastern Time (US & Canada)", sleeptime_start: '11:00', sleeptime_end: '13:00')
+        expect(device.sleeptime_active?).to eq(false)
+      end
+    end
+
+    it 'is inactive after end time' do
+      Timecop.freeze(Time.utc(2020, 01, 01, 19, 00)) do
+        device.update(time_zone: "Eastern Time (US & Canada)", sleeptime_start: '11:00', sleeptime_end: '13:00')
+        expect(device.sleeptime_active?).to eq(false)
+      end
+    end
+
+    it 'is active between start/end times across midnight' do
+      Timecop.freeze(Time.utc(2020, 01, 01, 06, 00)) do
+        device.update(time_zone: "Eastern Time (US & Canada)", sleeptime_start: '22:00', sleeptime_end: '06:00')
+        expect(device.sleeptime_active?).to eq(true)
+      end
+    end
+
+    it 'is inactive before start time across midnight' do
+      Timecop.freeze(Time.utc(2020, 01, 01, 15, 00)) do
+        device.update(time_zone: "Eastern Time (US & Canada)", sleeptime_start: '22:00', sleeptime_end: '06:00')
+        expect(device.sleeptime_active?).to eq(false)
+      end
+    end
+
+    it 'is inactive after end time across midnight' do
+      Timecop.freeze(Time.utc(2020, 01, 01, 12, 00)) do
+        device.update(time_zone: "Eastern Time (US & Canada)", sleeptime_start: '22:00', sleeptime_end: '06:00')
+        expect(device.sleeptime_active?).to eq(false)
+      end
+    end
   end
 
   describe '#online? and #offline?' do

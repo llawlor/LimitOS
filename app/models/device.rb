@@ -79,11 +79,11 @@ class Device < ApplicationRecord
     # if start is before end
     if sleeptime_start < sleeptime_end
       # compare time portions only (ignoring dates)
-      return (Time.now.strftime("%H%M%S") > sleeptime_start.strftime("%H%M%S")) && (Time.now.strftime("%H%M%S") < sleeptime_end.strftime("%H%M%S"))
+      return (Time.now.in_time_zone(time_zone).strftime("%H%M%S") > sleeptime_start.strftime("%H%M%S")) && (Time.now.in_time_zone(time_zone).strftime("%H%M%S") < sleeptime_end.strftime("%H%M%S"))
     # else start should go past midnight until end
     else
       # compare time portions only (ignoring dates)
-      return (Time.now.strftime("%H%M%S") > sleeptime_start.strftime("%H%M%S")) || (Time.now.strftime("%H%M%S") < sleeptime_end.strftime("%H%M%S"))
+      return (Time.now.in_time_zone(time_zone).strftime("%H%M%S") > sleeptime_start.strftime("%H%M%S")) || (Time.now.in_time_zone(time_zone).strftime("%H%M%S") < sleeptime_end.strftime("%H%M%S"))
     end
   end
 
