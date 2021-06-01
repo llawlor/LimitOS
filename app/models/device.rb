@@ -365,6 +365,9 @@ class Device < ApplicationRecord
     # exit if the data is malformed (pin is not a number)
     return false if message.keys.include?("pin") && (message["pin"].to_s != message["pin"].to_i.to_s)
 
+    # exit if sleeptime is active
+    return false if self.sleeptime_active?
+
     # if the i2c_address is present get the slave, otherwise return the parent
     input_device = (message["i2c_address"].present? ? self.devices.find_by(i2c_address: message["i2c_address"]) : self)
 

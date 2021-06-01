@@ -295,6 +295,12 @@ RSpec.describe Device, type: :model do
       }.to have_broadcasted_to(device.id).from_channel(DevicesChannel).with(hash_including({ pin: '5', servo: '12' }))
     end
 
+    it "doesn't broadcast message if sleeptime is active" do
+      device.update(time_zone: "Eastern Time (US & Canada)", sleeptime_start: '00:00', sleeptime_end: '23:59')
+      expect(device.sleeptime_active?).to eq(true)
+      expect(device.broadcast_message({ "pin" => '5', "servo" => '12' })).to eq(false)
+    end
+
     it 'broadcasts the message and includes the i2c address' do
       slave_device = FactoryBot.create(:device, user: user, device: device, i2c_address: '0x04')
       expect {
