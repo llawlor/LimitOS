@@ -13,6 +13,9 @@ class DevicesController < ApplicationController
     # get device by slug
     @device = Device.find_by(slug: params[:slug]) if @device.blank? && params[:slug].present?
 
+    # return false if no device
+    render plain: 'Unauthorized' and return if @device.blank?
+
     # error if not public video
     render plain: 'Video is not public.' and return if @device.private? && !@device.public_video?
 
