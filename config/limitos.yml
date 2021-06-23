@@ -13,11 +13,11 @@ defaults: &defaults
 
 development:
   <<: *defaults
-  video_from_devices_host: 'ws://192.168.1.187:8081'
-  video_to_clients_host: 'ws://192.168.1.187:8082'
-  audio_input_host: 'ws://192.168.1.187:8083'
-  audio_output_host: 'ws://192.168.1.187:8084'
-  websocket_server_url: 'ws://192.168.1.187:3000/cable'
+  video_from_devices_host: 'ws://192.168.1.186:8081'
+  video_to_clients_host: 'ws://192.168.1.186:8082'
+  audio_input_host: 'ws://192.168.1.186:8083'
+  audio_output_host: 'ws://192.168.1.186:8084'
+  websocket_server_url: 'ws://192.168.1.186:3000/cable'
 
 test:
   <<: *defaults
