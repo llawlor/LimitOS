@@ -5,7 +5,7 @@ After=network-online.target
 [Service]
 User=pi
 WorkingDirectory=<%= params[:current_directory] || '/home/pi' %>
-ExecStart=<%= params[:python3_directory] || '/user/bin/python3' %> <%= params[:current_directory] || '/home/pi' %>/limitos<%= '_dev' if !Rails.env.production? %>.py
+ExecStart=<%= params[:python3_directory] || '/usr/bin/python3' %> <%= params[:current_directory] || '/home/pi' %>/limitos<%= '_dev' if !Rails.env.production? %>.py
 StandardOutput=syslog
 Restart=always
 RestartSec=5s
