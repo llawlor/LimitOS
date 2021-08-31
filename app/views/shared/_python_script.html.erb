@@ -495,6 +495,8 @@ def handle_device_message(message):
         if ('audio_input_url' in message):
             global audio_input_url
             audio_input_url = message['audio_input_url']
+            # start persistent connection to the remote relay server
+            connect_remote_audio_relay(audio_input_url)
 
         # set the audio start pin
         if ('audio_start_pin' in message):
@@ -597,9 +599,6 @@ def start_rpi_microphone(audio_input_url):
         # send the websocket command to start the speakers on the listening device
         ws.send(json.dumps(input))
 
-    # connect to the remote relay server
-    connect_remote_audio_relay(audio_input_url)
-
     # start ffmpeg_audio
     start_ffmpeg_audio()
 
@@ -653,10 +652,6 @@ def stop_rpi_microphone():
 
         # stop ffmpeg_audio
         ffmpeg_audio_process.kill()
-
-        # stop the remote relay websocket
-        remote_audio_input_websocket.close()
-
 
 # function to start ffmpeg and video servers
 def start_video(video_url):
