@@ -568,6 +568,8 @@ def connect_audio_output_listener(audio_output_url):
     def on_media_close(remote_audio_output_websocket):
         print('websocket closed')
         #stop_rpi_microphone()
+        # reconnect
+        connect_audio_output_listener(audio_output_url)
 
     # start the websocket with callbacks
     global remote_audio_output_websocket
@@ -768,6 +770,8 @@ def connect_remote_audio_relay(audio_url):
     # when the remote audio websocket is closed, stop the audio
     def on_audio_close(remote_audio_input_websocket):
         stop_rpi_microphone()
+        # reconnect on close
+        connect_remote_audio_relay(audio_url)
 
     # start the websocket with callbacks
     global remote_audio_input_websocket
