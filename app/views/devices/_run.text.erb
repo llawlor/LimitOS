@@ -187,10 +187,6 @@ function install_limitos_py()
   # retrieve the systemd script
   curl -sS "<%= full_server_url %>/api/v1/devices/systemd_script?python3_directory=$python3_directory&current_directory=$current_directory" > limitos<%= '_dev' if !Rails.env.production? %>.service
 
-  # create directories
-  mkdir ~/.config/systemd
-  mkdir ~/.config/systemd/user
-
   # move the service file to ~/.config/systemd/user/
   mv limitos<%= '_dev' if !Rails.env.production? %>.service ~/.config/systemd/user/
 
