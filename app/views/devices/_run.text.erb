@@ -187,17 +187,18 @@ function install_limitos_py()
   # retrieve the systemd script
   curl -sS "<%= full_server_url %>/api/v1/devices/systemd_script?python3_directory=$python3_directory&current_directory=$current_directory" > limitos<%= '_dev' if !Rails.env.production? %>.service
 
-  # move the service file to /lib/systemd/system/
-  sudo mv limitos<%= '_dev' if !Rails.env.production? %>.service /lib/systemd/system/
+  # create directories
+  mkdir ~/.config/systemd
+  mkdir ~/.config/systemd/user
+
+  # move the service file to ~/.config/systemd/user/
+  mv limitos<%= '_dev' if !Rails.env.production? %>.service ~/.config/systemd/user/
 
   # reload systemd
-  sudo systemctl daemon-reload
-
-  # enable the script
-  sudo systemctl enable limitos<%= '_dev' if !Rails.env.production? %>
+  systemctl --user daemon-reload
 
   # start (or restart) the systemd service
-  sudo systemctl restart limitos<%= '_dev' if !Rails.env.production? %>
+  systemctl --user restart limitos<%= '_dev' if !Rails.env.production? %>
 }
 
 # run the main function
