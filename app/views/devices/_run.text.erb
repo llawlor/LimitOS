@@ -188,17 +188,23 @@ function install_limitos_py()
   curl -sS "<%= full_server_url %>/api/v1/devices/systemd_script?python3_directory=$python3_directory&current_directory=$current_directory" > limitos<%= '_dev' if !Rails.env.production? %>.service
 
   # create directories
-  mkdir ~/.config/systemd
-  mkdir ~/.config/systemd/user
+  mkdir ~/.config/systemd 2> /dev/null
+  mkdir ~/.config/systemd/user 2> /dev/null
 
   # move the service file to ~/.config/systemd/user/
   mv limitos<%= '_dev' if !Rails.env.production? %>.service ~/.config/systemd/user/
+
+  # enable lingering of pi user so that systemd --user service is started on boot
+  loginctl enable-linger pi
 
   # reload systemd
   systemctl --user daemon-reload
 
   # start (or restart) the systemd service
   systemctl --user restart limitos<%= '_dev' if !Rails.env.production? %>
+
+  # start limitos at boot
+  systemctl --user enable limitos<%= '_dev' if !Rails.env.production? %> 2> /dev/null
 }
 
 # run the main function
