@@ -766,7 +766,9 @@ def connect_remote_audio_relay(audio_url):
     # if there is an error, stop the audio
     def on_audio_error(remote_audio_input_websocket, error):
         stop_rpi_microphone()
-
+        # reconnect on error
+        connect_remote_audio_relay(audio_url)
+        
     # when the remote audio websocket is closed, stop the audio
     def on_audio_close(remote_audio_input_websocket):
         stop_rpi_microphone()
