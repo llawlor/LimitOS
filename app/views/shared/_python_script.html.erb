@@ -588,7 +588,7 @@ def connect_audio_output_listener(audio_output_url):
             subprotocols = ["binary", "base64"])
 
         # continue running in a separate thread
-        websocket_listener_thread = threading.Thread(target=remote_audio_output_websocket.run_forever)
+        websocket_listener_thread = threading.Thread(target=remote_audio_output_websocket.run_forever, kwargs={'ping_interval': 50})
         websocket_listener_thread.daemon = True
         websocket_listener_thread.start()
 
@@ -799,7 +799,7 @@ def connect_remote_audio_relay(audio_url):
             subprotocols = ["binary", "base64"])
 
         # continue running in a separate thread
-        websocket_thread = threading.Thread(target=remote_audio_input_websocket.run_forever)
+        websocket_thread = threading.Thread(target=remote_audio_input_websocket.run_forever, kwargs={'ping_interval': 50})
         websocket_thread.daemon = True
         websocket_thread.start()
 
