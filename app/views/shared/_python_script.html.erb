@@ -562,28 +562,35 @@ def connect_audio_output_listener(audio_output_url):
     # if there is an error, do nothing
     def on_media_error(remote_audio_output_websocket, error):
         print('error received, reconnecting...')
+        # wait for socket to close
+        time.sleep(1)
         connect_audio_output_listener(audio_output_url)
 
     # when the remote video websocket is closed
     def on_media_close(remote_audio_output_websocket):
         print('websocket closed')
         #stop_rpi_microphone()
+        # wait for socket to close
+        time.sleep(1)
         # reconnect
         connect_audio_output_listener(audio_output_url)
 
-    # start the websocket with callbacks
+    # use the global variable
     global remote_audio_output_websocket
-    remote_audio_output_websocket = websocket.WebSocketApp(audio_output_url,
-        #on_open = on_open,
-        on_message = on_media_message,
-        on_error = on_media_error,
-        on_close = on_media_close,
-        subprotocols = ["binary", "base64"])
+    # if the websocket isn't connected
+    if (remote_audio_output_websocket == None or not remote_audio_output_websocket.sock or not remote_audio_output_websocket.sock.connected):
+        # start the websocket with callbacks
+        remote_audio_output_websocket = websocket.WebSocketApp(audio_output_url,
+            #on_open = on_open,
+            on_message = on_media_message,
+            on_error = on_media_error,
+            on_close = on_media_close,
+            subprotocols = ["binary", "base64"])
 
-    # continue running in a separate thread
-    websocket_listener_thread = threading.Thread(target=remote_audio_output_websocket.run_forever)
-    websocket_listener_thread.daemon = True
-    websocket_listener_thread.start()
+        # continue running in a separate thread
+        websocket_listener_thread = threading.Thread(target=remote_audio_output_websocket.run_forever)
+        websocket_listener_thread.daemon = True
+        websocket_listener_thread.start()
 
 # function to start ffmpeg_audio and audio servers
 def start_rpi_microphone(audio_input_url):
@@ -766,28 +773,35 @@ def connect_remote_audio_relay(audio_url):
     # if there is an error, stop the audio
     def on_audio_error(remote_audio_input_websocket, error):
         stop_rpi_microphone()
+        # wait for socket to close
+        time.sleep(1)
         # reconnect on error
         connect_remote_audio_relay(audio_url)
-        
+
     # when the remote audio websocket is closed, stop the audio
     def on_audio_close(remote_audio_input_websocket):
         stop_rpi_microphone()
+        # wait for socket to close
+        time.sleep(1)
         # reconnect on close
         connect_remote_audio_relay(audio_url)
 
-    # start the websocket with callbacks
+    # use the global variable
     global remote_audio_input_websocket
-    remote_audio_input_websocket = websocket.WebSocketApp(audio_url,
-        #on_open = on_open,
-        on_message = on_audio_message,
-        on_error = on_audio_error,
-        on_close = on_audio_close,
-        subprotocols = ["binary", "base64"])
+    # if the websocket isn't connected
+    if (remote_audio_input_websocket == None or not remote_audio_input_websocket.sock or not remote_audio_input_websocket.sock.connected):
+        # start the websocket with callbacks
+        remote_audio_input_websocket = websocket.WebSocketApp(audio_url,
+            #on_open = on_open,
+            on_message = on_audio_message,
+            on_error = on_audio_error,
+            on_close = on_audio_close,
+            subprotocols = ["binary", "base64"])
 
-    # continue running in a separate thread
-    websocket_thread = threading.Thread(target=remote_audio_input_websocket.run_forever)
-    websocket_thread.daemon = True
-    websocket_thread.start()
+        # continue running in a separate thread
+        websocket_thread = threading.Thread(target=remote_audio_input_websocket.run_forever)
+        websocket_thread.daemon = True
+        websocket_thread.start()
 
 # let the web server know we're online
 def status_update():
