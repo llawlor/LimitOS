@@ -75,6 +75,7 @@ Rails.application.routes.draw do
       get 'active_buzzer'
       get 'live_video'
       get 'rover'
+      get 'two_way_audio'
     end
   end
 

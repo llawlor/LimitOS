@@ -1,0 +1,41 @@
+<% content_for :custom_head do %>
+  <%= image_meta_tag('tutorials/rover_assembled.jpg') %>
+<% end %>
+
+<div class="row">
+  <div class="col-xs-12 col-md-offset-2 col-md-8">
+
+    <div class="page-header">
+      <h1>Two-Way Audio Devices Tutorial<br>(static "walkie talkies")</h1>
+    </div>
+
+    <br>
+
+    <h3>What you'll be building</h3>
+
+    This tutorial teaches you how to build
+
+    <h3>Requirements and Materials</h3>
+    <ul class="spaced-list">
+      <li>Raspberry Pi connected to the internet</li>
+    </ul>
+
+    <br><br><br>
+
+    <h3>Step 1: ...</h3>
+
+    <br><br><br>
+
+    <h3>Step 5: Run <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
+    LimitOS runs alongside your existing operating system, and can be run via:
+    <br>
+    <%= render 'shared/install_command' %>
+    <br>
+    Follow the on-screen instructions to register the device afterwards.
+    <br><br>
+    <%= tutorial_image('tutorials/limitos_run.gif') %>
+
+    <br><br><br><br>
+
+  </div>
+</div>

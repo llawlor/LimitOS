@@ -4,6 +4,10 @@ class TutorialsController < ApplicationController
   def index
   end
 
+  # two-way audio tutorial
+  def two_way_audio
+  end
+
   # rover tutorial
   def rover
   end
