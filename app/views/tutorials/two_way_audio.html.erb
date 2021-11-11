@@ -17,16 +17,28 @@
 
     <h3>Requirements and Materials</h3>
     <ul class="spaced-list">
-      <li>Raspberry Pi connected to the internet</li>
+      <li>Two Raspberry Pis connected to the internet</li>
+      <li><a href="https://raspberrypi.com/software/">Raspberry Pi OS</a></li>
+      <li>Two USB microphones</li>
+      <li>Two USB speakers</li>
     </ul>
 
     <br><br><br>
 
-    <h3>Step 1: ...</h3>
+    <h3>Step 1: Set up speakers</h3>
 
     <br><br><br>
 
-    <h3>Step 5: Run <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
+    <h3>Step 2: Set up microphone</h3>
+
+    <br><br><br>
+
+    <h3>Step 3: Change audio output</h3>
+    Change audio output to USB device via speaker icon
+    
+    <br><br><br>
+
+    <h3>Step 4: Run <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
     LimitOS runs alongside your existing operating system, and can be run via:
     <br>
     <%= render 'shared/install_command' %>
@@ -34,6 +46,10 @@
     Follow the on-screen instructions to register the device afterwards.
     <br><br>
     <%= tutorial_image('tutorials/limitos_run.gif') %>
+
+    <br><br><br>
+
+    <h3>Debugging info</h3>
 
     <br><br><br><br>
 
