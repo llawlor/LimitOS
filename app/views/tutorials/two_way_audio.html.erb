@@ -13,7 +13,7 @@
 
     <h3>What you'll be building</h3>
 
-    This tutorial teaches you how to build two-way audio devices that can be placed in remote locations. By pushing a button, one person can talk to another and vice versa.
+    This tutorial teaches you how to build two-way audio devices that can be placed in remote locations. By pushing a button, one person can talk to another via the internet and vice versa.
     You'll need to repeat steps 1-5 twice so that you end up with two audio devices.
 
     <h3>Requirements and Materials</h3>
@@ -25,6 +25,10 @@
       <li>Two boxes to house the components</li>
       <li>Circuit materials: push button, breadboard, wires, 10k ohm resistor</li>
     </ul>
+
+    <br><br>
+
+    <%= tutorial_image('tutorials/completed_boxes.jpg') %>
 
     <br><br><br>
 
@@ -44,14 +48,7 @@
 
     <br><br><br>
 
-    <h3>Step 4: Change audio output</h3>
-    Change audio output to USB device via speaker icon
-
-    <%= tutorial_image('tutorials/completed_boxes.jpg') %>
-
-    <br><br><br>
-
-    <h3>Step 5: Run <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
+    <h3>Step 4: Run <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
     LimitOS runs alongside your existing operating system, and can be run via:
     <br>
     <%= render 'shared/install_command' %>
@@ -59,6 +56,20 @@
     Follow the on-screen instructions to register the device afterwards.
     <br><br>
     <%= tutorial_image('tutorials/limitos_run.gif') %>
+
+    <br><br><br>
+
+    <h3>Step 5: Configure audio</h3>
+    Using the Raspberry Pi OS user interface, change the audio output to the USB device via the speaker icon in the top right.
+    <br><br>
+    Then, using the LimitOS web interface:
+    <ul>
+      <li>navigate to the device and click "Edit Device"</li>
+      <li>in the "Broadcast to device" field, select the opposite audio device so that audio is output remotely</li>
+      <li>check the "Enable two-way audio?" checkbox</li>
+      <li>set the "Audio start pin" as pin 17</li>
+      <li>click "Update Device" to save</li>
+    </ul>
 
     <br><br><br>
 
