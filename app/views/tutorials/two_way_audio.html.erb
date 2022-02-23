@@ -19,7 +19,7 @@
     <h3>Requirements and Materials</h3>
     <ul class="spaced-list">
       <li>Two Raspberry Pis connected to the internet</li>
-      <li><a href="https://raspberrypi.com/software/">Raspberry Pi OS</a></li>
+      <li><a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi OS (Buster)</a></li>
       <li>Two USB microphones</li>
       <li>Two USB speakers</li>
       <li>Two boxes to house the components</li>
@@ -49,7 +49,7 @@
     <br><br><br>
 
     <h3>Step 3: Run <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
-    LimitOS runs alongside your existing operating system, and can be run via:
+    LimitOS runs on top of Raspberry Pi OS (Buster), and can be run via:
     <br>
     <%= render 'shared/install_command' %>
     <br>

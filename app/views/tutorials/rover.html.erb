@@ -23,7 +23,7 @@
     <ul class="spaced-list">
       <li>Raspberry Pi connected to the internet</li>
       <li><a href="https://www.raspberrypi.org/products/camera-module-v2/">Raspberry Pi camera</a></li>
-      <li><a href="https://raspberrypi.com/software/">Raspberry Pi OS</a> (or ffmpeg manually installed)</li>
+      <li><a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi OS (Buster)</a></li>
       <li>
         Chassis Components:
         <a href="https://www.pololu.com/product/1418/" target="_blank">Zumo chassis kit</a>,
@@ -78,7 +78,7 @@
     <br><br><br>
 
     <h3>Step 5: Run <%= Rails.application.config_for(:limitos)['application_name'] %> on the Raspberry Pi</h3>
-    LimitOS runs alongside your existing operating system, and can be run via:
+    LimitOS runs on top of Raspberry Pi OS (Buster), and can be run via:
     <br>
     <%= render 'shared/install_command' %>
     <br>
