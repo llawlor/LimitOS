@@ -1,6 +1,6 @@
 <h1>Activating <%= Rails.application.config_for(:limitos)['application_name'] %></h1>
 
-<%= Rails.application.config_for(:limitos)['application_name'] %> is designed to be run on a Raspberry Pi.
+<%= Rails.application.config_for(:limitos)['application_name'] %> is designed to be run on a Raspberry Pi that already has Raspberry Pi OS (Buster) installed.
 
 <br><br>
 
@@ -27,6 +27,7 @@
 
 <h4>Detailed activation steps:</h4>
 <ol>
+  <li>Install <a href="https://www.raspberrypi.com/software/operating-systems/">Raspberry Pi OS (Legacy)</a> (codename Buster). The newest Raspberry Pi OS version (Bullseye) is not backward compatible with LimitOS.</li>
   <li>Log in as a root user on your Raspberry Pi (default username is "pi", default password is "raspberry")</li>
   <li>Type (or copy/paste) the following command: curl -sS <%= full_server_url %>/run | bash</li>
   <li>When you see a registration code appear, go to <a href="https://<%= Rails.application.config_for(:limitos)['domain'] %>/register">https://<%= Rails.application.config_for(:limitos)['domain'] %>/register</a> (on any device) and type in your registration code</li>
